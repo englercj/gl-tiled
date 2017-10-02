@@ -1,0 +1,49 @@
+{
+  "name": "gl-tiled",
+  "version": "1.0.0",
+  "main": "./dist/gl-tiled.js",
+  "description": "A Tiled editor renderer for WebGL.",
+  "author": "Chad Engler <chad@pantherdev.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/englercj/gl-tiled",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/englercj/gl-tiled.git"
+  },
+  "bugs": {
+    "url": "https://github.com/englercj/gl-tiled/issues"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "keywords": [
+    "gl",
+    "webgl",
+    "html5",
+    "tilemap",
+    "tile",
+    "tiled",
+    "map",
+    "render",
+    "2d"
+  ],
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "gl-matrix": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/gl-matrix": "^2.3.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-string": "^2.0.2",
+    "rollup-plugin-typescript2": "^0.7.0",
+    "typescript": "^2.5.3"
+  }
+}
