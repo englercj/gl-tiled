@@ -2,6 +2,7 @@ import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/Tilelayer';
 import GLTilemap from './GLTilemap';
 import GLTileset, { TilesetFlags } from './GLTileset';
+import GLProgram from './gl/GLProgram';
 
 /**
  * Due to the storage format used tileset images are limited to
@@ -22,21 +23,23 @@ export default class GLTilelayer
     public mapTextureData: Uint8Array;
     public mapTexture: WebGLTexture;
 
-    public inverseTextureSize = vec2.create();
+    private _inverseTextureSize = vec2.create();
 
-    public alpha: number;
+    private _alpha: number;
 
+    private _firstUniformUpload = true;
+    private _needUniformUpload = true;
     private _repeatTiles: boolean;
 
     constructor(public gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
     {
-        this.inverseTextureSize[0] = 1 / desc.width;
-        this.inverseTextureSize[1] = 1 / desc.height;
+        this._inverseTextureSize[0] = 1 / desc.width;
+        this._inverseTextureSize[1] = 1 / desc.height;
 
         this.mapTexture = gl.createTexture();
         this.mapTextureData = new Uint8Array(desc.width * desc.height * 4);
 
-        this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
+        this._alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
 
         this._repeatTiles = true;
 
@@ -48,6 +51,20 @@ export default class GLTilelayer
         this.upload();
     }
 
+    get alpha()
+    {
+        return this._alpha;
+    }
+
+    set alpha(v)
+    {
+        if (v !== this._alpha)
+        {
+            this._needUniformUpload = true;
+            this._alpha = v;
+        }
+    }
+
     get repeatTiles()
     {
         return this._repeatTiles;
@@ -57,9 +74,30 @@ export default class GLTilelayer
     {
         if (v !== this._repeatTiles)
         {
+            this._needUniformUpload = true;
             this._repeatTiles = v;
-            this.setupTexture();
+            this.setupTexture(); // delay until next draw?
         }
+    }
+
+    uploadUniforms(shader: GLProgram, force: boolean = false)
+    {
+        if (!force && !this._needUniformUpload)
+            return;
+
+        const gl = this.gl;
+
+        gl.uniform1f(shader.uniforms.uAlpha, this._alpha);
+        gl.uniform1i(shader.uniforms.uRepeatTiles, this.repeatTiles ? 1 : 0);
+
+        // these are static and will only ever need to be uploaded once.
+        if (force || this._firstUniformUpload)
+        {
+            this._firstUniformUpload = false;
+            gl.uniform2fv(shader.uniforms.uInverseLayerTextureSize, this._inverseTextureSize);
+        }
+
+        this._needUniformUpload = false;
     }
 
     /**

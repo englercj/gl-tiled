@@ -125,6 +125,15 @@ export default class GLTileset
         };
     }
 
+    bind(startSlot: number)
+    {
+        for (let i = 0; i < this.textures.length; ++i)
+        {
+            this.gl.activeTexture(startSlot + i);
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[i]);
+        }
+    }
+
     private addImage(src: string, assets?: IAssets)
     {
         const tex = this.gl.createTexture();
