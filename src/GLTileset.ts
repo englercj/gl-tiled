@@ -1,6 +1,6 @@
 import ITileset, { ITerrain, ITile } from './tiled/Tileset';
 
-interface ITileProps
+export interface ITileProps
 {
     coords: IPoint;
     imgIndex: number;
@@ -8,6 +8,7 @@ interface ITileProps
     flippedY: boolean;
     flippedAD: boolean;
     props: any;
+    tile: ITile;
 }
 
 /**
@@ -122,6 +123,7 @@ export default class GLTileset
             flippedY: (gid & TilesetFlags.FlippedVertical) != 0,
             flippedAD: (gid & TilesetFlags.FlippedAntiDiagonal) != 0,
             props: this.desc.tileproperties && this.desc.tileproperties[index],
+            tile: this.desc.tiles && this.desc.tiles[index],
         };
     }
 

@@ -1,8 +1,47 @@
 import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/Tilelayer';
 import GLTilemap from './GLTilemap';
-import GLTileset, { TilesetFlags } from './GLTileset';
+import GLTileset, { TilesetFlags, ITileProps } from './GLTileset';
 import GLProgram from './gl/GLProgram';
+
+interface IAnimationDataFrame
+{
+    /** How long this frame is displayed for. */
+    duration: number;
+
+    /** The time index at which this frame starts being displayed. */
+    startTime: number;
+
+    /** The time index at which this frame is over. */
+    endTime: number;
+
+    /** The id of the tile in the tileset of the frame to use. */
+    tileid: number;
+
+    /** The tile properties from the tileset about this frame's tile. */
+    props: ITileProps;
+}
+
+interface IAnimationData
+{
+    /** The index into our data array of the tile to animate. */
+    index: number;
+
+    /** An array of frame data for the animation. */
+    frames: IAnimationDataFrame[];
+
+    /** The index of the currently active frame. */
+    activeFrame: number;
+
+    /**
+     * The elapsed time of this animation. We store these separately per
+     * animation so they can be offset from eachother if so desired.
+     */
+    elapsedTime: number;
+
+    /** The maximum amount of time this animation lasts. Sum of all frame durations. */
+    maxTime: number;
+}
 
 /**
  * Due to the storage format used tileset images are limited to
@@ -22,6 +61,8 @@ export default class GLTilelayer
 
     public mapTextureData: Uint8Array;
     public mapTexture: WebGLTexture;
+
+    private _animations: IAnimationData[] = [];
 
     private _inverseTextureSize = vec2.create();
 
@@ -43,7 +84,8 @@ export default class GLTilelayer
 
         this._repeatTiles = true;
 
-        // should be true...
+        // If this isn't true then we probably did something wrong or got bad data...
+        // This has caught me putting in base64 data instead of array data more than once!
         if ((desc.width * desc.height) !== this.desc.data.length)
             throw new Error('Sizes are off!');
 
@@ -124,10 +166,35 @@ export default class GLTilelayer
 
             for (let t = 0; t < tilesets.length; ++t)
             {
-                const tileprops = tilesets[t].getTileProperties(gid);
+                const tileset = tilesets[t];
+                const tileprops = tileset.getTileProperties(gid);
 
                 if (tileprops)
                 {
+                    if (tileprops.tile && tileprops.tile.animation)
+                    {
+                        let maxTime = 0;
+
+                        this._animations.push({
+                            index,
+                            activeFrame: -1,
+                            elapsedTime: 0,
+                            frames: tileprops.tile.animation.map((v) =>
+                            {
+                                return {
+                                    duration: v.duration,
+                                    tileid: v.tileid,
+                                    props: tileset.getTileProperties(v.tileid + tileset.desc.firstgid),
+                                    startTime: maxTime,
+                                    endTime: (maxTime += v.duration),
+                                };
+                            }),
+                            maxTime: 0,
+                        });
+
+                        this._animations[this._animations.length - 1].maxTime = maxTime;
+                    }
+
                     this.mapTextureData[index++] = tileprops.coords.x;
                     this.mapTextureData[index++] = tileprops.coords.y;
                     this.mapTextureData[index++] = tileprops.imgIndex + imgIndex;
@@ -157,15 +224,57 @@ export default class GLTilelayer
         }
     }
 
+    update(dt: number)
+    {
+        let needsUpload = false;
+
+        for (let i = 0; i < this._animations.length; ++i)
+        {
+            const anim = this._animations[i];
+
+            anim.elapsedTime = (anim.elapsedTime + dt) % anim.maxTime;
+
+            for (let f = 0; f < anim.frames.length; ++f)
+            {
+                const frame = anim.frames[f];
+
+                if (anim.elapsedTime >= frame.startTime && anim.elapsedTime < frame.endTime)
+                {
+                    if (anim.activeFrame !== f)
+                    {
+                        needsUpload = true;
+                        anim.activeFrame = f;
+                        this.mapTextureData[anim.index] = frame.props.coords.x;
+                        this.mapTextureData[anim.index + 1] = frame.props.coords.y;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // TODO: Incremental upload? Only upload changed ones?
+        // Not sure if multiple subImage2D's will be faster...
+        if (needsUpload)
+            this.uploadData();
+    }
+
     /**
      * Uploads the map texture to the GPU.
      *
      */
     upload()
     {
+        this.setupTexture();
+        this.uploadData(false);
+    }
+
+    uploadData(doBind: boolean = true)
+    {
         const gl = this.gl;
 
-        this.setupTexture();
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.mapTexture);
 
         gl.texImage2D(gl.TEXTURE_2D,
             0,          // level
@@ -179,11 +288,12 @@ export default class GLTilelayer
         );
     }
 
-    setupTexture()
+    setupTexture(doBind: boolean = true)
     {
         const gl = this.gl;
 
-        gl.bindTexture(gl.TEXTURE_2D, this.mapTexture);
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.mapTexture);
 
         // MUST be filtered with NEAREST or tile lookup fails
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

@@ -13,6 +13,8 @@ export default class GLTilemap
     public layers: GLTilelayer[] = [];
     public tilesets: GLTileset[] = [];
 
+    private _lastTime = 0;
+
     private _viewportSize = vec2.create();
     private _scaledViewportSize = vec2.create();
     private _inverseLayerTileSize = vec2.create();
@@ -143,6 +145,13 @@ export default class GLTilemap
 
     draw(x: number = 0, y: number = 0)
     {
+        if (this._lastTime === 0)
+            this._lastTime = performance.now();
+
+        const now = performance.now();
+        const dt = now - this._lastTime;
+        this._lastTime = now;
+
         var gl = this.gl;
 
         // TODO: Custom blending modes?
@@ -182,6 +191,8 @@ export default class GLTilemap
         for (let i = 0; i < this.layers.length; ++i)
         {
             const layer = this.layers[i];
+
+            layer.update(dt);
 
             gl.uniform2f(shader.uniforms.uViewportOffset, Math.floor(x * this._tileScale * layer.scrollScaleX), Math.floor(y * this._tileScale * layer.scrollScaleY));
             layer.uploadUniforms(shader);
