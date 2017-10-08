@@ -92,7 +92,7 @@ void main()
     vec2 tileOffset = floor(tile.xy * 255.0) * tileSize;
     vec2 tileCoord = mod(vPixelCoord, tileSize);
     vec2 flipVec = vec2(hasFlag(flipFlags, Flag_FlippedHorizontal), hasFlag(flipFlags, Flag_FlippedVertical));
-    vec2 tileCoordFlipped = abs((tileSize * vec2(isFlippedX, isFlippedY)) - tileCoord);
+    vec2 tileCoordFlipped = abs((tileSize * flipVec) - tileCoord);
 
     // if isFlippedAD is set, this will flip the x/y coords
     if (hasFlag(flipFlags, Flag_FlippedAntiDiagonal) == 1.0)
