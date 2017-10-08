@@ -10,10 +10,8 @@ import tilelayerFS from './shaders/tilelayer.frag';
 
 export default class GLTilemap
 {
-    public layers: GLTilelayer[] = [];
-    public tilesets: GLTileset[] = [];
-
-    private _lastTime = 0;
+    private _layers: GLTilelayer[] = [];
+    private _tilesets: GLTileset[] = [];
 
     private _viewportSize = vec2.create();
     private _scaledViewportSize = vec2.create();
@@ -56,7 +54,7 @@ export default class GLTilemap
         {
             const tileset = new GLTileset(gl, desc.tilesets[i], assets);
             totalTilesetImages += tileset.images.length;
-            this.tilesets.push(tileset);
+            this._tilesets.push(tileset);
         }
 
         for (let i = 0; i < desc.layers.length; ++i)
@@ -65,7 +63,7 @@ export default class GLTilemap
 
             switch (l.type)
             {
-                case 'tilelayer': this.layers.push(new GLTilelayer(gl, l, this)); break;
+                case 'tilelayer': this._layers.push(new GLTilelayer(gl, l, this)); break;
                 // case 'objectlayer': this.layers.push(new GLTilelayer(gl, l, this)); break;
                 // case 'imagelayer': this.layers.push(new GLTilelayer(gl, l, this)); break;
             }
@@ -77,17 +75,47 @@ export default class GLTilemap
         this._buildBuffers();
 
         const fragShader = tilelayerFS
-            .replace('#pragma NUM_TILESETS', `#define NUM_TILESETS ${this.tilesets.length}`)
+            .replace('#pragma NUM_TILESETS', `#define NUM_TILESETS ${this._tilesets.length}`)
             .replace('#pragma NUM_TILESET_IMAGES', `#define NUM_TILESET_IMAGES ${totalTilesetImages}`);
 
         this._tilelayerShader = new GLProgram(gl, tilelayerVS, fragShader);
     }
 
+    get layers(): IReadonlyArray<GLTilelayer>
+    {
+        return this._layers;
+    }
+
+    get tilesets(): IReadonlyArray<GLTileset>
+    {
+        return this._tilesets;
+    }
+
+    get viewportWidth()
+    {
+        return this._viewportSize[0];
+    }
+
+    get viewportHeight()
+    {
+        return this._viewportSize[1];
+    }
+
+    get scaledViewportWidth()
+    {
+        return this._scaledViewportSize[0];
+    }
+
+    get scaledViewportHeight()
+    {
+        return this._scaledViewportSize[1];
+    }
+
     set repeatTiles(v: boolean)
     {
-        for (let i = 0; i < this.layers.length; ++i)
+        for (let i = 0; i < this._layers.length; ++i)
         {
-            this.layers[i].repeatTiles = false;
+            this._layers[i].repeatTiles = false;
         }
     }
 
@@ -143,15 +171,27 @@ export default class GLTilemap
         this._needUniformUpload = false;
     }
 
+    /**
+     * Updates each layer's animations by the given delta time.
+     *
+     * @param dt Delta time in milliseconds to perform an update for.
+     */
+    update(dt: number)
+    {
+        for (let i = 0; i < this.layers.length; ++i)
+        {
+            this._layers[i].update(dt);
+        }
+    }
+
+    /**
+     * Draws the tilemap.
+     *
+     * @param x The x offset at which to draw the map
+     * @param y The y offset at which to draw the map
+     */
     draw(x: number = 0, y: number = 0)
     {
-        if (this._lastTime === 0)
-            this._lastTime = performance.now();
-
-        const now = performance.now();
-        const dt = now - this._lastTime;
-        this._lastTime = now;
-
         var gl = this.gl;
 
         // TODO: Custom blending modes?
@@ -173,9 +213,9 @@ export default class GLTilemap
 
         // Bind tileset textures
         let imgIndex = 0;
-        for (let i = 0; i < this.tilesets.length; ++i)
+        for (let i = 0; i < this._tilesets.length; ++i)
         {
-            const tileset = this.tilesets[i];
+            const tileset = this._tilesets[i];
 
             for (let t = 0; t < tileset.textures.length; ++t)
             {
@@ -188,11 +228,9 @@ export default class GLTilemap
         // Draw each layer of the map
         gl.activeTexture(gl.TEXTURE0);
 
-        for (let i = 0; i < this.layers.length; ++i)
+        for (let i = 0; i < this._layers.length; ++i)
         {
-            const layer = this.layers[i];
-
-            layer.update(dt);
+            const layer = this._layers[i];
 
             gl.uniform2f(shader.uniforms.uViewportOffset, Math.floor(x * this._tileScale * layer.scrollScaleX), Math.floor(y * this._tileScale * layer.scrollScaleY));
             layer.uploadUniforms(shader);
@@ -210,9 +248,9 @@ export default class GLTilemap
 
         // tileset size buffers
         let imgIndex = 0;
-        for (let i = 0; i < this.tilesets.length; ++i)
+        for (let i = 0; i < this._tilesets.length; ++i)
         {
-            const tileset = this.tilesets[i];
+            const tileset = this._tilesets[i];
 
             for (let s = 0; s < tileset.images.length; ++s)
             {

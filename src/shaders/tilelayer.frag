@@ -81,23 +81,21 @@ void main()
     float flipFlags = floor(tile.w * 255.0);
 
     // 0 when not set, 1 when the flag is set. Easy to use as a multiplier
+    // GLSL ES 1.0 doesn't have bitwise flags...
     // int isFlippedAD = (flipFlags & Flag_FlippedAntiDiagonal) >> 1;
     // int isFlippedY = (flipFlags & Flag_FlippedVertical) >> 2;
     // int isFlippedX = (flipFlags & Flag_FlippedHorizontal) >> 3;
-
-    float isFlippedAD = hasFlag(flipFlags, Flag_FlippedAntiDiagonal);
-    float isFlippedY = hasFlag(flipFlags, Flag_FlippedVertical);
-    float isFlippedX = hasFlag(flipFlags, Flag_FlippedHorizontal);
 
     int imgIndex = int(floor(tile.z * 255.0));
     vec2 tileSize = getTilesetTileSize(imgIndex);
 
     vec2 tileOffset = floor(tile.xy * 255.0) * tileSize;
     vec2 tileCoord = mod(vPixelCoord, tileSize);
+    vec2 flipVec = vec2(hasFlag(flipFlags, Flag_FlippedHorizontal), hasFlag(flipFlags, Flag_FlippedVertical));
     vec2 tileCoordFlipped = abs((tileSize * vec2(isFlippedX, isFlippedY)) - tileCoord);
 
     // if isFlippedAD is set, this will flip the x/y coords
-    if (isFlippedAD == 1.0)
+    if (hasFlag(flipFlags, Flag_FlippedAntiDiagonal) == 1.0)
     {
         float x = tileCoordFlipped.x;
         tileCoordFlipped.x = tileCoordFlipped.y;

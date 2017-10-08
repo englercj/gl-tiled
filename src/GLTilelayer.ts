@@ -4,6 +4,10 @@ import GLTilemap from './GLTilemap';
 import GLTileset, { TilesetFlags, ITileProps } from './GLTileset';
 import GLProgram from './gl/GLProgram';
 
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
+
 interface IAnimationDataFrame
 {
     /** How long this frame is displayed for. */
@@ -148,7 +152,7 @@ export default class GLTilelayer
      *
      * @param tilesets The list of tilesets, who's images will be uploaded to the GPU elsewhere.
      */
-    buildMapTexture(tilesets: GLTileset[])
+    buildMapTexture(tilesets: IReadonlyArray<GLTileset>)
     {
         // TODO:
         // - Might be faster to build this texture on the GPU in a framebuffer?
@@ -164,59 +168,63 @@ export default class GLTilelayer
             const gid = this.desc.data[i];
             let imgIndex = 0;
 
-            for (let t = 0; t < tilesets.length; ++t)
+            if (gid)
             {
-                const tileset = tilesets[t];
-                const tileprops = tileset.getTileProperties(gid);
-
-                if (tileprops)
+                for (let t = 0; t < tilesets.length; ++t)
                 {
-                    if (tileprops.tile && tileprops.tile.animation)
+                    const tileset = tilesets[t];
+                    const tileprops = tileset.getTileProperties(gid);
+
+                    if (tileprops)
                     {
-                        let maxTime = 0;
+                        if (tileprops.tile && tileprops.tile.animation)
+                        {
+                            let maxTime = 0;
 
-                        this._animations.push({
-                            index,
-                            activeFrame: -1,
-                            elapsedTime: 0,
-                            frames: tileprops.tile.animation.map((v) =>
-                            {
-                                return {
-                                    duration: v.duration,
-                                    tileid: v.tileid,
-                                    props: tileset.getTileProperties(v.tileid + tileset.desc.firstgid),
-                                    startTime: maxTime,
-                                    endTime: (maxTime += v.duration),
-                                };
-                            }),
-                            maxTime: 0,
-                        });
+                            this._animations.push({
+                                index,
+                                activeFrame: -1,
+                                elapsedTime: 0,
+                                frames: tileprops.tile.animation.map((v) =>
+                                {
+                                    return {
+                                        duration: v.duration,
+                                        tileid: v.tileid,
+                                        props: tileset.getTileProperties(v.tileid + tileset.desc.firstgid),
+                                        startTime: maxTime,
+                                        endTime: (maxTime += v.duration),
+                                    };
+                                }),
+                                maxTime: 0,
+                            });
 
-                        this._animations[this._animations.length - 1].maxTime = maxTime;
+                            this._animations[this._animations.length - 1].maxTime = maxTime;
+                        }
+
+                        this.mapTextureData[index++] = tileprops.coords.x;
+                        this.mapTextureData[index++] = tileprops.coords.y;
+                        this.mapTextureData[index++] = tileprops.imgIndex + imgIndex;
+                        this.mapTextureData[index++] =
+                            (tileprops.flippedX ? TilesetFlags.FlippedHorizontalFlag : 0)
+                            | (tileprops.flippedY ? TilesetFlags.FlippedVerticalFlag : 0)
+                            | (tileprops.flippedAD ? TilesetFlags.FlippedAntiDiagonalFlag : 0);
+
+                        continue dataloop;
                     }
 
-                    this.mapTextureData[index++] = tileprops.coords.x;
-                    this.mapTextureData[index++] = tileprops.coords.y;
-                    this.mapTextureData[index++] = tileprops.imgIndex + imgIndex;
-                    this.mapTextureData[index++] =
-                        (tileprops.flippedX ? TilesetFlags.FlippedHorizontalFlag : 0)
-                        | (tileprops.flippedY ? TilesetFlags.FlippedVerticalFlag : 0)
-                        | (tileprops.flippedAD ? TilesetFlags.FlippedAntiDiagonalFlag : 0);
-
-                    continue dataloop;
+                    imgIndex += tilesets[t].images.length;
                 }
-
-                imgIndex += tilesets[t].images.length;
             }
 
             // if we reach here, it was because either this tile is 0, meaning
             // there is no tile here. Or, we failed to find the tileset for it.
 
-            // if we got here from a non-0 gid, then explode
-            if (gid)
-                throw new Error('Unable to find tileset for gid: ' + gid);
+            // @if DEBUG
+            // if we got here from a non-0 gid, then assert.
+            ASSERT(gid === 0, `Unable to find tileset for gid: ${gid}`);
+            // @endif
 
-            // otherwise just write an empty entry
+            // if we failed to find a tileset, or the gid was 0, just write an empty entry.
             this.mapTextureData[index++] = 255;
             this.mapTextureData[index++] = 255;
             this.mapTextureData[index++] = 255;
@@ -224,6 +232,11 @@ export default class GLTilelayer
         }
     }
 
+    /**
+     * Updates the layer's animations by the given delta time.
+     *
+     * @param dt Delta time in milliseconds to perform an update for.
+     */
     update(dt: number)
     {
         let needsUpload = false;

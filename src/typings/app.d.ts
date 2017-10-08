@@ -9,6 +9,12 @@ interface IPoint
     y: number;
 }
 
+interface IReadonlyArray<T>
+{
+    readonly length: number;
+    readonly [n: number]: T;
+}
+
 type TCallback = () => void;
 type TCallback1<T1> = (arg1: T1) => void;
 type TCallback2<T1, T2> = (arg1: T1, arg2: T2) => void;
