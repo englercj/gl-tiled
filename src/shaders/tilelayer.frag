@@ -58,12 +58,8 @@ vec2 getTilesetTileSize(int index)
 vec4 getColor(int index, vec2 coord)
 {
     for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
-    {
         if (i == index)
-        {
             return texture2D(uTilesets[i], coord * uInverseTilesetTextureSize[i]);
-        }
-    }
 
     return vec4(0.0, 0.0, 0.0, 0.0);
 }
