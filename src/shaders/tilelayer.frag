@@ -6,7 +6,7 @@ precision mediump float;
 #pragma NUM_TILESET_IMAGES
 
 varying vec2 vPixelCoord;
-varying vec2 vTexureCoord;
+varying vec2 vTextureCoord;
 
 uniform sampler2D uLayer;
 uniform sampler2D uTilesets[NUM_TILESET_IMAGES];
@@ -70,17 +70,16 @@ vec4 getColor(int index, vec2 coord)
 
 void main()
 {
-    if (uRepeatTiles == 0 && (vTexureCoord.x < 0.0 || vTexureCoord.x > 1.0 || vTexureCoord.y < 0.0 || vTexureCoord.y > 1.0))
+    if (uRepeatTiles == 0 && (vTextureCoord.x < 0.0 || vTextureCoord.x > 1.0 || vTextureCoord.y < 0.0 || vTextureCoord.y > 1.0))
         discard;
 
-    vec4 tile = texture2D(uLayer, vTexureCoord);
+    vec4 tile = texture2D(uLayer, vTextureCoord);
 
     if (tile == c_one4)
         discard;
 
     float flipFlags = floor(tile.w * 255.0);
 
-    // 0 when not set, 1 when the flag is set. Easy to use as a multiplier
     // GLSL ES 1.0 doesn't have bitwise flags...
     // int isFlippedAD = (flipFlags & Flag_FlippedAntiDiagonal) >> 1;
     // int isFlippedY = (flipFlags & Flag_FlippedVertical) >> 2;
@@ -102,5 +101,7 @@ void main()
         tileCoordFlipped.y = x;
     }
 
-    gl_FragColor = getColor(imgIndex, tileCoordFlipped + tileOffset) * vec4(1.0, 1.0, 1.0, uAlpha);
+    vec4 color = getColor(imgIndex, tileCoordFlipped + tileOffset);
+
+    gl_FragColor = vec4(color.rgb, color.a * uAlpha);
 }

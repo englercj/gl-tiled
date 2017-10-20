@@ -79,11 +79,13 @@ export default class GLProgram
         // if linking fails, then log and cleanup
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         {
+            const errLog = gl.getProgramInfoLog(program);
+
             gl.deleteProgram(program);
             gl.deleteShader(glVertShader);
             gl.deleteShader(glFragShader);
 
-            throw new Error(`Could not link shader program. Log:\n${gl.getProgramInfoLog(program)}`);
+            throw new Error(`Could not link shader program. Log:\n${errLog}`);
         }
 
         // clean up some shaders
@@ -109,7 +111,11 @@ export default class GLProgram
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
         {
-            throw new Error(`Failed to compile shader. Log:\n${gl.getShaderInfoLog(shader)}`);
+            const errLog = gl.getShaderInfoLog(shader);
+
+            gl.deleteShader(shader);
+
+            throw new Error(`Failed to compile shader. Log:\n${errLog}`);
         }
 
         return shader;

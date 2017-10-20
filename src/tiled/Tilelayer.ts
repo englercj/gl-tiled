@@ -1,17 +1,11 @@
-import IObjectBase from './objects';
+import TObject from './objects';
 
 /**
  * Interface representing a Tiled layer.
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#layer
  */
-export interface ITilelayerBase
+interface ITilelayerBase
 {
-    /** Column count. Same as map width for fixed-size maps. (int) */
-    width: number;
-
-    /** Row count. Same as map height for fixed-size maps. (int) */
-    height: number;
-
     /** Name assigned to this layer */
     name: string;
 
@@ -27,6 +21,12 @@ export interface ITilelayerBase
     /** Vertical layer offset in tiles. Always 0. (int) */
     y: number;
 
+    /** Horizontal layer offset in pixels. (float) */
+    offsetx: number;
+
+    /** Vertical layer offset in pixels. (float) */
+    offsety: number;
+
     /** string key-value pairs. */
     properties: TMap<string>;
 
@@ -40,6 +40,12 @@ export interface ITilelayer extends ITilelayerBase
 
     /** Array of GIDs. tilelayer only. (int) */
     data: number[];
+
+    /** Column count. Same as map width for fixed-size maps. (int) */
+    width: number;
+
+    /** Row count. Same as map height for fixed-size maps. (int) */
+    height: number;
 }
 
 export interface IObjectlayer extends ITilelayerBase
@@ -47,7 +53,7 @@ export interface IObjectlayer extends ITilelayerBase
     type: 'objectgroup';
 
     /** Array of Objects. objectgroup only. */
-    objects: IObject[];
+    objects: TObject[];
 
     /** 'topdown' (default) or 'index'. objectgroup only. */
     draworder: ('topdown' | 'index');
@@ -59,8 +65,10 @@ export interface IImagelayer extends ITilelayerBase
 
     /** The url to the image source for the layer */
     image: string;
+
+    /** A color that is considered to be transparent */
+    transparentcolor: string;
 }
 
-type ILayer = (ITilelayer | IObjectlayer | IImagelayer);
-
-export default ILayer;
+type TLayer = (ITilelayer | IObjectlayer | IImagelayer);
+export default TLayer;

@@ -1,8 +1,8 @@
 import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/Tilelayer';
-import GLTilemap from './GLTilemap';
+import GLTilemap, { ELayerType } from './GLTilemap';
 import GLTileset, { TilesetFlags, ITileProps } from './GLTileset';
-import GLProgram from './gl/GLProgram';
+import GLProgram from './utils/GLProgram';
 
 // @if DEBUG
 import { ASSERT } from './debug';
@@ -60,11 +60,13 @@ interface IAnimationData
  */
 export default class GLTilelayer
 {
+    type: ELayerType.Tilelayer = ELayerType.Tilelayer;
+
     public scrollScaleX = 1;
     public scrollScaleY = 1;
 
-    public mapTextureData: Uint8Array;
-    public mapTexture: WebGLTexture;
+    public readonly texture: WebGLTexture;
+    public readonly textureData: Uint8Array;
 
     private _animations: IAnimationData[] = [];
 
@@ -74,19 +76,17 @@ export default class GLTilelayer
 
     private _firstUniformUpload = true;
     private _needUniformUpload = true;
-    private _repeatTiles: boolean;
+    private _repeatTiles = true;
 
     constructor(public gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
     {
         this._inverseTextureSize[0] = 1 / desc.width;
         this._inverseTextureSize[1] = 1 / desc.height;
 
-        this.mapTexture = gl.createTexture();
-        this.mapTextureData = new Uint8Array(desc.width * desc.height * 4);
+        this.texture = gl.createTexture();
+        this.textureData = new Uint8Array(desc.width * desc.height * 4);
 
         this._alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
-
-        this._repeatTiles = true;
 
         // If this isn't true then we probably did something wrong or got bad data...
         // This has caught me putting in base64 data instead of array data more than once!
@@ -134,7 +134,7 @@ export default class GLTilelayer
         const gl = this.gl;
 
         gl.uniform1f(shader.uniforms.uAlpha, this._alpha);
-        gl.uniform1i(shader.uniforms.uRepeatTiles, this.repeatTiles ? 1 : 0);
+        gl.uniform1i(shader.uniforms.uRepeatTiles, this._repeatTiles ? 1 : 0);
 
         // these are static and will only ever need to be uploaded once.
         if (force || this._firstUniformUpload)
@@ -201,10 +201,10 @@ export default class GLTilelayer
                             this._animations[this._animations.length - 1].maxTime = maxTime;
                         }
 
-                        this.mapTextureData[index++] = tileprops.coords.x;
-                        this.mapTextureData[index++] = tileprops.coords.y;
-                        this.mapTextureData[index++] = tileprops.imgIndex + imgIndex;
-                        this.mapTextureData[index++] =
+                        this.textureData[index++] = tileprops.coords.x;
+                        this.textureData[index++] = tileprops.coords.y;
+                        this.textureData[index++] = tileprops.imgIndex + imgIndex;
+                        this.textureData[index++] =
                             (tileprops.flippedX ? TilesetFlags.FlippedHorizontalFlag : 0)
                             | (tileprops.flippedY ? TilesetFlags.FlippedVerticalFlag : 0)
                             | (tileprops.flippedAD ? TilesetFlags.FlippedAntiDiagonalFlag : 0);
@@ -225,10 +225,10 @@ export default class GLTilelayer
             // @endif
 
             // if we failed to find a tileset, or the gid was 0, just write an empty entry.
-            this.mapTextureData[index++] = 255;
-            this.mapTextureData[index++] = 255;
-            this.mapTextureData[index++] = 255;
-            this.mapTextureData[index++] = 255;
+            this.textureData[index++] = 255;
+            this.textureData[index++] = 255;
+            this.textureData[index++] = 255;
+            this.textureData[index++] = 255;
         }
     }
 
@@ -257,8 +257,8 @@ export default class GLTilelayer
                     {
                         needsUpload = true;
                         anim.activeFrame = f;
-                        this.mapTextureData[anim.index] = frame.props.coords.x;
-                        this.mapTextureData[anim.index + 1] = frame.props.coords.y;
+                        this.textureData[anim.index] = frame.props.coords.x;
+                        this.textureData[anim.index + 1] = frame.props.coords.y;
                     }
 
                     break;
@@ -287,7 +287,7 @@ export default class GLTilelayer
         const gl = this.gl;
 
         if (doBind)
-            gl.bindTexture(gl.TEXTURE_2D, this.mapTexture);
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         gl.texImage2D(gl.TEXTURE_2D,
             0,          // level
@@ -297,7 +297,7 @@ export default class GLTilelayer
             0,          // border
             gl.RGBA,    // format
             gl.UNSIGNED_BYTE, // type
-            this.mapTextureData
+            this.textureData
         );
     }
 
@@ -306,7 +306,7 @@ export default class GLTilelayer
         const gl = this.gl;
 
         if (doBind)
-            gl.bindTexture(gl.TEXTURE_2D, this.mapTexture);
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         // MUST be filtered with NEAREST or tile lookup fails
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

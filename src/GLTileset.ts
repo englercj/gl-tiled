@@ -1,4 +1,5 @@
 import ITileset, { ITerrain, ITile } from './tiled/Tileset';
+import { loadImage } from './utils/loadImage';
 
 export interface ITileProps
 {
@@ -31,7 +32,7 @@ export enum TilesetFlags {
 export default class GLTileset
 {
     /** The images in this tileset. */
-    public images: HTMLImageElement[] = [];
+    public images: CanvasImageSource[] = [];
 
     /** The gl textures in this tileset */
     public textures: WebGLTexture[] = [];
@@ -41,7 +42,7 @@ export default class GLTileset
         // load the images
         if (this.desc.image)
         {
-            this.addImage(this.desc.image, assets);
+            this._addImage(this.desc.image, assets);
         }
         else if (this.desc.tiles)
         {
@@ -56,7 +57,7 @@ export default class GLTileset
 
                 if (tile.image)
                 {
-                    this.addImage(tile.image, assets);
+                    this._addImage(tile.image, assets);
                 }
             }
         }
@@ -136,33 +137,19 @@ export default class GLTileset
         }
     }
 
-    private addImage(src: string, assets?: IAssets)
+    private _addImage(src: string, assets?: IAssets)
     {
         const tex = this.gl.createTexture();
-        const asset = assets && assets[src];
-        let img: HTMLImageElement = null;
-
-        if (asset)
+        const img = loadImage(src, assets, (errEvent) =>
         {
-            img = asset instanceof HTMLImageElement ? asset : asset.data;
-        }
-
-        if (img)
-        {
-            this.setupTexture(img, tex);
-        }
-        else
-        {
-            img = new Image();
-            img.src = src;
-            img.addEventListener('load', () => this.setupTexture(img, tex));
-        }
+            this._setupTexture(img, tex);
+        });
 
         this.images.push(img);
         this.textures.push(tex);
     }
 
-    private setupTexture(img: HTMLImageElement, tex: WebGLTexture)
+    private _setupTexture(img: CanvasImageSource, tex: WebGLTexture)
     {
         const gl = this.gl;
 

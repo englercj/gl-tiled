@@ -1,7 +1,7 @@
 /**
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#object
  */
-export default interface IObjectBase
+export interface IObjectBase
 {
     /** Incremental id - unique across all objects (int) */
     id: number;
@@ -68,3 +68,6 @@ export interface IText extends IObjectBase
     /** String key-value pairs */
     text: TMap<string>;
 }
+
+type TObject = (IObject | IEllipse | IRectangle | IPolygon | IPolyline | IText);
+export default TObject;
