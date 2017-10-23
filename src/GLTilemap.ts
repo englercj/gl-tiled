@@ -338,8 +338,8 @@ export default class GLTilemap
     private _createShaders(totalTilesetImages: number)
     {
         const tilelayerFragShader = tilelayerFS
-            .replace('#pragma NUM_TILESETS', `#define NUM_TILESETS ${this._tilesets.length}`)
-            .replace('#pragma NUM_TILESET_IMAGES', `#define NUM_TILESET_IMAGES ${totalTilesetImages}`);
+            .replace('#pragma define(NUM_TILESETS)', `#define NUM_TILESETS ${this._tilesets.length}`)
+            .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${totalTilesetImages}`);
 
         this.shaders = {
             tilelayer: new GLProgram(this.gl, tilelayerVS, tilelayerFragShader, GLTilemap._attribIndices),

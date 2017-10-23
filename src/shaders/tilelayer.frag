@@ -2,8 +2,8 @@ precision mediump float;
 
 // TODO: There is a bit too much branching here, need to try and simplify a bit
 
-#pragma NUM_TILESETS
-#pragma NUM_TILESET_IMAGES
+#pragma define(NUM_TILESETS)
+#pragma define(NUM_TILESET_IMAGES)
 
 varying vec2 vPixelCoord;
 varying vec2 vTextureCoord;
