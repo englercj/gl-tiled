@@ -3,6 +3,8 @@ precision highp float;
 attribute vec2 aPosition;
 attribute vec2 aTexture;
 
+uniform float uInverseTileScale;
+
 uniform vec2 uOffset;
 uniform vec2 uSize;
 uniform vec2 uViewportSize;
@@ -17,11 +19,14 @@ void main()
     position += 1.0;
     position /= 2.0;
 
+    // round offset to the nearest multiple of the inverse scale
+    // this essentially clamps offset to whole "pixels"
+    vec2 offset = uOffset + (uInverseTileScale / 2.0);
+    offset -= mod(offset, uInverseTileScale);
+
     // modify offset by viewport & size
-    vec2 offset = vec2(
-        uOffset.x - (uViewportSize.x / 2.0),
-        uOffset.y + ((uViewportSize.y / 2.0) - uSize.y)
-    );
+    offset.x -= uViewportSize.x / 2.0;
+    offset.y += (uViewportSize.y / 2.0) - uSize.y;
 
     // calculate this vertex position based on image size and offset
     position *= uSize;

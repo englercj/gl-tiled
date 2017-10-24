@@ -70,7 +70,7 @@ export default class GLTilelayer
 
     private _animations: IAnimationData[] = [];
 
-    private _inverseTextureSize = vec2.create();
+    private _inverseTileCount = vec2.create();
 
     private _alpha: number;
 
@@ -80,8 +80,8 @@ export default class GLTilelayer
 
     constructor(public gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
     {
-        this._inverseTextureSize[0] = 1 / desc.width;
-        this._inverseTextureSize[1] = 1 / desc.height;
+        this._inverseTileCount[0] = 1 / desc.width;
+        this._inverseTileCount[1] = 1 / desc.height;
 
         this.texture = gl.createTexture();
         this.textureData = new Uint8Array(desc.width * desc.height * 4);
@@ -140,7 +140,7 @@ export default class GLTilelayer
         if (force || this._firstUniformUpload)
         {
             this._firstUniformUpload = false;
-            gl.uniform2fv(shader.uniforms.uInverseLayerTextureSize, this._inverseTextureSize);
+            gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
         }
 
         this._needUniformUpload = false;

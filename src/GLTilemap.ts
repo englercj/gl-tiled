@@ -220,9 +220,13 @@ export default class GLTilemap
         let lastShader = ELayerType.UNKNOWN;
         let activeShader: GLProgram = null;
 
+        const invScale = 1.0 / this._tileScale;
+
         for (let i = 0; i < this._layers.length; ++i)
         {
             const layer = this._layers[i];
+            const offsetx = layer.desc.offsetx || 0;
+            const offsety = layer.desc.offsety || 0;
 
             if (!layer.desc.visible)
                 continue;
@@ -239,8 +243,8 @@ export default class GLTilemap
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(
                         activeShader.uniforms.uOffset,
-                        Math.floor(((-layer.desc.offsetx || 0) + (x * layer.scrollScaleX)) * this._tileScale),
-                        Math.floor(((-layer.desc.offsety || 0) + (y * layer.scrollScaleY)) * this._tileScale)
+                        -offsetx + (x * layer.scrollScaleX),
+                        -offsety + (y * layer.scrollScaleY)
                     );
                     break;
 
@@ -248,8 +252,8 @@ export default class GLTilemap
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(
                         activeShader.uniforms.uOffset,
-                        Math.floor((layer.desc.offsetx || 0) + ((-x * layer.scrollScaleX) * this._tileScale)),
-                        Math.floor((-layer.desc.offsety || 0) + ((y * layer.scrollScaleY) * this._tileScale))
+                        offsetx + (-x * layer.scrollScaleX),
+                        -offsety + (y * layer.scrollScaleY)
                     );
                     break;
             }
@@ -305,10 +309,12 @@ export default class GLTilemap
         const tileShader = this.shaders.tilelayer;
         gl.useProgram(tileShader.program);
         gl.uniform2fv(tileShader.uniforms.uViewportSize, this._scaledViewportSize);
+        gl.uniform1f(tileShader.uniforms.uInverseTileScale, 1.0 / this._tileScale);
 
         const imageShader = this.shaders.imagelayer;
         gl.useProgram(imageShader.program);
         gl.uniform2fv(imageShader.uniforms.uViewportSize, this._scaledViewportSize);
+        gl.uniform1f(imageShader.uniforms.uInverseTileScale, 1.0 / this._tileScale);
     }
 
     private _buildBuffers()

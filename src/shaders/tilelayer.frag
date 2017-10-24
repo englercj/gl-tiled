@@ -59,7 +59,9 @@ vec4 getColor(int index, vec2 coord)
 {
     for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
         if (i == index)
+        {
             return texture2D(uTilesets[i], coord * uInverseTilesetTextureSize[i]);
+        }
 
     return vec4(0.0, 0.0, 0.0, 0.0);
 }
@@ -84,20 +86,21 @@ void main()
     int imgIndex = int(floor(tile.z * 255.0));
     vec2 tileSize = getTilesetTileSize(imgIndex);
 
-    vec2 tileOffset = floor(tile.xy * 255.0) * tileSize;
-    vec2 tileCoord = mod(vPixelCoord, tileSize);
     vec2 flipVec = vec2(hasFlag(flipFlags, Flag_FlippedHorizontal), hasFlag(flipFlags, Flag_FlippedVertical));
-    vec2 tileCoordFlipped = abs((tileSize * flipVec) - tileCoord);
+
+    vec2 tileCoord = floor(tile.xy * 255.0) * tileSize;
+    vec2 offsetInTile = mod(vPixelCoord, tileSize);
+    vec2 offsetInTileFlipped = abs((tileSize * flipVec) - offsetInTile);
 
     // if isFlippedAD is set, this will flip the x/y coords
     if (hasFlag(flipFlags, Flag_FlippedAntiDiagonal) == 1.0)
     {
-        float x = tileCoordFlipped.x;
-        tileCoordFlipped.x = tileCoordFlipped.y;
-        tileCoordFlipped.y = x;
+        float x = offsetInTileFlipped.x;
+        offsetInTileFlipped.x = offsetInTileFlipped.y;
+        offsetInTileFlipped.y = x;
     }
 
-    vec4 color = getColor(imgIndex, tileCoordFlipped + tileOffset);
+    vec4 color = getColor(imgIndex, tileCoord + offsetInTileFlipped);
 
     gl_FragColor = vec4(color.rgb, color.a * uAlpha);
 }
