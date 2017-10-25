@@ -1,0 +1,37 @@
+{ "height":10,
+ "layers":[
+        {
+         "data":[179, 179, 179, 179, 179, 179, 179, 179, 179, 179, 179, 0, 0, 0, 0, 0, 0, 0, 0, 179, 179, 1610612936, 0, 179, 179, 179, 179, 0, 2684354760, 179, 179, 0, 1610612915, 0, 0, 0, 0, 2684354739, 0, 179, 179, 0, 1610612915, 0, 0, 0, 0, 2684354739, 0, 179, 179, 0, 1610612915, 0, 0, 0, 0, 2684354739, 0, 179, 179, 3221225672, 0, 3221225651, 3221225651, 3221225651, 3221225651, 0, 1073742024, 179, 179, 0, 0, 0, 0, 0, 0, 0, 0, 179, 179, 179, 179, 179, 179, 179, 179, 179, 179, 179, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "name":"ground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.0.3",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "columns":20,
+         "firstgid":1,
+         "image":"..\/gfx\/png\/ughTiles.png",
+         "imageheight":160,
+         "imagewidth":320,
+         "margin":0,
+         "name":"ughTiles",
+         "spacing":0,
+         "tilecount":200,
+         "tileheight":16,
+         "tilewidth":16
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":1,
+ "width":10
+}

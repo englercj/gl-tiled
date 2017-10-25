@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+        <title>WebGL Tiled Test</title>
+
+        <style>
+            * {
+                box-sizing: content-box;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+            html, body {
+                margin: 0; padding: 0;
+                width: 100%; height: 100%;
+            }
+            canvas {
+                position: absolute;
+                width: 100%; height: 100%;
+                top: 0; left: 0;
+                margin: 0; padding: 0;
+                cursor: grab;
+                cursor: -webkit-grab;
+                cursor: -moz-grab;
+                cursor: -ms-grab;
+                background: #000;
+            }
+            canvas:active {
+                cursor: grabbing;
+                cursor: -webkit-grabbing;
+                cursor: -moz-grabbing;
+                cursor: -ms-grabbing;
+            }
+            #debug-txt {
+                position: fixed;
+                z-index: 99;
+                top: 0; right: 0;
+            }
+            #switch {
+                position: fixed;
+                z-index: 99;
+                top: 20px; right: 0;
+            }
+            .white { color:#fff; }
+        </style>
+
+        <script src="../dist/gl-tiled.js"></script>
+    </head>
+    <body>
+        <select id="switch"></select>
+        <span id="debug-txt" onclick="this.classList.toggle('white')"></span>
+        <canvas id="view"></canvas>
+
+        <script src="../node_modules/resource-loader/dist/resource-loader.js"></script>
+        <script src="../node_modules/stats.js/build/stats.min.js"></script>
+        <script src="tiled-loader.js"></script>
+        <script src="demo.js"></script>
+    </body>
+</html>
