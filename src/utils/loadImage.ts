@@ -10,8 +10,7 @@ export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent
 
     if (img)
     {
-        if (cb)
-            setTimeout(() => cb(null, img), 1);
+        cb(null, img);
     }
     else
     {

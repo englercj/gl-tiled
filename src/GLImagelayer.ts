@@ -8,19 +8,45 @@ export default class GLImagelayer
 {
     type: ELayerType.Imagelayer = ELayerType.Imagelayer;
 
+    public gl: WebGLRenderingContext;
+
     public scrollScaleX = 1;
     public scrollScaleY = 1;
 
-    public readonly texture: WebGLTexture;
-    public readonly image: CanvasImageSource;
+    public texture: WebGLTexture = null;
+    public image: CanvasImageSource;
 
-    constructor(public gl: WebGLRenderingContext, public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
+    constructor(gl: WebGLRenderingContext, public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
     {
-        this.texture = gl.createTexture();
-        this.image = loadImage(desc.image, assets, (errEvent) =>
+        loadImage(desc.image, assets, (errEvent, img) =>
         {
-            this._setupTexture();
+            this.image = img;
+            this.glInitialize(gl);
         });
+    }
+
+    glInitialize(gl: WebGLRenderingContext)
+    {
+        this.gl = gl;
+        this.texture = this.gl.createTexture();
+        this.upload();
+    }
+
+    glTerminate()
+    {
+        if (this.texture)
+        {
+            this.gl.deleteTexture(this.texture);
+            this.texture = null;
+        }
+
+        this.gl = null;
+    }
+
+    upload()
+    {
+        this.setupTexture();
+        this.uploadData(false);
     }
 
     uploadUniforms(shader: GLProgram)
@@ -28,12 +54,22 @@ export default class GLImagelayer
         this.gl.uniform2f(shader.uniforms.uSize, this.image.width, this.image.height);
     }
 
-    private _setupTexture()
+    uploadData(doBind: boolean = true)
     {
         const gl = this.gl;
 
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
+    }
+
+    setupTexture(doBind: boolean = true)
+    {
+        const gl = this.gl;
+
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         // TODO: Allow user to set filtering
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

@@ -62,11 +62,13 @@ export default class GLTilelayer
 {
     type: ELayerType.Tilelayer = ELayerType.Tilelayer;
 
+    public gl: WebGLRenderingContext;
+
     public scrollScaleX = 1;
     public scrollScaleY = 1;
 
-    public readonly texture: WebGLTexture;
-    public readonly textureData: Uint8Array;
+    public texture: WebGLTexture = null;
+    public textureData: Uint8Array;
 
     private _animations: IAnimationData[] = [];
 
@@ -78,12 +80,11 @@ export default class GLTilelayer
     private _needUniformUpload = true;
     private _repeatTiles = true;
 
-    constructor(public gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
+    constructor(gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
     {
         this._inverseTileCount[0] = 1 / desc.width;
         this._inverseTileCount[1] = 1 / desc.height;
 
-        this.texture = gl.createTexture();
         this.textureData = new Uint8Array(desc.width * desc.height * 4);
 
         this._alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
@@ -94,7 +95,7 @@ export default class GLTilelayer
             throw new Error('Sizes are off!');
 
         this.buildMapTexture(map.tilesets);
-        this.upload();
+        this.glInitialize(gl);
     }
 
     get alpha()
@@ -126,24 +127,22 @@ export default class GLTilelayer
         }
     }
 
-    uploadUniforms(shader: GLProgram, force: boolean = false)
+    glInitialize(gl: WebGLRenderingContext)
     {
-        if (!force && !this._needUniformUpload)
-            return;
+        this.gl = gl;
+        this.texture = this.gl.createTexture();
+        this.upload();
+    }
 
-        const gl = this.gl;
-
-        gl.uniform1f(shader.uniforms.uAlpha, this._alpha);
-        gl.uniform1i(shader.uniforms.uRepeatTiles, this._repeatTiles ? 1 : 0);
-
-        // these are static and will only ever need to be uploaded once.
-        if (force || this._firstUniformUpload)
+    glTerminate()
+    {
+        if (this.texture)
         {
-            this._firstUniformUpload = false;
-            gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
+            this.gl.deleteTexture(this.texture);
+            this.texture = null;
         }
 
-        this._needUniformUpload = false;
+        this.gl = null;
     }
 
     /**
@@ -272,14 +271,30 @@ export default class GLTilelayer
             this.uploadData();
     }
 
-    /**
-     * Uploads the map texture to the GPU.
-     *
-     */
     upload()
     {
         this.setupTexture();
         this.uploadData(false);
+    }
+
+    uploadUniforms(shader: GLProgram, force: boolean = false)
+    {
+        if (!force && !this._needUniformUpload)
+            return;
+
+        const gl = this.gl;
+
+        gl.uniform1f(shader.uniforms.uAlpha, this._alpha);
+        gl.uniform1i(shader.uniforms.uRepeatTiles, this._repeatTiles ? 1 : 0);
+
+        // these are static and will only ever need to be uploaded once.
+        if (force || this._firstUniformUpload)
+        {
+            this._firstUniformUpload = false;
+            gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
+        }
+
+        this._needUniformUpload = false;
     }
 
     uploadData(doBind: boolean = true)

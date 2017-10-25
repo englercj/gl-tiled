@@ -31,14 +31,18 @@ export enum TilesetFlags {
 
 export default class GLTileset
 {
+    public gl: WebGLRenderingContext;
+
     /** The images in this tileset. */
     public images: CanvasImageSource[] = [];
 
     /** The gl textures in this tileset */
     public textures: WebGLTexture[] = [];
 
-    constructor(public gl: WebGLRenderingContext, public desc: ITileset, assets?: IAssets)
+    constructor(gl: WebGLRenderingContext, public desc: ITileset, assets?: IAssets)
     {
+        this.glInitialize(gl);
+
         // load the images
         if (this.desc.image)
         {
@@ -137,21 +141,65 @@ export default class GLTileset
         }
     }
 
-    private _addImage(src: string, assets?: IAssets)
+    glInitialize(gl: WebGLRenderingContext)
     {
-        const tex = this.gl.createTexture();
-        const img = loadImage(src, assets, (errEvent) =>
-        {
-            this._setupTexture(img, tex);
-        });
+        this.gl = gl;
 
-        this.images.push(img);
-        this.textures.push(tex);
+        for (let i = 0; i < this.textures.length; ++i)
+        {
+            const tex = this.textures[i];
+
+            // If there is already a texture then that means the image finished
+            // loading at some point, so we need to recreate the texture. If there
+            // isn't a texture here, then the loading callback will hit at some point
+            // and create the texture for us.
+            if (tex)
+            {
+                this._createTexture(i);
+            }
+        }
     }
 
-    private _setupTexture(img: CanvasImageSource, tex: WebGLTexture)
+    glTerminate()
     {
         const gl = this.gl;
+
+        for (let i = 0; i < this.textures.length; ++i)
+        {
+            const tex = this.textures[i];
+
+            if (tex)
+            {
+                gl.deleteTexture(tex);
+                this.textures[i] = null;
+            }
+        }
+
+        this.gl = null;
+    }
+
+    private _addImage(src: string, assets?: IAssets)
+    {
+        const imgIndex = this.images.length;
+
+        this.textures.push(null);
+        this.images.push(null);
+        loadImage(src, assets, (errEvent, img) =>
+        {
+            // in case glTerminate was called before loading finished
+            if (!this.gl)
+                return;
+
+            this.images[imgIndex] = img;
+            this._createTexture(imgIndex);
+        });
+    }
+
+    private _createTexture(imgIndex: number)
+    {
+        const gl = this.gl;
+        const img = this.images[imgIndex];
+        const tex = this.textures[imgIndex] = gl.createTexture();
 
         gl.bindTexture(gl.TEXTURE_2D, tex);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);

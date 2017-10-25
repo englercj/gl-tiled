@@ -21,6 +21,8 @@ export type TGLLayer = (GLTilelayer | GLImagelayer);
 
 interface IShaderCache
 {
+    [key: string]: GLProgram;
+
     tilelayer: GLProgram;
     imagelayer: GLProgram;
 }
@@ -31,6 +33,9 @@ export default class GLTilemap
         aPosition: 0,
         aTexture: 1,
     };
+
+    public gl: WebGLRenderingContext;
+    public shaders: IShaderCache;
 
     private _layers: TGLLayer[] = [];
     private _tilesets: GLTileset[] = [];
@@ -55,27 +60,21 @@ export default class GLTilemap
 
     private _firstTilelayerUniformUpload = true;
     private _tileScale = 1;
+    private _totalTilesetImages = 0;
 
     private _tilesetIndices: Int32Array;
     private _tilesetTileSizeBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
-    public shaders: IShaderCache;
-
-    constructor(public gl: WebGLRenderingContext, public desc: ITilemap, assets?: IAssets)
+    constructor(gl: WebGLRenderingContext, public desc: ITilemap, assets?: IAssets)
     {
         this._inverseLayerTileSize[0] = 1 / desc.tilewidth;
         this._inverseLayerTileSize[1] = 1 / desc.tileheight;
 
-        this._quadVertBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this._quadVertBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this._quadVerts, gl.STATIC_DRAW);
-
-        let totalTilesetImages = 0;
         for (let i = 0; i < desc.tilesets.length; ++i)
         {
             const tileset = new GLTileset(gl, desc.tilesets[i], assets);
-            totalTilesetImages += tileset.images.length;
+            this._totalTilesetImages += tileset.images.length;
             this._tilesets.push(tileset);
         }
 
@@ -91,12 +90,12 @@ export default class GLTilemap
             }
         }
 
-        this._tilesetIndices = new Int32Array(totalTilesetImages);
-        this._tilesetTileSizeBuffer = new Float32Array(totalTilesetImages * 2);
-        this._inverseTilesetTextureSizeBuffer = new Float32Array(totalTilesetImages * 2);
-        this._buildBuffers();
+        this._tilesetIndices = new Int32Array(this._totalTilesetImages);
+        this._tilesetTileSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
+        this._inverseTilesetTextureSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
+        this._buildBufferData();
 
-        this._createShaders(totalTilesetImages);
+        this.glInitialize(gl);
     }
 
     get layers(): IReadonlyArray<TGLLayer>
@@ -142,6 +141,20 @@ export default class GLTilemap
         }
     }
 
+    get tileScale()
+    {
+        return this._tileScale;
+    }
+
+    set tileScale(scale: number)
+    {
+        if (this._tileScale != scale)
+        {
+            this._tileScale = scale;
+            this._updateViewportSize();
+        }
+    }
+
     resizeViewport(width: number, height: number)
     {
         if (this._viewportSize[0] != width || this._viewportSize[1] != height)
@@ -152,15 +165,53 @@ export default class GLTilemap
         }
     }
 
-    get tileScale() { return this._tileScale; }
-
-    set tileScale(scale: number)
+    glInitialize(gl: WebGLRenderingContext)
     {
-        if (this._tileScale != scale)
+        this.gl = gl;
+
+        this._quadVertBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._quadVertBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this._quadVerts, gl.STATIC_DRAW);
+
+        this._createShaders();
+    }
+
+    glTerminate()
+    {
+        const gl = this.gl;
+
+        // destroy layers
+        for (let i = 0; i < this._layers.length; ++i)
         {
-            this._tileScale = scale;
-            this._updateViewportSize();
+            this._layers[i].glTerminate();
         }
+
+        // destroy tilesets
+        for (let i = 0; i < this._tilesets.length; ++i)
+        {
+            this._tilesets[i].glTerminate();
+        }
+
+        // destroy buffers
+        if (this._quadVertBuffer)
+        {
+            gl.deleteBuffer(this._quadVertBuffer);
+            this._quadVertBuffer = null;
+        }
+
+        // destroy shaders
+        for (const k in this.shaders)
+        {
+            const shader = this.shaders[k];
+
+            if (shader)
+            {
+                gl.deleteProgram(shader.program);
+                this.shaders[k] = null;
+            }
+        }
+
+        this.gl = null;
     }
 
     /**
@@ -317,7 +368,7 @@ export default class GLTilemap
         gl.uniform1f(imageShader.uniforms.uInverseTileScale, 1.0 / this._tileScale);
     }
 
-    private _buildBuffers()
+    private _buildBufferData()
     {
         // Index buffer
         for (let i = 0; i < this._tilesetIndices.length; ++i)
@@ -341,11 +392,11 @@ export default class GLTilemap
         }
     }
 
-    private _createShaders(totalTilesetImages: number)
+    private _createShaders()
     {
         const tilelayerFragShader = tilelayerFS
             .replace('#pragma define(NUM_TILESETS)', `#define NUM_TILESETS ${this._tilesets.length}`)
-            .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${totalTilesetImages}`);
+            .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${this._totalTilesetImages}`);
 
         this.shaders = {
             tilelayer: new GLProgram(this.gl, tilelayerVS, tilelayerFragShader, GLTilemap._attribIndices),
