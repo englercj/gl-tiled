@@ -39,10 +39,8 @@ export default class GLTileset
     /** The gl textures in this tileset */
     public textures: WebGLTexture[] = [];
 
-    constructor(gl: WebGLRenderingContext, public desc: ITileset, assets?: IAssets)
+    constructor(public desc: ITileset, assets?: IAssets)
     {
-        this.glInitialize(gl);
-
         // load the images
         if (this.desc.image)
         {
@@ -145,15 +143,13 @@ export default class GLTileset
     {
         this.gl = gl;
 
-        for (let i = 0; i < this.textures.length; ++i)
+        for (let i = 0; i < this.images.length; ++i)
         {
-            const tex = this.textures[i];
-
-            // If there is already a texture then that means the image finished
+            // If there is already an image then that means the image finished
             // loading at some point, so we need to recreate the texture. If there
-            // isn't a texture here, then the loading callback will hit at some point
-            // and create the texture for us.
-            if (tex)
+            // isn't an image here, then the loading callback will hit at some
+            // point and create the texture for us there.
+            if (this.images[i])
             {
                 this._createTexture(i);
             }
@@ -184,12 +180,9 @@ export default class GLTileset
 
         this.textures.push(null);
         this.images.push(null);
+
         loadImage(src, assets, (errEvent, img) =>
         {
-            // in case glTerminate was called before loading finished
-            if (!this.gl)
-                return;
-
             this.images[imgIndex] = img;
             this._createTexture(imgIndex);
         });
@@ -197,6 +190,9 @@ export default class GLTileset
 
     private _createTexture(imgIndex: number)
     {
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
         const img = this.images[imgIndex];
         const tex = this.textures[imgIndex] = gl.createTexture();

@@ -16,19 +16,19 @@ export default class GLImagelayer
     public texture: WebGLTexture = null;
     public image: CanvasImageSource;
 
-    constructor(gl: WebGLRenderingContext, public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
+    constructor(public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
     {
         loadImage(desc.image, assets, (errEvent, img) =>
         {
             this.image = img;
-            this.glInitialize(gl);
+            this.upload();
         });
     }
 
     glInitialize(gl: WebGLRenderingContext)
     {
         this.gl = gl;
-        this.texture = this.gl.createTexture();
+        this.texture = gl.createTexture();
         this.upload();
     }
 
@@ -45,6 +45,9 @@ export default class GLImagelayer
 
     upload()
     {
+        if (!this.gl || !this.image)
+            return;
+
         this.setupTexture();
         this.uploadData(false);
     }

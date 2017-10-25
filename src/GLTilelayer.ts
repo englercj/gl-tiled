@@ -80,7 +80,7 @@ export default class GLTilelayer
     private _needUniformUpload = true;
     private _repeatTiles = true;
 
-    constructor(gl: WebGLRenderingContext, public desc: ITilelayer, map: GLTilemap)
+    constructor(public desc: ITilelayer, map: GLTilemap)
     {
         this._inverseTileCount[0] = 1 / desc.width;
         this._inverseTileCount[1] = 1 / desc.height;
@@ -95,7 +95,6 @@ export default class GLTilelayer
             throw new Error('Sizes are off!');
 
         this.buildMapTexture(map.tilesets);
-        this.glInitialize(gl);
     }
 
     get alpha()
@@ -130,7 +129,9 @@ export default class GLTilelayer
     glInitialize(gl: WebGLRenderingContext)
     {
         this.gl = gl;
-        this.texture = this.gl.createTexture();
+        this.texture = gl.createTexture();
+        this._firstUniformUpload = true;
+        this._needUniformUpload = true;
         this.upload();
     }
 

@@ -73,7 +73,7 @@ export default class GLTilemap
 
         for (let i = 0; i < desc.tilesets.length; ++i)
         {
-            const tileset = new GLTileset(gl, desc.tilesets[i], assets);
+            const tileset = new GLTileset(desc.tilesets[i], assets);
             this._totalTilesetImages += tileset.images.length;
             this._tilesets.push(tileset);
         }
@@ -84,9 +84,9 @@ export default class GLTilemap
 
             switch (l.type)
             {
-                case 'tilelayer': this._layers.push(new GLTilelayer(gl, l, this)); break;
+                case 'tilelayer': this._layers.push(new GLTilelayer(l, this)); break;
                 // case 'objectlayer': this._layers.push(new GLTilelayer(gl, l, this)); break;
-                case 'imagelayer': this._layers.push(new GLImagelayer(gl, l, this, assets)); break;
+                case 'imagelayer': this._layers.push(new GLImagelayer(l, this, assets)); break;
             }
         }
 
@@ -168,12 +168,30 @@ export default class GLTilemap
     glInitialize(gl: WebGLRenderingContext)
     {
         this.gl = gl;
+        this._firstTilelayerUniformUpload = true;
 
+        // initialize layers
+        for (let i = 0; i < this._layers.length; ++i)
+        {
+            this._layers[i].glInitialize(gl);
+        }
+
+        // initialize tilesets
+        for (let i = 0; i < this._tilesets.length; ++i)
+        {
+            this._tilesets[i].glInitialize(gl);
+        }
+
+        // create buffers
         this._quadVertBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this._quadVertBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this._quadVerts, gl.STATIC_DRAW);
 
+        // create shaders
         this._createShaders();
+
+        // update viewport uniforms
+        this._updateViewportSize();
     }
 
     glTerminate()
