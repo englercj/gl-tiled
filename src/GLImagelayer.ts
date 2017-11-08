@@ -54,6 +54,9 @@ export default class GLImagelayer
 
     uploadUniforms(shader: GLProgram)
     {
+        if (!this.gl || !this.image)
+            return;
+
         this.gl.uniform2f(shader.uniforms.uSize, this.image.width, this.image.height);
     }
 
