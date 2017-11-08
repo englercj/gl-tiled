@@ -2,6 +2,8 @@
 
 A WebGL renderer for the [Tiled Editor](http://mapeditor.org).
 
+Tested with Tiled Map Editor v1.0.3.
+
 ## TODO:
 
 - Objectlayer support
