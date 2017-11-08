@@ -49,6 +49,19 @@
                 }
             }
 
+            for (let i = 0; i < resource.data.layers.length; ++i)
+            {
+                const layer = resource.data.layers[i];
+
+                if (layer.image)
+                {
+                    if (!this.resources[layer.image])
+                    {
+                        this.add(layer.image, urlDir + layer.image, loadOptions);
+                    }
+                }
+            }
+
             next();
         }
     }
