@@ -86,20 +86,36 @@ function onLoad()
     document.body.appendChild(stats.dom);
 
     var mapQueryParam = getParameterByName('map');
+    var lastOptgroup = null;
 
     // TODO: Create options in switchElm select.
     for (var i = 0; i < resourceUrls.length; ++i)
     {
         var url = resourceUrls[i];
-        var key = url.substring(url.lastIndexOf('/') + 1);
+        var urlParts = url.split('/');
+        var folder = urlParts[1];
+        var filename = urlParts[urlParts.length - 1];
+
+        if (!lastOptgroup || lastOptgroup.label !== folder)
+        {
+            if (lastOptgroup)
+                switchElm.appendChild(lastOptgroup);
+
+            lastOptgroup = document.createElement('optgroup');
+            lastOptgroup.label = folder;
+        }
+
         var opt = document.createElement('option');
 
         opt.value = url;
-        opt.textContent = key;
+        opt.textContent = filename;
         opt.selected = url === mapQueryParam;
 
-        switchElm.appendChild(opt);
+        lastOptgroup.appendChild(opt);
     }
+
+    if (lastOptgroup)
+        switchElm.appendChild(lastOptgroup);
 
     window.addEventListener('resize', onResize);
     switchElm.addEventListener('change', onMapChange, false);
