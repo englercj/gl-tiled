@@ -1,6 +1,7 @@
 import { vec2, mat3 } from 'gl-matrix';
 import GLProgram from './utils/GLProgram';
 import ITilemap from './tiled/Tilemap';
+import ITileset, { ITile } from './tiled/Tileset';
 import GLTileset from './GLTileset';
 import GLTilelayer from './GLTilelayer';
 import GLImagelayer from './GLImagelayer';
@@ -405,10 +406,14 @@ export default class GLTilemap
             {
                 this._tilesetTileSizeBuffer[(imgIndex * 2)] = tileset.desc.tilewidth;
                 this._tilesetTileSizeBuffer[(imgIndex * 2) + 1] = tileset.desc.tileheight;
+
                 this._tilesetTileOffsetBuffer[(imgIndex * 2)] = tileset.desc.spacing;
                 this._tilesetTileOffsetBuffer[(imgIndex * 2) + 1] = tileset.desc.margin;
-                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2)] = 1 / tileset.desc.imagewidth;
-                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / tileset.desc.imageheight;
+
+                const imgDesc: (ITile | ITileset) = tileset.desc.tiles && tileset.desc.tiles[s] ? tileset.desc.tiles[s] : tileset.desc;
+
+                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2)] = 1 / imgDesc.imagewidth;
+                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / imgDesc.imageheight;
 
                 imgIndex++;
             }
