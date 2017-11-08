@@ -12,6 +12,7 @@ uniform sampler2D uLayer;
 uniform sampler2D uTilesets[NUM_TILESET_IMAGES];
 
 uniform vec2 uTilesetTileSize[NUM_TILESET_IMAGES];
+uniform vec2 uTilesetTileOffset[NUM_TILESET_IMAGES];
 uniform vec2 uInverseTilesetTextureSize[NUM_TILESET_IMAGES];
 uniform float uAlpha;
 uniform int uRepeatTiles;
@@ -55,6 +56,15 @@ vec2 getTilesetTileSize(int index)
     return vec2(0.0, 0.0);
 }
 
+vec2 getTilesetTileOffset(int index)
+{
+    for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
+        if (i == index)
+            return uTilesetTileOffset[i];
+
+    return vec2(0.0, 0.0);
+}
+
 vec4 getColor(int index, vec2 coord)
 {
     for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
@@ -85,10 +95,16 @@ void main()
 
     int imgIndex = int(floor(tile.z * 255.0));
     vec2 tileSize = getTilesetTileSize(imgIndex);
+    vec2 tileOffset = getTilesetTileOffset(imgIndex);
 
     vec2 flipVec = vec2(hasFlag(flipFlags, Flag_FlippedHorizontal), hasFlag(flipFlags, Flag_FlippedVertical));
 
-    vec2 tileCoord = floor(tile.xy * 255.0) * tileSize;
+    vec2 tileCoord = floor(tile.xy * 255.0);
+
+    // tileOffset.x is 'spacing', tileOffset.y is 'margin'
+    tileCoord.x = (tileCoord.x * tileSize.x) + (tileCoord.x * tileOffset.x) + tileOffset.y;
+    tileCoord.y = (tileCoord.y * tileSize.y) + (tileCoord.y * tileOffset.x) + tileOffset.y;
+
     vec2 offsetInTile = mod(vPixelCoord, tileSize);
     vec2 offsetInTileFlipped = abs((tileSize * flipVec) - offsetInTile);
 

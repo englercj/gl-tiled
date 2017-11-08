@@ -64,6 +64,7 @@ export default class GLTilemap
 
     private _tilesetIndices: Int32Array;
     private _tilesetTileSizeBuffer: Float32Array;
+    private _tilesetTileOffsetBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
     constructor(gl: WebGLRenderingContext, public desc: ITilemap, assets?: IAssets)
@@ -92,6 +93,7 @@ export default class GLTilemap
 
         this._tilesetIndices = new Int32Array(this._totalTilesetImages);
         this._tilesetTileSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
+        this._tilesetTileOffsetBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._inverseTilesetTextureSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._buildBufferData();
 
@@ -352,6 +354,7 @@ export default class GLTilemap
                     gl.uniform2fv(tileShader.uniforms.uInverseLayerTileSize, this._inverseLayerTileSize);
                     gl.uniform1iv(tileShader.uniforms.uTilesets, this._tilesetIndices);
                     gl.uniform2fv(tileShader.uniforms.uTilesetTileSize, this._tilesetTileSizeBuffer);
+                    gl.uniform2fv(tileShader.uniforms.uTilesetTileOffset, this._tilesetTileOffsetBuffer);
                     gl.uniform2fv(tileShader.uniforms.uInverseTilesetTextureSize, this._inverseTilesetTextureSizeBuffer);
                 }
 
@@ -402,6 +405,8 @@ export default class GLTilemap
             {
                 this._tilesetTileSizeBuffer[(imgIndex * 2)] = tileset.desc.tilewidth;
                 this._tilesetTileSizeBuffer[(imgIndex * 2) + 1] = tileset.desc.tileheight;
+                this._tilesetTileOffsetBuffer[(imgIndex * 2)] = tileset.desc.spacing;
+                this._tilesetTileOffsetBuffer[(imgIndex * 2) + 1] = tileset.desc.margin;
                 this._inverseTilesetTextureSizeBuffer[(imgIndex * 2)] = 1 / tileset.desc.imagewidth;
                 this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / tileset.desc.imageheight;
 
