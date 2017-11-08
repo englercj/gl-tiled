@@ -7,6 +7,7 @@ var resourceUrls = [
 
     // Orthogonal test maps
     'maps/ortho/basicRotate.json',
+    'maps/ortho/formosa.json',
     // 'maps/ortho/formosa_gzip.json',
     // 'maps/ortho/formosa_zlib.json',
     'maps/ortho/Ortho_1_16__16_large.json',
