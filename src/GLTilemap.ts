@@ -1,4 +1,5 @@
 import { vec2, mat3 } from 'gl-matrix';
+import { parseColorStr } from './utils/parseColorStr';
 import GLProgram from './utils/GLProgram';
 import ITilemap from './tiled/Tilemap';
 import ITileset, { ITile } from './tiled/Tileset';
@@ -97,26 +98,7 @@ export default class GLTilemap
 
         // parse the background color
         this._backgroundColor = new Float32Array(4);
-
-        const colorStr = desc.backgroundcolor;
-
-        if (colorStr)
-        {
-            if (colorStr.length === 9)
-            {
-                this._backgroundColor[0] = parseInt(colorStr.substr(3, 2), 16) / 255;
-                this._backgroundColor[1] = parseInt(colorStr.substr(5, 2), 16) / 255;
-                this._backgroundColor[2] = parseInt(colorStr.substr(7, 2), 16) / 255;
-                this._backgroundColor[3] = parseInt(colorStr.substr(1, 2), 16) / 255;
-            }
-            else if (colorStr.length === 7)
-            {
-                this._backgroundColor[0] = parseInt(colorStr.substr(1, 2), 16) / 255;
-                this._backgroundColor[1] = parseInt(colorStr.substr(3, 2), 16) / 255;
-                this._backgroundColor[2] = parseInt(colorStr.substr(5, 2), 16) / 255;
-                this._backgroundColor[3] = 1.0;
-            }
-        }
+        parseColorStr(desc.backgroundcolor, this._backgroundColor);
 
         // setup the different buffers
         this._tilesetIndices = new Int32Array(this._totalTilesetImages);

@@ -1,6 +1,7 @@
 import { vec2, mat3 } from 'gl-matrix';
 import { IImagelayer } from './tiled/Tilelayer';
 import { loadImage } from './utils/loadImage';
+import { parseColorStr } from './utils/parseColorStr';
 import GLTilemap, { ELayerType } from './GLTilemap';
 import GLProgram from './utils/GLProgram';
 
@@ -16,8 +17,18 @@ export default class GLImagelayer
     public texture: WebGLTexture = null;
     public image: CanvasImageSource;
 
+    public alpha: number;
+
+    private _transparentColor: Float32Array;
+
     constructor(public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
     {
+        this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
+
+        // parse the transparent color
+        this._transparentColor = new Float32Array(4);
+        parseColorStr(desc.transparentcolor, this._transparentColor);
+
         loadImage(desc.image, assets, (errEvent, img) =>
         {
             this.image = img;
@@ -57,7 +68,11 @@ export default class GLImagelayer
         if (!this.gl || !this.image)
             return;
 
-        this.gl.uniform2f(shader.uniforms.uSize, this.image.width, this.image.height);
+        const gl = this.gl;
+
+        gl.uniform1f(shader.uniforms.uAlpha, this.alpha);
+        gl.uniform4fv(shader.uniforms.uTransparentColor, this._transparentColor);
+        gl.uniform2f(shader.uniforms.uSize, this.image.width, this.image.height);
     }
 
     uploadData(doBind: boolean = true)

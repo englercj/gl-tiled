@@ -295,7 +295,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -303,6 +303,16 @@
          "image":"..\/gfx\/png\/formosa\/moon_overlay.png",
          "name":"Image Layer 1",
          "opacity":1,
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "image":"..\/gfx\/png\/blue_x10.png",
+         "name":"Image Layer 2",
+         "opacity":1,
+         "transparentcolor":"#1b9fd7",
          "type":"imagelayer",
          "visible":true,
          "x":0,
