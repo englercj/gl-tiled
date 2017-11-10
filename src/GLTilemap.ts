@@ -6,6 +6,8 @@ import GLTileset from './GLTileset';
 import GLTilelayer from './GLTilelayer';
 import GLImagelayer from './GLImagelayer';
 
+import backgroundVS from './shaders/background.vert';
+import backgroundFS from './shaders/background.frag';
 import tilelayerVS from './shaders/tilelayer.vert';
 import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
@@ -63,6 +65,7 @@ export default class GLTilemap
     private _tileScale = 1;
     private _totalTilesetImages = 0;
 
+    private _backgroundColor: Float32Array;
     private _tilesetIndices: Int32Array;
     private _tilesetTileSizeBuffer: Float32Array;
     private _tilesetTileOffsetBuffer: Float32Array;
@@ -92,6 +95,30 @@ export default class GLTilemap
             }
         }
 
+        // parse the background color
+        this._backgroundColor = new Float32Array(4);
+
+        const colorStr = desc.backgroundcolor;
+
+        if (colorStr)
+        {
+            if (colorStr.length === 9)
+            {
+                this._backgroundColor[0] = parseInt(colorStr.substr(3, 2), 16) / 255;
+                this._backgroundColor[1] = parseInt(colorStr.substr(5, 2), 16) / 255;
+                this._backgroundColor[2] = parseInt(colorStr.substr(7, 2), 16) / 255;
+                this._backgroundColor[3] = parseInt(colorStr.substr(1, 2), 16) / 255;
+            }
+            else if (colorStr.length === 7)
+            {
+                this._backgroundColor[0] = parseInt(colorStr.substr(1, 2), 16) / 255;
+                this._backgroundColor[1] = parseInt(colorStr.substr(3, 2), 16) / 255;
+                this._backgroundColor[2] = parseInt(colorStr.substr(5, 2), 16) / 255;
+                this._backgroundColor[3] = 1.0;
+            }
+        }
+
+        // setup the different buffers
         this._tilesetIndices = new Int32Array(this._totalTilesetImages);
         this._tilesetTileSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._tilesetTileOffsetBuffer = new Float32Array(this._totalTilesetImages * 2);
@@ -272,6 +299,16 @@ export default class GLTilemap
         gl.vertexAttribPointer(GLTilemap._attribIndices.aPosition, 2, gl.FLOAT, false, 16, 0);
         gl.vertexAttribPointer(GLTilemap._attribIndices.aTexture, 2, gl.FLOAT, false, 16, 8);
 
+        // Draw background
+        if (this._backgroundColor[3] > 0)
+        {
+            const bgShader = this.shaders.background;
+
+            gl.useProgram(bgShader.program);
+            gl.uniform4fv(bgShader.uniforms.uColor, this._backgroundColor);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
         // Bind tileset textures
         let imgIndex = 0;
         for (let i = 0; i < this._tilesets.length; ++i)
@@ -427,6 +464,7 @@ export default class GLTilemap
             .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${this._totalTilesetImages}`);
 
         this.shaders = {
+            background: new GLProgram(this.gl, backgroundVS, backgroundFS, GLTilemap._attribIndices),
             tilelayer: new GLProgram(this.gl, tilelayerVS, tilelayerFragShader, GLTilemap._attribIndices),
             imagelayer: new GLProgram(this.gl, imagelayerVS, imagelayerFS, GLTilemap._attribIndices),
         };

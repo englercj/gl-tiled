@@ -13,5 +13,4 @@ Tested with Tiled Map Editor v1.0.3.
  * Possibility: Render at scale 1 to a framebuffer, scale the frambuffer linearly
 - Imagelayer transparent color
 - Map tile render order
-- Map background color
 - Isometric, Isometric (Staggered), Hexagonal (Staggered)
