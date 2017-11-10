@@ -191,6 +191,9 @@ function onMapChange()
     tileMap.resizeViewport(canvasElm.width, canvasElm.height);
 
     history.pushState(null, '', '?map=' + encodeURIComponent(mapUrl));
+
+    // reset offset
+    offset[0] = offset[1] = 0;
 }
 
 function zoom(zoomDelta)
