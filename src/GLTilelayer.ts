@@ -70,14 +70,13 @@ export default class GLTilelayer
     public texture: WebGLTexture = null;
     public textureData: Uint8Array;
 
+    public alpha: number;
+
     private _animations: IAnimationData[] = [];
 
     private _inverseTileCount = vec2.create();
 
-    private _alpha: number;
 
-    private _firstUniformUpload = true;
-    private _needUniformUpload = true;
     private _repeatTiles = true;
 
     constructor(public desc: ITilelayer, map: GLTilemap)
@@ -87,7 +86,7 @@ export default class GLTilelayer
 
         this.textureData = new Uint8Array(desc.width * desc.height * 4);
 
-        this._alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
+        this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
 
         // If this isn't true then we probably did something wrong or got bad data...
         // This has caught me putting in base64 data instead of array data more than once!
@@ -95,20 +94,6 @@ export default class GLTilelayer
             throw new Error('Sizes are off!');
 
         this.buildMapTexture(map.tilesets);
-    }
-
-    get alpha()
-    {
-        return this._alpha;
-    }
-
-    set alpha(v)
-    {
-        if (v !== this._alpha)
-        {
-            this._needUniformUpload = true;
-            this._alpha = v;
-        }
     }
 
     get repeatTiles()
@@ -120,7 +105,6 @@ export default class GLTilelayer
     {
         if (v !== this._repeatTiles)
         {
-            this._needUniformUpload = true;
             this._repeatTiles = v;
             this.setupTexture(); // delay until next draw?
         }
@@ -130,8 +114,6 @@ export default class GLTilelayer
     {
         this.gl = gl;
         this.texture = gl.createTexture();
-        this._firstUniformUpload = true;
-        this._needUniformUpload = true;
         this.upload();
     }
 
@@ -278,24 +260,13 @@ export default class GLTilelayer
         this.uploadData(false);
     }
 
-    uploadUniforms(shader: GLProgram, force: boolean = false)
+    uploadUniforms(shader: GLProgram)
     {
-        if (!force && !this._needUniformUpload)
-            return;
-
         const gl = this.gl;
 
-        gl.uniform1f(shader.uniforms.uAlpha, this._alpha);
+        gl.uniform1f(shader.uniforms.uAlpha, this.alpha);
         gl.uniform1i(shader.uniforms.uRepeatTiles, this._repeatTiles ? 1 : 0);
-
-        // these are static and will only ever need to be uploaded once.
-        if (force || this._firstUniformUpload)
-        {
-            this._firstUniformUpload = false;
-            gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
-        }
-
-        this._needUniformUpload = false;
+        gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
     }
 
     uploadData(doBind: boolean = true)
