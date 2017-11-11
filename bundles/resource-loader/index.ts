@@ -1,7 +1,9 @@
+declare var Loader: any;
+
 (function (exports) {
     exports.tiledMiddlewareFactory = function ()
     {
-        return function tiledMiddleware(resource, next)
+        return function tiledMiddleware(resource: any, next: any)
         {
             if (!resource.data
                 || resource.type !== Loader.Resource.TYPE.JSON

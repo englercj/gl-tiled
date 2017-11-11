@@ -11,6 +11,7 @@
     "include": [
         "../typings/**/*",
         "typings/**/*",
-        "src/**/*"
+        "src/**/*",
+        "bundles/**/*"
     ]
 }
