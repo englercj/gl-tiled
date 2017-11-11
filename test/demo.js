@@ -31,7 +31,7 @@ var stats = new Stats();
 var loader = new Loader();
 var maps = {};
 
-loader.use(tiledMiddlewareFactory());
+loader.use(glTiled['resource-loader'].tiledMiddlewareFactory());
 loader.add(resourceUrls);
 loader.load(onLoad);
 

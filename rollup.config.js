@@ -44,7 +44,6 @@ const plugins = [
 
 const output = {
     format: 'umd',
-    name: 'glTiled',
     sourcemap: false
 };
 
@@ -62,12 +61,13 @@ for (let i = 0; i < dirs.length; ++i)
     {
         const ext = dirname === 'gl-tiled' ? '' : `.${dirname}`;
         const file = path.join('dist', `gl-tiled${ext}.js`);
+        const name = `glTiled${ext}`;
 
         bundles.push({
             input: path.join('bundles', dirname, 'index.ts'),
             banner,
             plugins,
-            output: Object.assign({ file }, output),
+            output: Object.assign({ file, name }, output),
         });
     }
 }
