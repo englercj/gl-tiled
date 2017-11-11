@@ -39,12 +39,14 @@
   },
   "devDependencies": {
     "@types/gl-matrix": "^2.3.0",
+    "resource-loader": "^2.0.9",
     "rollup": "^0.50.0",
     "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-preprocess": "0.0.4",
     "rollup-plugin-string": "^2.0.2",
     "rollup-plugin-typescript2": "^0.7.0",
+    "stats.js": "^0.17.0",
     "typescript": "2.5.3"
   }
 }
