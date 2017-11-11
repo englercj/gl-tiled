@@ -45,6 +45,6 @@
     "rollup-plugin-preprocess": "0.0.4",
     "rollup-plugin-string": "^2.0.2",
     "rollup-plugin-typescript2": "^0.7.0",
-    "typescript": "^2.6.1"
+    "typescript": "2.5.3"
   }
 }

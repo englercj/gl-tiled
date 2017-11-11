@@ -6,10 +6,7 @@
         "sourceMap": false,
         "declaration": false,
         "noImplicitAny": true,
-        "removeComments": true,
-        "inlineSourceMap": false,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "removeComments": true
     },
     "include": [
         "../typings/**/*",
