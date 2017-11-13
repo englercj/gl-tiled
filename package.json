@@ -19,8 +19,8 @@
     "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src",
     "prepublish": "npm run build",
     "postpublish": "npm run deploy",
-    "predeploy": "rimraf ./docs && npm run docs",
-    "deploy": "gh-pages -d docs"
+    "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll",
+    "deploy": "gh-pages --dotfiles -d docs"
   },
   "keywords": [
     "gl",
