@@ -16,10 +16,10 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
-    "docs": "typedoc --options typedoc.json ./src",
+    "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src",
     "prepublish": "npm run build",
     "postpublish": "npm run deploy",
-    "predeploy": "rm -rf ./docs && npm run docs",
+    "predeploy": "rimraf ./docs && npm run docs",
     "deploy": "gh-pages -d docs"
   },
   "keywords": [
@@ -45,7 +45,9 @@
   },
   "devDependencies": {
     "@types/gl-matrix": "^2.4.0",
+    "gh-pages": "^1.0.0",
     "resource-loader": "^2.0.9",
+    "rimraf": "^2.6.2",
     "rollup": "^0.50.1",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.0",
