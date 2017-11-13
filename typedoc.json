@@ -1,0 +1,9 @@
+{
+    "includeDeclarations": true,
+    "excludeExternals": true,
+    "excludePrivate": true,
+    "mode": "modules",
+    "module": "commonjs",
+    "target": "ES5",
+    "out": "docs"
+}

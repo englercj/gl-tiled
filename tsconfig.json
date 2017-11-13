@@ -9,8 +9,6 @@
         "removeComments": true
     },
     "include": [
-        "../typings/**/*",
-        "typings/**/*",
         "src/**/*",
         "bundles/**/*"
     ]

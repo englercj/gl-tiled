@@ -45,9 +45,6 @@ var gl = null;
 var resizeTimeout = 0;
 var tileMap = null;
 
-var halfWidth = 0;
-var halfHeight = 0;
-
 var zoomLevels = [0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8];
 var zoomIndex = 4;
 var zooming = false;
@@ -226,9 +223,6 @@ function doResize()
 {
     canvasElm.width = canvasElm.offsetWidth;
     canvasElm.height = canvasElm.offsetHeight;
-
-    halfWidth = canvasElm.width / 2.0;
-    halfHeight = canvasElm.height / 2.0;
 
     gl.viewport(0, 0, canvasElm.width, canvasElm.height);
 
