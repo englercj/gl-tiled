@@ -14,9 +14,13 @@
     "url": "https://github.com/englercj/gl-tiled/issues"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
-    "docs": "typedoc --options typedoc.json ./src"
+    "docs": "typedoc --options typedoc.json ./src",
+    "prepublish": "npm run build",
+    "postpublish": "npm run deploy",
+    "predeploy": "rm -rf ./docs && npm run docs",
+    "deploy": "gh-pages -d docs"
   },
   "keywords": [
     "gl",
@@ -36,6 +40,7 @@
     "package.json"
   ],
   "dependencies": {
+    "cross-env": "^5.1.1",
     "gl-matrix": "^2.4.0"
   },
   "devDependencies": {
