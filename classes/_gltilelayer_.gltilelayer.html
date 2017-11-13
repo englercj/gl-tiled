@@ -1,0 +1,706 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>GLTilelayer | gl-tiled</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">gl-tiled</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_gltilelayer_.html">&quot;GLTilelayer&quot;</a>
+				</li>
+				<li>
+					<a href="_gltilelayer_.gltilelayer.html">GLTilelayer</a>
+				</li>
+			</ul>
+			<h1>Class GLTilelayer</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Due to the storage format used tileset images are limited to
+							256 x 256 tiles, and there can only be up to 256 tilesets. Similarly
+						a multi-image tileset can only have up-to 256 images.</p>
+					</div>
+					<p>Since a tileset sheet with 256x256 tiles at 16x16 tile size is 4096x4096
+						pixels I think this restriciton is probably OK. Additonally if you actually
+						approach the 256 image/tileset limit it will likely be a GPU bandwidth issue
+					long before it is an issue with our storage format here.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">GLTilelayer</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_gltilelayer_.gltilelayer.html#_animations" class="tsd-kind-icon">_animations</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_gltilelayer_.gltilelayer.html#_inversetilecount" class="tsd-kind-icon">_inverse<wbr>Tile<wbr>Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_gltilelayer_.gltilelayer.html#_repeattiles" class="tsd-kind-icon">_repeat<wbr>Tiles</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#alpha" class="tsd-kind-icon">alpha</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#desc" class="tsd-kind-icon">desc</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#gl" class="tsd-kind-icon">gl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#scrollscalex" class="tsd-kind-icon">scroll<wbr>ScaleX</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#scrollscaley" class="tsd-kind-icon">scroll<wbr>ScaleY</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#texture" class="tsd-kind-icon">texture</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#texturedata" class="tsd-kind-icon">texture<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#type" class="tsd-kind-icon">type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#repeattiles" class="tsd-kind-icon">repeat<wbr>Tiles</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#buildmaptexture" class="tsd-kind-icon">build<wbr>Map<wbr>Texture</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#glinitialize" class="tsd-kind-icon">gl<wbr>Initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#glterminate" class="tsd-kind-icon">gl<wbr>Terminate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#setuptexture" class="tsd-kind-icon">setup<wbr>Texture</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#update" class="tsd-kind-icon">update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#upload" class="tsd-kind-icon">upload</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#uploaddata" class="tsd-kind-icon">upload<wbr>Data</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_gltilelayer_.gltilelayer.html#uploaduniforms" class="tsd-kind-icon">upload<wbr>Uniforms</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new GLTilelayer<span class="tsd-signature-symbol">(</span>desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tiled_tilelayer_.itilelayer.html" class="tsd-signature-type">ITilelayer</a>, map<span class="tsd-signature-symbol">: </span><a href="_gltilemap_.gltilemap.html" class="tsd-signature-type">GLTilemap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_gltilelayer_.gltilelayer.html" class="tsd-signature-type">GLTilelayer</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L80">GLTilelayer.ts:80</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>desc: <a href="../interfaces/_tiled_tilelayer_.itilelayer.html" class="tsd-signature-type">ITilelayer</a></h5>
+								</li>
+								<li>
+									<h5>map: <a href="_gltilemap_.gltilemap.html" class="tsd-signature-type">GLTilemap</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_gltilelayer_.gltilelayer.html" class="tsd-signature-type">GLTilelayer</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_animations" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _animations</h3>
+					<div class="tsd-signature tsd-kind-icon">_animations<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gltilelayer_.ianimationdata.html" class="tsd-signature-type">IAnimationData</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L75">GLTilelayer.ts:75</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_inversetilecount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _inverse<wbr>Tile<wbr>Count</h3>
+					<div class="tsd-signature tsd-kind-icon">_inverse<wbr>Tile<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">vec2</span><span class="tsd-signature-symbol"> =&nbsp;vec2.create()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L77">GLTilelayer.ts:77</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_repeattiles" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _repeat<wbr>Tiles</h3>
+					<div class="tsd-signature tsd-kind-icon">_repeat<wbr>Tiles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L80">GLTilelayer.ts:80</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="alpha" class="tsd-anchor"></a>
+					<h3>alpha</h3>
+					<div class="tsd-signature tsd-kind-icon">alpha<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L73">GLTilelayer.ts:73</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="desc" class="tsd-anchor"></a>
+					<h3>desc</h3>
+					<div class="tsd-signature tsd-kind-icon">desc<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_tiled_tilelayer_.itilelayer.html" class="tsd-signature-type">ITilelayer</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L82">GLTilelayer.ts:82</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="gl" class="tsd-anchor"></a>
+					<h3>gl</h3>
+					<div class="tsd-signature tsd-kind-icon">gl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLRenderingContext</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L65">GLTilelayer.ts:65</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="scrollscalex" class="tsd-anchor"></a>
+					<h3>scroll<wbr>ScaleX</h3>
+					<div class="tsd-signature tsd-kind-icon">scroll<wbr>ScaleX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L67">GLTilelayer.ts:67</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="scrollscaley" class="tsd-anchor"></a>
+					<h3>scroll<wbr>ScaleY</h3>
+					<div class="tsd-signature tsd-kind-icon">scroll<wbr>ScaleY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L68">GLTilelayer.ts:68</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="texture" class="tsd-anchor"></a>
+					<h3>texture</h3>
+					<div class="tsd-signature tsd-kind-icon">texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLTexture</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L70">GLTilelayer.ts:70</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="texturedata" class="tsd-anchor"></a>
+					<h3>texture<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">texture<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L71">GLTilelayer.ts:71</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/_gltilemap_.elayertype.html#tilelayer" class="tsd-signature-type">Tilelayer</a><span class="tsd-signature-symbol"> =&nbsp;ELayerType.Tilelayer</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L63">GLTilelayer.ts:63</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="repeattiles" class="tsd-anchor"></a>
+					<h3>repeat<wbr>Tiles</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> repeatTiles<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> repeatTiles<span class="tsd-signature-symbol">(</span>v<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L99">GLTilelayer.ts:99</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L104">GLTilelayer.ts:104</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>v: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="buildmaptexture" class="tsd-anchor"></a>
+					<h3>build<wbr>Map<wbr>Texture</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Map<wbr>Texture<span class="tsd-signature-symbol">(</span>tilesets<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="_gltileset_.gltileset.html" class="tsd-signature-type">GLTileset</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L137">GLTilelayer.ts:137</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Builds the texture used as the map for this layer. Each texture has the data
+									necessary for the shader to lookup the correct texel to display.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tilesets: <span class="tsd-signature-type">IReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><a href="_gltileset_.gltileset.html" class="tsd-signature-type">GLTileset</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The list of tilesets, who&#39;s images will be uploaded to the GPU elsewhere.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="glinitialize" class="tsd-anchor"></a>
+					<h3>gl<wbr>Initialize</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">gl<wbr>Initialize<span class="tsd-signature-symbol">(</span>gl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">WebGLRenderingContext</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L113">GLTilelayer.ts:113</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gl: <span class="tsd-signature-type">WebGLRenderingContext</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="glterminate" class="tsd-anchor"></a>
+					<h3>gl<wbr>Terminate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">gl<wbr>Terminate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L120">GLTilelayer.ts:120</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setuptexture" class="tsd-anchor"></a>
+					<h3>setup<wbr>Texture</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">setup<wbr>Texture<span class="tsd-signature-symbol">(</span>doBind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L291">GLTilelayer.ts:291</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> doBind: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>dt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L222">GLTilelayer.ts:222</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Updates the layer&#39;s animations by the given delta time.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>dt: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Delta time in milliseconds to perform an update for.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="upload" class="tsd-anchor"></a>
+					<h3>upload</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">upload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L257">GLTilelayer.ts:257</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="uploaddata" class="tsd-anchor"></a>
+					<h3>upload<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">upload<wbr>Data<span class="tsd-signature-symbol">(</span>doBind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L272">GLTilelayer.ts:272</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> doBind: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="uploaduniforms" class="tsd-anchor"></a>
+					<h3>upload<wbr>Uniforms</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">upload<wbr>Uniforms<span class="tsd-signature-symbol">(</span>shader<span class="tsd-signature-symbol">: </span><a href="_utils_glprogram_.glprogram.html" class="tsd-signature-type">GLProgram</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/e7b6262/src/GLTilelayer.ts#L263">GLTilelayer.ts:263</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>shader: <a href="_utils_glprogram_.glprogram.html" class="tsd-signature-type">GLProgram</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_glimagelayer_.html">"GLImagelayer"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/_gltilelayer_.html">"GLTilelayer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_gltilemap_.html">"GLTilemap"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_gltileset_.html">"GLTileset"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_debug_.html">"debug"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tiled_tilelayer_.html">"tiled/<wbr>Tilelayer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tiled_tilemap_.html">"tiled/<wbr>Tilemap"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tiled_tileset_.html">"tiled/<wbr>Tileset"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_tiled_objects_.html">"tiled/objects"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_utils_glprogram_.html">"utils/GLProgram"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_utils_loadimage_.html">"utils/load<wbr>Image"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_utils_parsecolorstr_.html">"utils/parse<wbr>Color<wbr>Str"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_gltilelayer_.gltilelayer.html" class="tsd-kind-icon">GLTilelayer</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_gltilelayer_.gltilelayer.html#_animations" class="tsd-kind-icon">_animations</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_gltilelayer_.gltilelayer.html#_inversetilecount" class="tsd-kind-icon">_inverse<wbr>Tile<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_gltilelayer_.gltilelayer.html#_repeattiles" class="tsd-kind-icon">_repeat<wbr>Tiles</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#alpha" class="tsd-kind-icon">alpha</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#desc" class="tsd-kind-icon">desc</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#gl" class="tsd-kind-icon">gl</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#scrollscalex" class="tsd-kind-icon">scroll<wbr>ScaleX</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#scrollscaley" class="tsd-kind-icon">scroll<wbr>ScaleY</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#texture" class="tsd-kind-icon">texture</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#texturedata" class="tsd-kind-icon">texture<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#type" class="tsd-kind-icon">type</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#repeattiles" class="tsd-kind-icon">repeat<wbr>Tiles</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#buildmaptexture" class="tsd-kind-icon">build<wbr>Map<wbr>Texture</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#glinitialize" class="tsd-kind-icon">gl<wbr>Initialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#glterminate" class="tsd-kind-icon">gl<wbr>Terminate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#setuptexture" class="tsd-kind-icon">setup<wbr>Texture</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#update" class="tsd-kind-icon">update</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#upload" class="tsd-kind-icon">upload</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#uploaddata" class="tsd-kind-icon">upload<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_gltilelayer_.gltilelayer.html#uploaduniforms" class="tsd-kind-icon">upload<wbr>Uniforms</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/_gltilelayer_.ianimationdata.html" class="tsd-kind-icon">IAnimation<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/_gltilelayer_.ianimationdataframe.html" class="tsd-kind-icon">IAnimation<wbr>Data<wbr>Frame</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
