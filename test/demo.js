@@ -176,7 +176,7 @@ function onMapChange()
 
     if (!maps[mapUrl])
     {
-        tileMap = maps[mapUrl] = new glTiled.Tilemap(gl, loader.resources[mapUrl].data, loader.resources);
+        tileMap = maps[mapUrl] = new glTiled.GLTilemap(gl, loader.resources[mapUrl].data, loader.resources);
         tileMap.repeatTiles = false;
     }
     else
