@@ -16,7 +16,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
-    "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src",
+    "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src ./bundles",
     "prepublish": "npm run build",
     "postpublish": "npm run deploy",
     "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll",

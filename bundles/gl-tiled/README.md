@@ -7,10 +7,10 @@ framework. However, it does not provide any special code to ease integration wit
 
 Exported classes:
 
-- [GLTilemap](https://englercj.github.io/gl-tiled/classes/_gltilemap_.gltilemap.html)
-- [GLTileset](https://englercj.github.io/gl-tiled/classes/_gltileset_.gltileset.html)
-- [GLTilelayer](https://englercj.github.io/gl-tiled/classes/_gltilelayer_.gltilelayer.html)
-- [GLImagelayer](https://englercj.github.io/gl-tiled/classes/_glimagelayer_.glimagelayer.html)
+- [`GLTilemap`](https://englercj.github.io/gl-tiled/classes/_gltilemap_.gltilemap.html)
+- [`GLTileset`](https://englercj.github.io/gl-tiled/classes/_gltileset_.gltileset.html)
+- [`GLTilelayer`](https://englercj.github.io/gl-tiled/classes/_gltilelayer_.gltilelayer.html)
+- [`GLImagelayer`](https://englercj.github.io/gl-tiled/classes/_glimagelayer_.glimagelayer.html)
 
 ## Implementation Details
 
