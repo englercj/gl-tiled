@@ -19,7 +19,7 @@
     "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src ./bundles",
     "prepublish": "npm run build",
     "postpublish": "npm run deploy",
-    "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll",
+    "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll && node ./scripts/copy-demo.js",
     "deploy": "gh-pages --dotfiles -d docs"
   },
   "keywords": [
@@ -46,7 +46,9 @@
   },
   "devDependencies": {
     "@types/gl-matrix": "^2.4.0",
+    "fs-extra": "^5.0.0",
     "gh-pages": "^1.1.0",
+    "glob": "^7.1.2",
     "resource-loader": "^2.1.1",
     "rimraf": "^2.6.2",
     "rollup": "^0.53.3",
