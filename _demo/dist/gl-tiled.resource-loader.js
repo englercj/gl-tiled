@@ -1,6 +1,6 @@
 /*!
 * gl-tiled - v1.0.0
-* Compiled Mon, 13 Nov 2017 17:20:56 UTC
+* Compiled Mon, 08 Jan 2018 01:40:05 UTC
 *
 * gl-tiled is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license

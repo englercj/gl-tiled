@@ -1,6 +1,6 @@
 /*!
 * gl-tiled - v1.0.0
-* Compiled Mon, 13 Nov 2017 17:20:56 UTC
+* Compiled Mon, 08 Jan 2018 01:40:05 UTC
 *
 * gl-tiled is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license
@@ -93,6 +93,8 @@ let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
  * @param {Type} type Array type, such as Float32Array or Array
  */
 
+
+const degree = Math.PI / 180;
 
 /**
  * Convert Degree To Radian
@@ -3653,7 +3655,7 @@ var GLTileset = (function () {
 var GLTilelayer = (function () {
     function GLTilelayer(desc, map) {
         this.desc = desc;
-        this.type = ELayerType.Tilelayer;
+        this.type = exports.ELayerType.Tilelayer;
         this.scrollScaleX = 1;
         this.scrollScaleY = 1;
         this.texture = null;
@@ -3814,14 +3816,13 @@ var tilelayerFS = "precision mediump float;\n\n// TODO: There is a bit too much 
 
 var imagelayerVS = "precision highp float;\n\nattribute vec2 aPosition;\nattribute vec2 aTexture;\n\nuniform float uInverseTileScale;\n\nuniform vec2 uOffset;\nuniform vec2 uSize;\nuniform vec2 uViewportSize;\n// uniform mat3 uProjection;\n\nvarying vec2 vTextureCoord;\n\nvoid main()\n{\n    // squash from [-1, 1] to [0, 1]\n    vec2 position = aPosition;\n    position += 1.0;\n    position /= 2.0;\n\n    // round offset to the nearest multiple of the inverse scale\n    // this essentially clamps offset to whole \"pixels\"\n    vec2 offset = uOffset + (uInverseTileScale / 2.0);\n    offset -= mod(offset, uInverseTileScale);\n\n    // modify offset by viewport & size\n    offset.x -= uViewportSize.x / 2.0;\n    offset.y += (uViewportSize.y / 2.0) - uSize.y;\n\n    // calculate this vertex position based on image size and offset\n    position *= uSize;\n    position += offset;\n\n    // project to clip space\n    position *= (2.0 / uViewportSize);\n\n    vTextureCoord = aTexture;\n    gl_Position = vec4(position, 0.0, 1.0);\n}\n";
 
-var imagelayerFS = "precision lowp float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float uAlpha;\nuniform vec4 uTransparentColor;\n\nvoid main()\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uTransparentColor.a == 1.0 && uTransparentColor.rgb == color.rgb)\n        discard;\n\n    gl_FragColor = vec4(color.rgb, color.a * uAlpha);\n}";
+var imagelayerFS = "precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float uAlpha;\nuniform vec4 uTransparentColor;\n\nvoid main()\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uTransparentColor.a == 1.0 && uTransparentColor.rgb == color.rgb)\n        discard;\n\n    gl_FragColor = vec4(color.rgb, color.a * uAlpha);\n}\n";
 
-var ELayerType;
 (function (ELayerType) {
     ELayerType[ELayerType["UNKNOWN"] = 0] = "UNKNOWN";
     ELayerType[ELayerType["Tilelayer"] = 1] = "Tilelayer";
     ELayerType[ELayerType["Imagelayer"] = 2] = "Imagelayer";
-})(ELayerType || (ELayerType = {}));
+})(exports.ELayerType || (exports.ELayerType = {}));
 var GLTilemap = (function () {
     function GLTilemap(gl, desc, assets) {
         this.desc = desc;
@@ -3915,7 +3916,7 @@ var GLTilemap = (function () {
         set: function (v) {
             for (var i = 0; i < this._layers.length; ++i) {
                 var layer = this._layers[i];
-                if (layer.type === ELayerType.Tilelayer) {
+                if (layer.type === exports.ELayerType.Tilelayer) {
                     layer.repeatTiles = false;
                 }
             }
@@ -3982,7 +3983,7 @@ var GLTilemap = (function () {
     GLTilemap.prototype.update = function (dt) {
         for (var i = 0; i < this.layers.length; ++i) {
             var layer = this._layers[i];
-            if (layer.type === ELayerType.Tilelayer)
+            if (layer.type === exports.ELayerType.Tilelayer)
                 layer.update(dt);
         }
     };
@@ -4013,8 +4014,9 @@ var GLTilemap = (function () {
             }
         }
         gl.activeTexture(gl.TEXTURE0);
-        var lastShader = ELayerType.UNKNOWN;
+        var lastShader = exports.ELayerType.UNKNOWN;
         var activeShader = null;
+        var invScale = 1.0 / this._tileScale;
         for (var i = 0; i < this._layers.length; ++i) {
             var layer = this._layers[i];
             var offsetx = layer.desc.offsetx || 0;
@@ -4026,11 +4028,11 @@ var GLTilemap = (function () {
                 lastShader = layer.type;
             }
             switch (layer.type) {
-                case ELayerType.Tilelayer:
+                case exports.ELayerType.Tilelayer:
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(activeShader.uniforms.uOffset, -offsetx + (x * layer.scrollScaleX), -offsety + (y * layer.scrollScaleY));
                     break;
-                case ELayerType.Imagelayer:
+                case exports.ELayerType.Imagelayer:
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(activeShader.uniforms.uOffset, offsetx + (-x * layer.scrollScaleX), -offsety + (y * layer.scrollScaleY));
                     break;
@@ -4042,7 +4044,7 @@ var GLTilemap = (function () {
     GLTilemap.prototype._bindShader = function (layer) {
         var gl = this.gl;
         switch (layer.type) {
-            case ELayerType.Tilelayer:
+            case exports.ELayerType.Tilelayer:
                 {
                     var tileShader = this.shaders.tilelayer;
                     gl.useProgram(tileShader.program);
@@ -4057,7 +4059,7 @@ var GLTilemap = (function () {
                     }
                     return tileShader;
                 }
-            case ELayerType.Imagelayer:
+            case exports.ELayerType.Imagelayer:
                 {
                     var imageShader = this.shaders.imagelayer;
                     gl.useProgram(imageShader.program);
@@ -4117,7 +4119,7 @@ var GLImagelayer = (function () {
     function GLImagelayer(desc, map, assets) {
         var _this = this;
         this.desc = desc;
-        this.type = ELayerType.Imagelayer;
+        this.type = exports.ELayerType.Imagelayer;
         this.scrollScaleX = 1;
         this.scrollScaleY = 1;
         this.texture = null;
