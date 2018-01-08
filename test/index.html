@@ -17,7 +17,7 @@
                 margin: 0; padding: 0;
                 width: 100%; height: 100%;
             }
-            canvas {
+            #view {
                 position: absolute;
                 width: 100%; height: 100%;
                 top: 0; left: 0;
@@ -28,29 +28,33 @@
                 cursor: -ms-grab;
                 background: #000;
             }
-            canvas:active {
+            #view:active {
                 cursor: grabbing;
                 cursor: -webkit-grabbing;
                 cursor: -moz-grabbing;
                 cursor: -ms-grabbing;
             }
-            #debug-txt {
+            #debug-txt, #show-layer-data, #switch {
                 position: fixed;
                 z-index: 99;
-                top: 0; right: 0;
+                right: 0;
             }
-            #switch {
-                position: fixed;
-                z-index: 99;
-                top: 20px; right: 0;
-            }
+            #debug-txt { top: 0; }
+            #show-layer-data { top: 20px; }
+            #switch { top: 40px; }
             .white { color:#fff; }
         </style>
     </head>
     <body>
-        <select id="switch"></select>
         <span id="debug-txt" onclick="this.classList.toggle('white')"></span>
+        <button id="show-layer-data">Show Layer Data Textures</button>
+        <select id="switch"></select>
+
+        <!-- main view -->
         <canvas id="view"></canvas>
+
+        <!-- data view -->
+        <div id="data-view" style="display: none"></div>
 
         <script src="../node_modules/resource-loader/dist/resource-loader.js"></script>
         <script src="../node_modules/stats.js/build/stats.min.js"></script>

@@ -76,7 +76,6 @@ export default class GLTilelayer
 
     private _inverseTileCount = vec2.create();
 
-
     private _repeatTiles = true;
 
     constructor(public desc: ITilelayer, map: GLTilemap)

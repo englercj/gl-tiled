@@ -44,7 +44,8 @@ const plugins = [
 
 const output = {
     format: 'umd',
-    sourcemap: false
+    sourcemap: false,
+    banner,
 };
 
 // generate configs for all the bundles
@@ -65,7 +66,6 @@ for (let i = 0; i < dirs.length; ++i)
 
         bundles.push({
             input: path.join('bundles', dirname, 'index.ts'),
-            banner,
             plugins,
             output: Object.assign({ file, name }, output),
         });

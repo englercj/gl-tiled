@@ -37,7 +37,10 @@ loader.load(onLoad);
 
 var offset = [0, 0];
 var lastTime = 0;
+var showingMap = true;
 
+var showLayerElm = null;
+var dataViewElm = null;
 var switchElm = null;
 var dbgTextElm = null;
 var canvasElm = null;
@@ -74,9 +77,11 @@ function getParameterByName(name, url) {
 function onLoad()
 {
     // initialize!
+    showLayerElm = document.getElementById('show-layer-data');
     switchElm = document.getElementById('switch');
     dbgTextElm = document.getElementById('debug-txt');
     canvasElm = document.getElementById('view');
+    dataViewElm = document.getElementById('data-view');
     gl = canvasElm.getContext('webgl');
 
     stats.dom.style.left = '';
@@ -165,6 +170,68 @@ function onLoad()
         e.preventDefault();
         zoom(e.wheelDeltaY);
     });
+
+    showLayerElm.addEventListener('click', function (e)
+    {
+        if (showingMap)
+        {
+            showingMap = false;
+            dataViewElm.style.display = '';
+            canvasElm.style.display = 'none';
+
+            showDataView();
+        }
+        else
+        {
+            showingMap = true;
+            dataViewElm.style.display = 'none';
+            canvasElm.style.display = '';
+
+            onResize();
+        }
+    });
+}
+
+function showDataView()
+{
+    while (dataViewElm.firstChild)
+    {
+        dataViewElm.removeChild(dataViewElm.firstChild);
+    }
+
+    var layers = tileMap.layers;
+
+    for (var i = 0; i < layers.length; ++i)
+    {
+        var layer = layers[i];
+
+        if (layer.type === glTiled.ELayerType.Tilelayer)
+        {
+            var txt = document.createElement('span');
+            txt.textContent = 'Tilelayer (index ' + i + '):';
+
+            var canvas = document.createElement('canvas');
+            canvas.width = layer.desc.width;
+            canvas.height = layer.desc.height;
+
+            var ctx = canvas.getContext('2d');
+            var newData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            if (newData.data.length !== layer.textureData.length)
+                console.error('Data lengths do not match!');
+
+            for (var j = 0; j < newData.data.length; ++j)
+            {
+                newData.data[j] = j % 4 === 3 ? 255 : layer.textureData[j];
+            }
+            ctx.putImageData(newData, 0, 0);
+
+            dataViewElm.appendChild(txt);
+            dataViewElm.appendChild(document.createElement('br'));
+            dataViewElm.appendChild(canvas);
+            dataViewElm.appendChild(document.createElement('br'));
+        }
+    }
 }
 
 function onMapChange()
@@ -191,6 +258,9 @@ function onMapChange()
 
     // reset offset
     offset[0] = offset[1] = 0;
+
+    if (!showingMap)
+        showDataView();
 }
 
 function zoom(zoomDelta)
