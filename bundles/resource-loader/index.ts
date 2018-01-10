@@ -25,16 +25,6 @@ export function tiledMiddlewareFactory()
 {
     return function tiledMiddleware(this: Loader, resource: Loader.Resource, next: Function)
     {
-        if (!resource.data
-            || resource.type !== Loader.Resource.TYPE.JSON
-            || !resource.data.layers
-            || !resource.data.tilesets
-        )
-        {
-            next();
-            return;
-        }
-
         const loadOptions: Loader.IResourceOptions = {
             crossOrigin: resource.crossOrigin,
             loadType: Loader.Resource.LOAD_TYPE.IMAGE,
@@ -46,41 +36,60 @@ export function tiledMiddlewareFactory()
 
         urlDir = urlDir.substr(0, urlDir.lastIndexOf('/')) + '/';
 
-        for (let i = 0; i < resource.data.tilesets.length; ++i)
+        const loadImage = (image : string) =>
         {
-            const tileset = resource.data.tilesets[i];
-
-            if (tileset.image)
+            if (image && !this.resources[image])
             {
-                if (!this.resources[tileset.image])
-                {
-                    this.add(tileset.image, urlDir + tileset.image, loadOptions);
-                }
+                this.add(image, urlDir + image, loadOptions);
             }
-            else if (resource.data.tiles)
-            {
-                for (const key in resource.data.tiles)
-                {
-                    const tile = resource.data.tiles[key];
+        };
 
-                    if (tile.image && !this.resources[tile.image])
+        if (resource.data
+            && resource.type == Loader.Resource.TYPE.JSON
+            && resource.data.layers
+            && resource.data.tilesets
+        )
+        {
+            for (let i = 0; i < resource.data.tilesets.length; ++i)
+            {
+                const tileset = resource.data.tilesets[i];
+
+                if (tileset.image)
+                {
+                    if (!this.resources[tileset.image])
                     {
-                        this.add(tile.image, urlDir + tile.image, loadOptions);
+                        this.add(tileset.image, urlDir + tileset.image, loadOptions);
+                    }
+                }
+                else if (resource.data.tiles)
+                {
+                    for (const key in resource.data.tiles)
+                    {
+                        const tile = resource.data.tiles[key];
+                        loadImage(tile.image);
                     }
                 }
             }
-        }
 
-        for (let i = 0; i < resource.data.layers.length; ++i)
-        {
-            const layer = resource.data.layers[i];
-
-            if (layer.image)
+            for (let i = 0; i < resource.data.layers.length; ++i)
             {
-                if (!this.resources[layer.image])
-                {
-                    this.add(layer.image, urlDir + layer.image, loadOptions);
-                }
+                const layer = resource.data.layers[i];
+
+                loadImage(layer.image);
+            }
+        } else if (
+            resource.data
+            && resource.type == Loader.Resource.TYPE.XML
+            && (resource.extension === 'tsx' || resource.extension === 'tmx')
+        )
+        {
+            const imageElements = resource.data.getElementsByTagName('image')
+
+            for (let i = 0; i < imageElements.length; ++i)
+            {
+                const element = imageElements[i];
+
+                loadImage(element.getAttribute('source'));
             }
         }
 
