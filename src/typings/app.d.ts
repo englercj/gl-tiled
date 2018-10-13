@@ -1,9 +1,6 @@
-// type CanvasImageSource = (CSSImageValue | SVGImageElement | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas);
-type CanvasImageSource = (HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap);
-
 interface IAssets
 {
-    [key: string]: (CanvasImageSource | { data: CanvasImageSource });
+    [key: string]: (TexImageSource | { data: TexImageSource });
 }
 
 interface IPoint

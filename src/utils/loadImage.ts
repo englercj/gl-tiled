@@ -1,7 +1,7 @@
-export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent, CanvasImageSource>): CanvasImageSource
+export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent, TexImageSource>): TexImageSource
 {
     const asset = cache && cache[url];
-    let img: CanvasImageSource = null;
+    let img: TexImageSource = null;
 
     if (asset)
     {
@@ -26,7 +26,7 @@ export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent
                 cb(null, img);
         };
 
-        img.onerror = (e) =>
+        img.onerror = (e: ErrorEvent) =>
         {
             (img as HTMLImageElement).onload = null;
             (img as HTMLImageElement).onerror = null;

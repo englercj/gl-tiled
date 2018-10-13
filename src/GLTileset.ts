@@ -34,7 +34,7 @@ export default class GLTileset
     public gl: WebGLRenderingContext;
 
     /** The images in this tileset. */
-    public images: CanvasImageSource[] = [];
+    public images: TexImageSource[] = [];
 
     /** The gl textures in this tileset */
     public textures: WebGLTexture[] = [];

@@ -15,7 +15,7 @@ export default class GLImagelayer
     public scrollScaleY = 1;
 
     public texture: WebGLTexture = null;
-    public image: CanvasImageSource;
+    public image: TexImageSource;
 
     public alpha: number;
 
