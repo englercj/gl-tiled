@@ -1,6 +1,6 @@
 import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/Tilelayer';
-import GLTilemap, { ELayerType } from './GLTilemap';
+import { ELayerType } from './ELayerType';
 import GLTileset, { TilesetFlags, ITileProps } from './GLTileset';
 import GLProgram from './utils/GLProgram';
 
@@ -78,7 +78,7 @@ export default class GLTilelayer
 
     private _repeatTiles = true;
 
-    constructor(public desc: ITilelayer, map: GLTilemap)
+    constructor(public desc: ITilelayer, tilesets: IReadonlyArray<GLTileset>)
     {
         this._inverseTileCount[0] = 1 / desc.width;
         this._inverseTileCount[1] = 1 / desc.height;
@@ -92,7 +92,7 @@ export default class GLTilelayer
         if ((desc.width * desc.height) !== this.desc.data.length)
             throw new Error('Sizes are off!');
 
-        this.buildMapTexture(map.tilesets);
+        this.buildMapTexture(tilesets);
     }
 
     get repeatTiles()

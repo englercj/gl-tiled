@@ -3,6 +3,7 @@ import { parseColorStr } from './utils/parseColorStr';
 import GLProgram from './utils/GLProgram';
 import ITilemap from './tiled/Tilemap';
 import ITileset, { ITile } from './tiled/Tileset';
+import { ELayerType } from './ELayerType';
 import GLTileset from './GLTileset';
 import GLTilelayer from './GLTilelayer';
 import GLImagelayer from './GLImagelayer';
@@ -13,13 +14,6 @@ import tilelayerVS from './shaders/tilelayer.vert';
 import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
 import imagelayerFS from './shaders/imagelayer.frag';
-
-export enum ELayerType
-{
-    UNKNOWN = 0,
-    Tilelayer,
-    Imagelayer,
-}
 
 export type TGLLayer = (GLTilelayer | GLImagelayer);
 
@@ -90,9 +84,9 @@ export default class GLTilemap
 
             switch (l.type)
             {
-                case 'tilelayer': this._layers.push(new GLTilelayer(l, this)); break;
-                // case 'objectlayer': this._layers.push(new GLTilelayer(gl, l, this)); break;
-                case 'imagelayer': this._layers.push(new GLImagelayer(l, this, assets)); break;
+                case 'tilelayer': this._layers.push(new GLTilelayer(l, this.tilesets)); break;
+                // case 'objectlayer': this._layers.push(new GLObjectlayer(l)); break;
+                case 'imagelayer': this._layers.push(new GLImagelayer(l, assets)); break;
             }
         }
 

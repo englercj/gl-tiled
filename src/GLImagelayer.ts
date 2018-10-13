@@ -2,7 +2,7 @@ import { vec2, mat3 } from 'gl-matrix';
 import { IImagelayer } from './tiled/Tilelayer';
 import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
-import GLTilemap, { ELayerType } from './GLTilemap';
+import { ELayerType } from './ELayerType';
 import GLProgram from './utils/GLProgram';
 
 export default class GLImagelayer
@@ -21,7 +21,7 @@ export default class GLImagelayer
 
     private _transparentColor: Float32Array;
 
-    constructor(public desc: IImagelayer, map: GLTilemap, assets?: IAssets)
+    constructor(public desc: IImagelayer, assets?: IAssets)
     {
         this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
 
