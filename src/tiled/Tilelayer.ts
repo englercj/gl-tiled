@@ -1,4 +1,5 @@
 import { TObject } from './objects';
+import { TMap } from '../typings/types';
 
 /**
  * Interface representing a Tiled layer.

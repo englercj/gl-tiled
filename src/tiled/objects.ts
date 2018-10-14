@@ -1,3 +1,5 @@
+import { TMap, IPoint } from '../typings/types';
+
 /**
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#object
  */

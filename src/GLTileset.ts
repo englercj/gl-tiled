@@ -1,5 +1,6 @@
 import { ITileset, ITerrain, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
+import { IAssets, IPoint } from './typings/types';
 
 export interface ITileProps
 {

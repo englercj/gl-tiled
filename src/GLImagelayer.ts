@@ -1,9 +1,9 @@
-import { vec2, mat3 } from 'gl-matrix';
 import { IImagelayer } from './tiled/Tilelayer';
 import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLProgram } from './utils/GLProgram';
+import { IAssets } from './typings/types';
 
 export class GLImagelayer
 {

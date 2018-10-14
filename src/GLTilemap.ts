@@ -7,6 +7,7 @@ import { ELayerType } from './ELayerType';
 import { GLTileset } from './GLTileset';
 import { GLTilelayer } from './GLTilelayer';
 import { GLImagelayer } from './GLImagelayer';
+import { IAssets, IReadonlyArray, TMap } from './typings/types';
 
 import backgroundVS from './shaders/background.vert';
 import backgroundFS from './shaders/background.frag';

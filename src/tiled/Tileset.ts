@@ -1,3 +1,5 @@
+import { TMap } from '../typings/types';
+
 export interface ITileAnimFrame
 {
     /** Time to display this frame in ms */

@@ -3,6 +3,7 @@ import { ITilelayer } from './tiled/Tilelayer';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
 import { GLProgram } from './utils/GLProgram';
+import { IReadonlyArray } from './typings/types';
 
 // @if DEBUG
 import { ASSERT } from './debug';

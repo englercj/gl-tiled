@@ -1,3 +1,5 @@
+import { IAssets, TCallback2 } from '../typings/types';
+
 export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent, TexImageSource>): TexImageSource
 {
     const asset = cache && cache[url];

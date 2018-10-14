@@ -1,3 +1,5 @@
+import { TMap } from '../typings/types';
+
 /**
  * Helper class to manage GL shader programs.
  *
