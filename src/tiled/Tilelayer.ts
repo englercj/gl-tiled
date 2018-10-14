@@ -1,10 +1,10 @@
-import TObject from './objects';
+import { TObject } from './objects';
 
 /**
  * Interface representing a Tiled layer.
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#layer
  */
-interface ITilelayerBase
+export interface ITilelayerBase
 {
     /** Name assigned to this layer */
     name: string;
@@ -70,5 +70,4 @@ export interface IImagelayer extends ITilelayerBase
     transparentcolor: string;
 }
 
-type TLayer = (ITilelayer | IObjectlayer | IImagelayer);
-export default TLayer;
+export type TLayer = (ITilelayer | IObjectlayer | IImagelayer);

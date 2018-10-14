@@ -1,6 +1,12 @@
-export { default as GLImagelayer } from '../../src/GLImagelayer';
-export { default as GLTilelayer } from '../../src/GLTilelayer';
-export { default as GLTilemap } from '../../src/GLTilemap';
-export { default as GLTileset } from '../../src/GLTileset';
+export * from '../../src/ELayerType';
+export * from '../../src/GLImagelayer';
+export * from '../../src/GLTilelayer';
+export * from '../../src/GLTilemap';
+export * from '../../src/GLTileset';
 
-export { ELayerType } from '../../src/ELayerType';
+export * from '../../src/tiled/objects';
+export * from '../../src/tiled/Tilelayer';
+export * from '../../src/tiled/Tilemap';
+export * from '../../src/tiled/Tileset';
+
+export * from '../../src/utils/GLProgram';

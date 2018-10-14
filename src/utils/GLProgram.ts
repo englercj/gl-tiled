@@ -2,7 +2,7 @@
  * Helper class to manage GL shader programs.
  *
  */
-export default class GLProgram
+export class GLProgram
 {
     /** The underlying GL program. */
     public program: WebGLProgram;

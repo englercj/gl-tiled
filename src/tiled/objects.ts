@@ -69,5 +69,4 @@ export interface IText extends IObjectBase
     text: TMap<string>;
 }
 
-type TObject = (IObject | IEllipse | IRectangle | IPolygon | IPolyline | IText);
-export default TObject;
+export type TObject = (IObject | IEllipse | IRectangle | IPolygon | IPolyline | IText);

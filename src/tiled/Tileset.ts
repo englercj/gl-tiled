@@ -44,7 +44,7 @@ export interface ITerrain
  * The "since" comments in the docs below are Tiled versions not versions of
  * this library.
  */
-export default interface ITileset
+export interface ITileset
 {
     /** GID corresponding to the first tile in the set */
     firstgid: number;

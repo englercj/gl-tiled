@@ -1,11 +1,11 @@
-import ILayer from './TileLayer';
-import ITileset from './Tileset';
+import { TLayer } from './TileLayer';
+import { ITileset } from './Tileset';
 
 /**
  * Interface representing a Tiled map.
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#map
  */
-export default interface ITilemap
+export interface ITilemap
 {
     /** The JSON format version */
     version: number;
@@ -29,7 +29,7 @@ export default interface ITilemap
     orientation: string;
 
     /** Array of Layers */
-    layers: ILayer[];
+    layers: TLayer[];
 
     /** Array of Tilesets */
     tilesets: ITileset[];

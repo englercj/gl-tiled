@@ -1,8 +1,8 @@
 import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/Tilelayer';
 import { ELayerType } from './ELayerType';
-import GLTileset, { TilesetFlags, ITileProps } from './GLTileset';
-import GLProgram from './utils/GLProgram';
+import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
+import { GLProgram } from './utils/GLProgram';
 
 // @if DEBUG
 import { ASSERT } from './debug';
@@ -58,7 +58,7 @@ interface IAnimationData
  * long before it is an issue with our storage format here.
  *
  */
-export default class GLTilelayer
+export class GLTilelayer
 {
     type: ELayerType.Tilelayer = ELayerType.Tilelayer;
 

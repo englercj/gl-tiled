@@ -2,6 +2,7 @@
   "name": "gl-tiled",
   "version": "1.0.0",
   "main": "./dist/gl-tiled.js",
+  "types": "./dist/bundles/gl-tiled/index.d.ts",
   "description": "A Tiled editor renderer for WebGL.",
   "author": "Chad Engler <chad@pantherdev.com>",
   "license": "MIT",

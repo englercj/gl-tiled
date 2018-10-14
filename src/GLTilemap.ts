@@ -1,12 +1,12 @@
 import { vec2, mat3 } from 'gl-matrix';
 import { parseColorStr } from './utils/parseColorStr';
-import GLProgram from './utils/GLProgram';
-import ITilemap from './tiled/Tilemap';
-import ITileset, { ITile } from './tiled/Tileset';
+import { GLProgram } from './utils/GLProgram';
+import { ITilemap } from './tiled/Tilemap';
+import { ITileset, ITile } from './tiled/Tileset';
 import { ELayerType } from './ELayerType';
-import GLTileset from './GLTileset';
-import GLTilelayer from './GLTilelayer';
-import GLImagelayer from './GLImagelayer';
+import { GLTileset } from './GLTileset';
+import { GLTilelayer } from './GLTilelayer';
+import { GLImagelayer } from './GLImagelayer';
 
 import backgroundVS from './shaders/background.vert';
 import backgroundFS from './shaders/background.frag';
@@ -25,7 +25,7 @@ interface IShaderCache
     imagelayer: GLProgram;
 }
 
-export default class GLTilemap
+export class GLTilemap
 {
     private static _attribIndices: TMap<number> = {
         aPosition: 0,

@@ -1,4 +1,4 @@
-import ITileset, { ITerrain, ITile } from './tiled/Tileset';
+import { ITileset, ITerrain, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
 
 export interface ITileProps
@@ -29,7 +29,7 @@ export enum TilesetFlags {
     FlippedHorizontalFlag   = FlippedHorizontal >> 28,
 };
 
-export default class GLTileset
+export class GLTileset
 {
     public gl: WebGLRenderingContext;
 

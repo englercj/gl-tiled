@@ -3,9 +3,9 @@ import { IImagelayer } from './tiled/Tilelayer';
 import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
-import GLProgram from './utils/GLProgram';
+import { GLProgram } from './utils/GLProgram';
 
-export default class GLImagelayer
+export class GLImagelayer
 {
     type: ELayerType.Imagelayer = ELayerType.Imagelayer;
 
