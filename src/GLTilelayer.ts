@@ -1,5 +1,5 @@
 import { vec2 } from 'gl-matrix';
-import { ITilelayer } from './tiled/Tilelayer';
+import { ITilelayer } from './tiled/layers';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
 import { GLProgram } from './utils/GLProgram';

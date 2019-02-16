@@ -1,4 +1,4 @@
-import { TLayer } from './TileLayer';
+import { TLayer } from './layers';
 import { ITileset } from './Tileset';
 
 /**

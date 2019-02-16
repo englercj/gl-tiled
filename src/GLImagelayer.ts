@@ -1,4 +1,4 @@
-import { IImagelayer } from './tiled/Tilelayer';
+import { IImagelayer } from './tiled/layers';
 import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
