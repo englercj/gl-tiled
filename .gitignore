@@ -21,7 +21,6 @@ npm-debug.log
 
 # project ignores
 !.gitkeep
-.rpt2_cache/
 node_modules/
 dist/
 docs/
