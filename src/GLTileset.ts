@@ -1,6 +1,6 @@
 import { ITileset, ITerrain, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
-import { IAssets, IPoint } from './typings/types';
+import { IAssets, IPoint, IDictionary } from './typings/types';
 
 export interface ITileProps
 {
@@ -39,6 +39,8 @@ export class GLTileset
     /** The gl textures in this tileset */
     public textures: WebGLTexture[] = [];
 
+    private _lidToTileMap: IDictionary<ITile> = {};
+
     constructor(public desc: ITileset, assets?: IAssets)
     {
         // load the images
@@ -52,6 +54,8 @@ export class GLTileset
             for (let i = 0; i < this.desc.tiles.length; ++i)
             {
                 const tile = this.desc.tiles[i];
+
+                this._lidToTileMap[tile.id] = tile;
 
                 if (tile.image)
                 {
@@ -74,7 +78,7 @@ export class GLTileset
      */
     containsGid(gid: number)
     {
-        return this.containsIndex(this.getTileIndex(gid));
+        return this.containsLocalId(this.getTileLocalId(gid));
     }
 
     /**
@@ -82,7 +86,7 @@ export class GLTileset
      *
      * @param index The local index of a tile in this tileset.
      */
-    containsIndex(index: number)
+    containsLocalId(index: number)
     {
         return index >= 0 && index < this.desc.tilecount;
     }
@@ -92,7 +96,7 @@ export class GLTileset
      *
      * @param gid The global ID of the tile in a map.
      */
-    getTileIndex(gid: number)
+    getTileLocalId(gid: number)
     {
         return (gid & ~TilesetFlags.All) - this.desc.firstgid;
     }
@@ -107,21 +111,21 @@ export class GLTileset
         if (!gid)
             return null;
 
-        const index = this.getTileIndex(gid);
+        const localId = this.getTileLocalId(gid);
 
-        if (!this.containsIndex(index))
+        if (!this.containsLocalId(localId))
             return null;
 
         return {
             coords: {
-                x: index % this.desc.columns,
-                y: Math.floor(index / this.desc.columns),
+                x: localId % this.desc.columns,
+                y: Math.floor(localId / this.desc.columns),
             },
-            imgIndex: this.images.length > 1 ? index : 0,
+            imgIndex: this.images.length > 1 ? localId : 0,
             flippedX: (gid & TilesetFlags.FlippedHorizontal) != 0,
             flippedY: (gid & TilesetFlags.FlippedVertical) != 0,
             flippedAD: (gid & TilesetFlags.FlippedAntiDiagonal) != 0,
-            tile: this.desc.tiles && this.desc.tiles[index],
+            tile: this._lidToTileMap[localId],
         };
     }
 
