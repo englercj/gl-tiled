@@ -437,10 +437,12 @@ export class GLTilemap
                 this._tilesetTileOffsetBuffer[(imgIndex * 2)] = tileset.desc.spacing;
                 this._tilesetTileOffsetBuffer[(imgIndex * 2) + 1] = tileset.desc.margin;
 
-                const imgDesc: (ITile | ITileset) = tileset.desc.tiles && tileset.desc.tiles[s] ? tileset.desc.tiles[s] : tileset.desc;
+                const imgDesc = tileset.desc.tiles && tileset.desc.tiles[s];
+                const imgWidth = imgDesc && imgDesc.imagewidth ? imgDesc.imagewidth : tileset.desc.imagewidth;
+                const imgHeight = imgDesc && imgDesc.imageheight ? imgDesc.imageheight : tileset.desc.imageheight;
 
-                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2)] = 1 / imgDesc.imagewidth;
-                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / imgDesc.imageheight;
+                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2)] = 1 / imgWidth;
+                this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / imgHeight;
 
                 imgIndex++;
             }
