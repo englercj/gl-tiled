@@ -91,7 +91,6 @@ function onLoad()
     var mapQueryParam = getParameterByName('map');
     var lastOptgroup = null;
 
-    // TODO: Create options in switchElm select.
     for (var i = 0; i < resourceUrls.length; ++i)
     {
         var url = resourceUrls[i];

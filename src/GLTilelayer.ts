@@ -146,6 +146,8 @@ export class GLTilelayer
         // - Should it just be calculated at runtime in the main shader (upload tileset metadata)?
         //  * Isn't this last one the same as what I do here? I'd still
         //    have to format the tileset data for upload...
+        // - Can I upload animation data and just lookup the right frame in the shader? That would
+        //   mean I don't have to upload a new layer texture each frame like I do now.
         let index = 0;
 
         // @if DEBUG
@@ -258,8 +260,6 @@ export class GLTilelayer
             }
         }
 
-        // TODO: Incremental upload? Only upload changed ones?
-        // Not sure if multiple subImage2D's will be faster...
         if (needsUpload)
             this.uploadData();
     }
