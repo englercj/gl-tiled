@@ -38,6 +38,8 @@ export class GLImagelayer
 
     glInitialize(gl: WebGLRenderingContext)
     {
+        this.glTerminate();
+
         this.gl = gl;
         this.texture = gl.createTexture();
         this.upload();
@@ -45,6 +47,9 @@ export class GLImagelayer
 
     glTerminate()
     {
+        if (!this.gl)
+            return;
+
         if (this.texture)
         {
             this.gl.deleteTexture(this.texture);

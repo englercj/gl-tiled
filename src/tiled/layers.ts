@@ -1,17 +1,50 @@
-import { TObject } from './objects';
-import { TMap } from '../typings/types';
+import { IObject } from './objects';
+import { IProperty } from './IProperty';
+
+export interface ITilelayerChunk
+{
+    /** Array of unsigned int (GIDs) or base64-encoded data */
+    data: number[] | string;
+
+    /** Height in tiles (int) */
+    height: number;
+
+    /** Width in tiles (int) */
+    width: number;
+
+    /** X coordinate in tiles (int) */
+    x: number;
+
+    /** Y coordinate in tiles (int) */
+    y: number;
+}
 
 /**
  * Interface representing a Tiled layer.
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#layer
  */
-export interface ITilelayerBase
+export interface ILayerBase
 {
+    /** Incremental id - unique across all layers */
+    id: number
+
     /** Name assigned to this layer */
     name: string;
 
-    /** 'tilelayer', 'objectgroup', or 'imagelayer' */
-    type: ('tilelayer' | 'objectgroup' | 'imagelayer');
+    /** Horizontal layer offset in pixels. (double) */
+    offsetx?: number;
+
+    /** Vertical layer offset in pixels. (double) */
+    offsety?: number;
+
+    /** Value between 0 and 1 (double) */
+    opacity: number;
+
+    /** A list of properties (name, value, type). */
+    properties: IProperty[];
+
+    /** tilelayer, objectgroup, imagelayer or group */
+    type: 'tilelayer' | 'objectgroup' | 'imagelayer' | 'group';
 
     /** Whether layer is shown or hidden in editor */
     visible: boolean;
@@ -21,54 +54,59 @@ export interface ITilelayerBase
 
     /** Vertical layer offset in tiles. Always 0. (int) */
     y: number;
-
-    /** Horizontal layer offset in pixels. (float) */
-    offsetx: number;
-
-    /** Vertical layer offset in pixels. (float) */
-    offsety: number;
-
-    /** string key-value pairs. */
-    properties: TMap<string>;
-
-    /** Value between 0 and 1 (float) */
-    opacity: number;
 }
 
-export interface ITilelayer extends ITilelayerBase
+export interface ITilelayer extends ILayerBase
 {
     type: 'tilelayer';
 
-    /** Array of GIDs. tilelayer only. (int) */
-    data: number[];
+    /** Array of chunks (optional). */
+    chunks?: ITilelayerChunk[];
 
-    /** Column count. Same as map width for fixed-size maps. (int) */
-    width: number;
+    /** zlib, gzip or empty (default). */
+    compression?: 'zlib' | 'gzip';
+
+    /** csv (default) or base64. */
+    encoding?: 'csv' | 'base64';
 
     /** Row count. Same as map height for fixed-size maps. (int) */
     height: number;
+
+    /** Array of unsigned int (GIDs) or base64-encoded data. */
+    data: number[] | string;
+
+    /** Column count. Same as map width for fixed-size maps. (int) */
+    width: number;
 }
 
-export interface IObjectlayer extends ITilelayerBase
+export interface IObjectgroup extends ILayerBase
 {
     type: 'objectgroup';
 
-    /** Array of Objects. objectgroup only. */
-    objects: TObject[];
+    /** 'topdown' (default) or 'index'. */
+    draworder: 'topdown' | 'index';
 
-    /** 'topdown' (default) or 'index'. objectgroup only. */
-    draworder: ('topdown' | 'index');
+    /** Array of Objects. objectgroup only. */
+    objects: IObject[];
 }
 
-export interface IImagelayer extends ITilelayerBase
+export interface IImagelayer extends ILayerBase
 {
     type: 'imagelayer';
 
-    /** The url to the image source for the layer */
+    /** Image used by this layer. */
     image: string;
 
-    /** A color that is considered to be transparent */
-    transparentcolor: string;
+    /** Hex-formatted color (#RRGGBB) */
+    transparentcolor?: string;
 }
 
-export type TLayer = (ITilelayer | IObjectlayer | IImagelayer);
+export interface ILayergroup extends ILayerBase
+{
+    type: 'group';
+
+    /** Array of layers. */
+    layers: TLayer[];
+}
+
+export type TLayer = ITilelayer | IObjectgroup | IImagelayer | ILayergroup;

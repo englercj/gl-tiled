@@ -3,7 +3,6 @@ import { ITilelayer } from './tiled/layers';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
 import { GLProgram } from './utils/GLProgram';
-import { IReadonlyArray } from './typings/types';
 
 // @if DEBUG
 import { ASSERT } from './debug';
@@ -79,7 +78,7 @@ export class GLTilelayer
 
     private _repeatTiles = true;
 
-    constructor(public desc: ITilelayer, tilesets: IReadonlyArray<GLTileset>)
+    constructor(public desc: ITilelayer, tilesets: ReadonlyArray<GLTileset>)
     {
         this._inverseTileCount[0] = 1 / desc.width;
         this._inverseTileCount[1] = 1 / desc.height;
@@ -112,6 +111,8 @@ export class GLTilelayer
 
     glInitialize(gl: WebGLRenderingContext)
     {
+        this.glTerminate();
+
         this.gl = gl;
         this.texture = gl.createTexture();
         this.upload();
@@ -119,6 +120,9 @@ export class GLTilelayer
 
     glTerminate()
     {
+        if (!this.gl)
+            return;
+
         if (this.texture)
         {
             this.gl.deleteTexture(this.texture);
@@ -134,7 +138,7 @@ export class GLTilelayer
      *
      * @param tilesets The list of tilesets, who's images will be uploaded to the GPU elsewhere.
      */
-    buildMapTexture(tilesets: IReadonlyArray<GLTileset>)
+    buildMapTexture(tilesets: ReadonlyArray<GLTileset>)
     {
         // TODO:
         // - Might be faster to build this texture on the GPU in a framebuffer?
@@ -144,10 +148,16 @@ export class GLTilelayer
         //    have to format the tileset data for upload...
         let index = 0;
 
+        // @if DEBUG
+        ASSERT(typeof this.desc.data !== 'string', 'Base64 encoded layer data is not supported.');
+        // @endif
+
+        const data = this.desc.data as number[];
+
         dataloop:
-        for (let i = 0; i < this.desc.data.length; ++i)
+        for (let i = 0; i < data.length; ++i)
         {
-            const gid = this.desc.data[i];
+            const gid = data[i];
             let imgIndex = 0;
 
             if (gid)

@@ -9,7 +9,6 @@ export interface ITileProps
     flippedX: boolean;
     flippedY: boolean;
     flippedAD: boolean;
-    props: any;
     tile: ITile;
 }
 
@@ -49,14 +48,9 @@ export class GLTileset
         }
         else if (this.desc.tiles)
         {
-            // need to sort because order matters here, and can't guarantee that the object's keys will be ordered.
-            // We need a custom comparator because .sort() is lexagraphic, not numeric.
-            const ids = Object.keys(this.desc.tiles)
-                                .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-
-            for (let i = 0; i < ids.length; ++i)
+            for (let i = 0; i < this.desc.tiles.length; ++i)
             {
-                const tile = this.desc.tiles[ids[i]];
+                const tile = this.desc.tiles[i];
 
                 if (tile.image)
                 {
@@ -126,7 +120,6 @@ export class GLTileset
             flippedX: (gid & TilesetFlags.FlippedHorizontal) != 0,
             flippedY: (gid & TilesetFlags.FlippedVertical) != 0,
             flippedAD: (gid & TilesetFlags.FlippedAntiDiagonal) != 0,
-            props: this.desc.tileproperties && this.desc.tileproperties[index],
             tile: this.desc.tiles && this.desc.tiles[index],
         };
     }
@@ -142,6 +135,8 @@ export class GLTileset
 
     glInitialize(gl: WebGLRenderingContext)
     {
+        this.glTerminate();
+
         this.gl = gl;
 
         for (let i = 0; i < this.images.length; ++i)
@@ -159,6 +154,9 @@ export class GLTileset
 
     glTerminate()
     {
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
 
         for (let i = 0; i < this.textures.length; ++i)

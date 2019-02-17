@@ -1,4 +1,4 @@
-import { TMap } from '../typings/types';
+import { IDictionary } from '../typings/types';
 
 /**
  * Helper class to manage GL shader programs.
@@ -10,10 +10,10 @@ export class GLProgram
     public program: WebGLProgram;
 
     /** The attribute locations of this program */
-    public attributes: TMap<number>;
+    public attributes: IDictionary<number>;
 
     /** The uniform locations of this program */
-    public uniforms: TMap<WebGLUniformLocation>;
+    public uniforms: IDictionary<WebGLUniformLocation>;
 
     /**
      * @param gl The rendering context.
@@ -22,7 +22,7 @@ export class GLProgram
      * @param attributeLocations A key value pair showing which location
      *  each attribute should sit eg `{ position: 0, uvs: 1 }`.
      */
-    constructor(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string, attributeLocations?: TMap<number>)
+    constructor(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string, attributeLocations?: IDictionary<number>)
     {
         this.program = GLProgram.compileProgram(
             gl,
@@ -57,7 +57,7 @@ export class GLProgram
      * @param attributeLocations A key value pair showing which location
      *  each attribute should sit eg `{ position: 0, uvs: 1 }`.
      */
-    static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string, attributeLocations?: TMap<number>): WebGLProgram
+    static compileProgram(gl: WebGLRenderingContext, vertexSrc: string, fragmentSrc: string, attributeLocations?: IDictionary<number>): WebGLProgram
     {
         const glVertShader = GLProgram.compileShader(gl, gl.VERTEX_SHADER, vertexSrc);
         const glFragShader = GLProgram.compileShader(gl, gl.FRAGMENT_SHADER, fragmentSrc);

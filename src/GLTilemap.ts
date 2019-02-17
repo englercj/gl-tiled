@@ -7,7 +7,7 @@ import { ELayerType } from './ELayerType';
 import { GLTileset } from './GLTileset';
 import { GLTilelayer } from './GLTilelayer';
 import { GLImagelayer } from './GLImagelayer';
-import { IAssets, IReadonlyArray, TMap } from './typings/types';
+import { IAssets, IDictionary } from './typings/types';
 
 import backgroundVS from './shaders/background.vert';
 import backgroundFS from './shaders/background.frag';
@@ -15,6 +15,7 @@ import tilelayerVS from './shaders/tilelayer.vert';
 import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
 import imagelayerFS from './shaders/imagelayer.frag';
+import { ASSERT } from './debug';
 
 export type TGLLayer = (GLTilelayer | GLImagelayer);
 
@@ -28,7 +29,7 @@ interface IShaderCache
 
 export class GLTilemap
 {
-    private static _attribIndices: TMap<number> = {
+    private static _attribIndices: IDictionary<number> = {
         aPosition: 0,
         aTexture: 1,
     };
@@ -67,8 +68,12 @@ export class GLTilemap
     private _tilesetTileOffsetBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
-    constructor(gl: WebGLRenderingContext, public desc: ITilemap, assets?: IAssets)
+    constructor(public desc: ITilemap, gl?: WebGLRenderingContext, assets?: IAssets)
     {
+        // @if DEBUG
+        ASSERT(desc.version >= 1.2, `Unsupported JSON format version ${desc.version}, please update your JSON to v1.2`);
+        // @endif
+
         this._inverseLayerTileSize[0] = 1 / desc.tilewidth;
         this._inverseLayerTileSize[1] = 1 / desc.tileheight;
 
@@ -102,15 +107,18 @@ export class GLTilemap
         this._inverseTilesetTextureSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._buildBufferData();
 
-        this.glInitialize(gl);
+        if (gl)
+        {
+            this.glInitialize(gl);
+        }
     }
 
-    get layers(): IReadonlyArray<TGLLayer>
+    get layers(): ReadonlyArray<TGLLayer>
     {
         return this._layers;
     }
 
-    get tilesets(): IReadonlyArray<GLTileset>
+    get tilesets(): ReadonlyArray<GLTileset>
     {
         return this._tilesets;
     }
@@ -174,6 +182,8 @@ export class GLTilemap
 
     glInitialize(gl: WebGLRenderingContext)
     {
+        this.glTerminate();
+
         this.gl = gl;
         this._firstTilelayerUniformUpload = true;
 
@@ -203,6 +213,9 @@ export class GLTilemap
 
     glTerminate()
     {
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
 
         // destroy layers
