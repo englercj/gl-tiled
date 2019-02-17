@@ -16,9 +16,9 @@ For the most basic usage, you only need to provide a JS object that represents t
 map.
 
 ```js
-// create the map instance, `gl` is the WebGLRenderingContext and `mapData` is
-// the parsed Tiled JSON map.
-var tilemap = new glTiled.Tilemap(gl, mapData);
+// Create the map instance. `mapData` is the parsed Tiled JSON map,
+// and `gl` is the WebGLRenderingContext.
+var tilemap = new glTiled.Tilemap(mapData, gl);
 
 // size the viewport of the map
 tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
