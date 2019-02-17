@@ -46,7 +46,8 @@ export class GLTileset
         {
             this._addImage(this.desc.image, assets);
         }
-        else if (this.desc.tiles)
+
+        if (this.desc.tiles)
         {
             for (let i = 0; i < this.desc.tiles.length; ++i)
             {

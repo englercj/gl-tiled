@@ -57,7 +57,8 @@ export function tiledMiddlewareFactory()
                     this.add(tileset.image, urlDir + tileset.image, loadOptions);
                 }
             }
-            else if (resource.data.tiles)
+
+            if (resource.data.tiles)
             {
                 for (const key in resource.data.tiles)
                 {
