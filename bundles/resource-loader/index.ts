@@ -4,8 +4,6 @@
  * Creates the tiled loader middleware function and returns it.
  *
  * @example
- * ```js
- *
  * var loader = new Loader();
  *
  * // add this middleware so that any map files we load will also have all their sub resources
@@ -19,7 +17,6 @@
  *      // will search for map resources in before trying to load them itself.
  *      var tilemap = new glTiled.Tilemap(gl, loader.resources.lightworld.data, loader.resources);
  * })
- * ```
  */
 export function tiledMiddlewareFactory()
 {
