@@ -1,4 +1,4 @@
-import { TLayer } from './layers';
+import { ILayer } from './layers';
 import { ITileset } from './Tileset';
 import { IProperty } from './IProperty';
 
@@ -21,7 +21,7 @@ export interface ITilemap
     infinite: boolean;
 
     /** Array of Layers */
-    layers: TLayer[];
+    layers: ILayer[];
 
     /** Auto-increments for each layer (int) */
     nextlayerid: number;

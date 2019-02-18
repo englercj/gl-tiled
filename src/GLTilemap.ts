@@ -1,4 +1,5 @@
 import { vec2 } from 'gl-matrix';
+import { ILayer } from './tiled/layers';
 import { ITilemap } from './tiled/Tilemap';
 import { GLProgram } from './utils/GLProgram';
 import { hasOwnKey } from './utils/hasOwnKey';
@@ -85,17 +86,7 @@ export class GLTilemap
             this._tilesets.push(tileset);
         }
 
-        for (let i = 0; i < desc.layers.length; ++i)
-        {
-            const l = desc.layers[i];
-
-            switch (l.type)
-            {
-                case 'tilelayer': this._layers.push(new GLTilelayer(l, this.tilesets)); break;
-                // case 'objectlayer': this._layers.push(new GLObjectlayer(l)); break;
-                case 'imagelayer': this._layers.push(new GLImagelayer(l, assets)); break;
-            }
-        }
+        this._createLayers(desc.layers, assets);
 
         // parse the background color
         this._backgroundColor = new Float32Array(4);
@@ -495,6 +486,22 @@ export class GLTilemap
                 this._inverseTilesetTextureSizeBuffer[(imgIndex * 2) + 1] = 1 / imgHeight;
 
                 imgIndex++;
+            }
+        }
+    }
+
+    private _createLayers(layers: ILayer[], assets?: IAssets)
+    {
+        for (let i = 0; i < layers.length; ++i)
+        {
+            const layer = layers[i];
+
+            switch (layer.type)
+            {
+                case 'tilelayer': this._layers.push(new GLTilelayer(layer, this.tilesets)); break;
+                // case 'objectgroup': this._layers.push(new GLObjectlayer(l)); break;
+                case 'imagelayer': this._layers.push(new GLImagelayer(layer, assets)); break;
+                case 'group': this._createLayers(layer.layers); break;
             }
         }
     }

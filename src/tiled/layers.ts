@@ -106,7 +106,7 @@ export interface ILayergroup extends ILayerBase
     type: 'group';
 
     /** Array of layers. */
-    layers: TLayer[];
+    layers: ILayer[];
 }
 
-export type TLayer = ITilelayer | IObjectgroup | IImagelayer | ILayergroup;
+export type ILayer = ITilelayer | IObjectgroup | IImagelayer | ILayergroup;
