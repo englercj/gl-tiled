@@ -1,13 +1,13 @@
-import { vec2, mat3 } from 'gl-matrix';
-import { parseColorStr } from './utils/parseColorStr';
-import { GLProgram } from './utils/GLProgram';
+import { vec2 } from 'gl-matrix';
 import { ITilemap } from './tiled/Tilemap';
-import { ITileset, ITile } from './tiled/Tileset';
+import { GLProgram } from './utils/GLProgram';
+import { hasOwnKey } from './utils/hasOwnKey';
+import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLTileset } from './GLTileset';
 import { GLTilelayer } from './GLTilelayer';
 import { GLImagelayer } from './GLImagelayer';
-import { IAssets, IDictionary } from './typings/types';
+import { IAssets } from './IAssets';
 
 import backgroundVS from './shaders/background.vert';
 import backgroundFS from './shaders/background.frag';
@@ -15,27 +15,29 @@ import tilelayerVS from './shaders/tilelayer.vert';
 import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
 import imagelayerFS from './shaders/imagelayer.frag';
+
+// @if DEBUG
 import { ASSERT } from './debug';
+// @endif
 
 export type TGLLayer = (GLTilelayer | GLImagelayer);
 
 interface IShaderCache
 {
-    [key: string]: GLProgram;
-
+    background: GLProgram;
     tilelayer: GLProgram;
     imagelayer: GLProgram;
 }
 
 export class GLTilemap
 {
-    private static _attribIndices: IDictionary<number> = {
+    private static _attribIndices = {
         aPosition: 0,
         aTexture: 1,
     };
 
-    public gl: WebGLRenderingContext;
-    public shaders: IShaderCache;
+    gl: WebGLRenderingContext | null = null;
+    shaders: IShaderCache | null = null;
 
     private _layers: TGLLayer[] = [];
     private _tilesets: GLTileset[] = [];
@@ -43,7 +45,6 @@ export class GLTilemap
     private _viewportSize = vec2.create();
     private _scaledViewportSize = vec2.create();
     private _inverseLayerTileSize = vec2.create();
-    private _inverseTilesetTextureSize = vec2.create();
 
     private _quadVerts = new Float32Array([
         //x  y  u  v
@@ -56,7 +57,7 @@ export class GLTilemap
         -1,  1, 0, 0,
     ]);
 
-    private _quadVertBuffer: WebGLBuffer;
+    private _quadVertBuffer: WebGLBuffer | null = null;
 
     private _firstTilelayerUniformUpload = true;
     private _tileScale = 1;
@@ -68,7 +69,7 @@ export class GLTilemap
     private _tilesetTileOffsetBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
-    constructor(public desc: ITilemap, gl?: WebGLRenderingContext, assets?: IAssets)
+    constructor(public readonly desc: ITilemap, gl?: WebGLRenderingContext, assets?: IAssets)
     {
         // @if DEBUG
         ASSERT(desc.version >= 1.2, `Unsupported JSON format version ${desc.version}, please update your JSON to v1.2`);
@@ -98,7 +99,9 @@ export class GLTilemap
 
         // parse the background color
         this._backgroundColor = new Float32Array(4);
-        parseColorStr(desc.backgroundcolor, this._backgroundColor);
+
+        if (desc.backgroundcolor)
+            parseColorStr(desc.backgroundcolor, this._backgroundColor);
 
         // setup the different buffers
         this._tilesetIndices = new Int32Array(this._totalTilesetImages);
@@ -240,15 +243,14 @@ export class GLTilemap
         // destroy shaders
         for (const k in this.shaders)
         {
-            const shader = this.shaders[k];
+            if (!hasOwnKey(this.shaders, k))
+                continue;
 
-            if (shader)
-            {
-                gl.deleteProgram(shader.program);
-                this.shaders[k] = null;
-            }
+            const shader = this.shaders[k];
+            gl.deleteProgram(shader.program);
         }
 
+        this.shaders = null;
         this.gl = null;
     }
 
@@ -276,13 +278,20 @@ export class GLTilemap
      */
     draw(x: number = 0, y: number = 0)
     {
+        // @if DEBUG
+        ASSERT(!!(this.gl && this.shaders), 'Cannot call `draw` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl || !this.shaders)
+            return;
+
         var gl = this.gl;
 
         // TODO: Custom blending modes?
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        // Enable attributes
+        // Enable attributes, these are the same for all shaders.
         gl.bindBuffer(gl.ARRAY_BUFFER, this._quadVertBuffer);
         gl.enableVertexAttribArray(GLTilemap._attribIndices.aPosition);
         gl.enableVertexAttribArray(GLTilemap._attribIndices.aTexture);
@@ -294,8 +303,12 @@ export class GLTilemap
         {
             const bgShader = this.shaders.background;
 
+            // @if DEBUG
+            ASSERT(!!(bgShader.uniforms.uColor), 'Invalid uniforms for background shader.');
+            // @endif
+
             gl.useProgram(bgShader.program);
-            gl.uniform4fv(bgShader.uniforms.uColor, this._backgroundColor);
+            gl.uniform4fv(bgShader.uniforms.uColor!, this._backgroundColor);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
@@ -317,9 +330,7 @@ export class GLTilemap
         gl.activeTexture(gl.TEXTURE0);
 
         let lastShader = ELayerType.UNKNOWN;
-        let activeShader: GLProgram = null;
-
-        const invScale = 1.0 / this._tileScale;
+        let activeShader: GLProgram | null = null;
 
         for (let i = 0; i < this._layers.length; ++i)
         {
@@ -336,12 +347,19 @@ export class GLTilemap
                 lastShader = layer.type;
             }
 
+            if (!activeShader)
+                continue;
+
+            // @if DEBUG
+            ASSERT(!!(activeShader.uniforms.uOffset), 'Invalid uniforms for layer shader.');
+            // @endif
+
             switch (layer.type)
             {
                 case ELayerType.Tilelayer:
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(
-                        activeShader.uniforms.uOffset,
+                        activeShader.uniforms.uOffset!,
                         -offsetx + (x * layer.scrollScaleX),
                         -offsety + (y * layer.scrollScaleY)
                     );
@@ -350,7 +368,7 @@ export class GLTilemap
                 case ELayerType.Imagelayer:
                     layer.uploadUniforms(activeShader);
                     gl.uniform2f(
-                        activeShader.uniforms.uOffset,
+                        activeShader.uniforms.uOffset!,
                         offsetx + (-x * layer.scrollScaleX),
                         -offsety + (y * layer.scrollScaleY)
                     );
@@ -364,13 +382,17 @@ export class GLTilemap
 
     private _bindShader(layer: TGLLayer): GLProgram
     {
-        const gl = this.gl;
+        // @if DEBUG
+        ASSERT(!!(this.gl && this.shaders), 'Cannot call `_bindShader` before `glInitialize`.');
+        // @endif
+
+        const gl = this.gl!;
 
         switch (layer.type)
         {
             case ELayerType.Tilelayer:
             {
-                const tileShader = this.shaders.tilelayer;
+                const tileShader = this.shaders!.tilelayer;
                 gl.useProgram(tileShader.program);
 
                 // these are static, and only need to be uploaded once.
@@ -378,12 +400,22 @@ export class GLTilemap
                 {
                     this._firstTilelayerUniformUpload = false;
 
-                    gl.uniform1i(tileShader.uniforms.uLayer, 0);
-                    gl.uniform2fv(tileShader.uniforms.uInverseLayerTileSize, this._inverseLayerTileSize);
-                    gl.uniform1iv(tileShader.uniforms.uTilesets, this._tilesetIndices);
-                    gl.uniform2fv(tileShader.uniforms.uTilesetTileSize, this._tilesetTileSizeBuffer);
-                    gl.uniform2fv(tileShader.uniforms.uTilesetTileOffset, this._tilesetTileOffsetBuffer);
-                    gl.uniform2fv(tileShader.uniforms.uInverseTilesetTextureSize, this._inverseTilesetTextureSizeBuffer);
+                    // @if DEBUG
+                    ASSERT(!!(tileShader.uniforms.uLayer
+                        && tileShader.uniforms.uInverseLayerTileSize
+                        && tileShader.uniforms.uTilesets
+                        && tileShader.uniforms.uTilesetTileSize
+                        && tileShader.uniforms.uTilesetTileOffset
+                        && tileShader.uniforms.uInverseTilesetTextureSize),
+                        'Invalid uniforms for tile layer shader.');
+                    // @endif
+
+                    gl.uniform1i(tileShader.uniforms.uLayer!, 0);
+                    gl.uniform2fv(tileShader.uniforms.uInverseLayerTileSize!, this._inverseLayerTileSize);
+                    gl.uniform1iv(tileShader.uniforms.uTilesets!, this._tilesetIndices);
+                    gl.uniform2fv(tileShader.uniforms.uTilesetTileSize!, this._tilesetTileSizeBuffer);
+                    gl.uniform2fv(tileShader.uniforms.uTilesetTileOffset!, this._tilesetTileOffsetBuffer);
+                    gl.uniform2fv(tileShader.uniforms.uInverseTilesetTextureSize!, this._inverseTilesetTextureSizeBuffer);
                 }
 
                 return tileShader;
@@ -391,7 +423,7 @@ export class GLTilemap
 
             case ELayerType.Imagelayer:
             {
-                const imageShader = this.shaders.imagelayer;
+                const imageShader = this.shaders!.imagelayer;
                 gl.useProgram(imageShader.program);
 
                 return imageShader;
@@ -401,20 +433,38 @@ export class GLTilemap
 
     private _updateViewportSize()
     {
+        // @if DEBUG
+        ASSERT(!!(this.gl && this.shaders), 'Cannot call `_updateViewportSize` before `glInitialize`.');
+        // @endif
+
         this._scaledViewportSize[0] = this._viewportSize[0] / this._tileScale;
         this._scaledViewportSize[1] = this._viewportSize[1] / this._tileScale;
 
-        const gl = this.gl;
+        const gl = this.gl!;
 
-        const tileShader = this.shaders.tilelayer;
+        const tileShader = this.shaders!.tilelayer;
+
+        // @if DEBUG
+        ASSERT(!!(tileShader.uniforms.uViewportSize
+            && tileShader.uniforms.uInverseTileScale),
+            'Invalid uniforms for tile layer shader.');
+        // @endif
+
         gl.useProgram(tileShader.program);
-        gl.uniform2fv(tileShader.uniforms.uViewportSize, this._scaledViewportSize);
-        gl.uniform1f(tileShader.uniforms.uInverseTileScale, 1.0 / this._tileScale);
+        gl.uniform2fv(tileShader.uniforms.uViewportSize!, this._scaledViewportSize);
+        gl.uniform1f(tileShader.uniforms.uInverseTileScale!, 1.0 / this._tileScale);
 
-        const imageShader = this.shaders.imagelayer;
+        const imageShader = this.shaders!.imagelayer;
+
+        // @if DEBUG
+        ASSERT(!!(imageShader.uniforms.uViewportSize
+            && imageShader.uniforms.uInverseTileScale),
+            'Invalid uniforms for image shader.');
+        // @endif
+
         gl.useProgram(imageShader.program);
-        gl.uniform2fv(imageShader.uniforms.uViewportSize, this._scaledViewportSize);
-        gl.uniform1f(imageShader.uniforms.uInverseTileScale, 1.0 / this._tileScale);
+        gl.uniform2fv(imageShader.uniforms.uViewportSize!, this._scaledViewportSize);
+        gl.uniform1f(imageShader.uniforms.uInverseTileScale!, 1.0 / this._tileScale);
     }
 
     private _buildBufferData()
@@ -451,14 +501,20 @@ export class GLTilemap
 
     private _createShaders()
     {
+        // @if DEBUG
+        ASSERT(!!(this.gl), 'Cannot call `_createShaders` before `glInitialize`.');
+        // @endif
+
         const tilelayerFragShader = tilelayerFS
             .replace('#pragma define(NUM_TILESETS)', `#define NUM_TILESETS ${this._tilesets.length}`)
             .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${this._totalTilesetImages}`);
 
+        const gl = this.gl!;
+
         this.shaders = {
-            background: new GLProgram(this.gl, backgroundVS, backgroundFS, GLTilemap._attribIndices),
-            tilelayer: new GLProgram(this.gl, tilelayerVS, tilelayerFragShader, GLTilemap._attribIndices),
-            imagelayer: new GLProgram(this.gl, imagelayerVS, imagelayerFS, GLTilemap._attribIndices),
+            background: new GLProgram(gl, backgroundVS, backgroundFS, GLTilemap._attribIndices),
+            tilelayer: new GLProgram(gl, tilelayerVS, tilelayerFragShader, GLTilemap._attribIndices),
+            imagelayer: new GLProgram(gl, imagelayerVS, imagelayerFS, GLTilemap._attribIndices),
         };
     }
 }

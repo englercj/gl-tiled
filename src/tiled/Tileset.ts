@@ -1,4 +1,4 @@
-import { IDictionary, IPoint } from '../typings/types';
+import { IPoint } from '../IPoint';
 import { IProperty } from './IProperty';
 import { IObjectgroup } from './layers';
 
@@ -119,9 +119,6 @@ export interface IWangSet
 /**
  * Interface representing a Tiled tileset.
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/
- *
- * The "since" comments in the docs below are Tiled versions not versions of
- * this library.
  */
 export interface ITileset
 {

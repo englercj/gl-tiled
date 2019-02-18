@@ -1,4 +1,5 @@
-import { IDictionary } from '../typings/types';
+import { IDictionary } from '../IDictionary';
+import { hasOwnKey } from './hasOwnKey';
 
 /**
  * Helper class to manage GL shader programs.
@@ -7,13 +8,13 @@ import { IDictionary } from '../typings/types';
 export class GLProgram
 {
     /** The underlying GL program. */
-    public program: WebGLProgram;
+    program: WebGLProgram;
 
     /** The attribute locations of this program */
-    public attributes: IDictionary<number>;
+    attributes: IDictionary<number> = {};
 
     /** The uniform locations of this program */
-    public uniforms: IDictionary<WebGLUniformLocation>;
+    uniforms: IDictionary<WebGLUniformLocation> = {};
 
     /**
      * @param gl The rendering context.
@@ -32,21 +33,33 @@ export class GLProgram
         );
 
         // build a list of attribute locations
-        this.attributes = {};
         const aCount = gl.getProgramParameter(this.program, gl.ACTIVE_ATTRIBUTES);
         for (let i = 0; i < aCount; ++i)
         {
             const attrib = gl.getActiveAttrib(this.program, i);
-            this.attributes[attrib.name] = gl.getAttribLocation(this.program, attrib.name);
+
+            if (attrib)
+            {
+                this.attributes[attrib.name] = gl.getAttribLocation(this.program, attrib.name);
+            }
         }
 
         // build a list of uniform locations
-        this.uniforms = {};
         const uCount = gl.getProgramParameter(this.program, gl.ACTIVE_UNIFORMS);
-        for (let i = 0; i < uCount; ++i) {
+        for (let i = 0; i < uCount; ++i)
+        {
             const uniform = gl.getActiveUniform(this.program, i);
-            const name = uniform.name.replace('[0]', '');
-            this.uniforms[name] = gl.getUniformLocation(this.program, name);
+
+            if (uniform)
+            {
+                const name = uniform.name.replace('[0]', '');
+                const loc = gl.getUniformLocation(this.program, name);
+
+                if (loc)
+                {
+                    this.uniforms[name] = loc;
+                }
+            }
         }
     }
 
@@ -64,15 +77,28 @@ export class GLProgram
 
         const program = gl.createProgram();
 
+        if (!program)
+        {
+            throw new Error('Failed to create WebGL program object.');
+        }
+
         gl.attachShader(program, glVertShader);
         gl.attachShader(program, glFragShader);
 
         // optionally, set the attributes manually for the program rather than letting WebGL decide..
         if (attributeLocations)
         {
-            for (const i in attributeLocations)
+            for (const k in attributeLocations)
             {
-                gl.bindAttribLocation(program, attributeLocations[i], i);
+                if (!hasOwnKey(attributeLocations, k))
+                    continue;
+
+                const location = attributeLocations[k];
+
+                if (location)
+                {
+                    gl.bindAttribLocation(program, location, k);
+                }
             }
         }
 
@@ -107,6 +133,11 @@ export class GLProgram
     static compileShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader
     {
         const shader = gl.createShader(type);
+
+        if (!shader)
+        {
+            throw new Error('Failed to create WebGL shader object.');
+        }
 
         gl.shaderSource(shader, source);
         gl.compileShader(shader);

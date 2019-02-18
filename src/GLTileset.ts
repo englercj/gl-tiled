@@ -1,6 +1,12 @@
-import { ITileset, ITerrain, ITile } from './tiled/Tileset';
+import { ITileset, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
-import { IAssets, IPoint, IDictionary } from './typings/types';
+import { IDictionary } from './IDictionary';
+import { IAssets } from './IAssets';
+import { IPoint } from './IPoint';
+
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
 
 export interface ITileProps
 {
@@ -9,7 +15,7 @@ export interface ITileProps
     flippedX: boolean;
     flippedY: boolean;
     flippedAD: boolean;
-    tile: ITile;
+    tile?: ITile;
 }
 
 /**
@@ -31,17 +37,17 @@ export enum TilesetFlags {
 
 export class GLTileset
 {
-    public gl: WebGLRenderingContext;
+    gl: WebGLRenderingContext | null = null;
 
     /** The images in this tileset. */
-    public images: TexImageSource[] = [];
+    images: (TexImageSource | null)[] = [];
 
     /** The gl textures in this tileset */
-    public textures: WebGLTexture[] = [];
+    textures: (WebGLTexture | null)[] = [];
 
     private _lidToTileMap: IDictionary<ITile> = {};
 
-    constructor(public desc: ITileset, assets?: IAssets)
+    constructor(public readonly desc: ITileset, assets?: IAssets)
     {
         // load the images
         if (this.desc.image)
@@ -106,7 +112,7 @@ export class GLTileset
      *
      * @param gid The global ID of the tile in a map.
      */
-    getTileProperties(gid: number): ITileProps
+    getTileProperties(gid: number): ITileProps | null
     {
         if (!gid)
             return null;
@@ -131,10 +137,16 @@ export class GLTileset
 
     bind(startSlot: number)
     {
+        // @if DEBUG
+        ASSERT(!!(this.gl), 'Cannot call `bind` before `glInitialize`.');
+        // @endif
+
+        const gl = this.gl!;
+
         for (let i = 0; i < this.textures.length; ++i)
         {
-            this.gl.activeTexture(startSlot + i);
-            this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[i]);
+            gl.activeTexture(startSlot + i);
+            gl.bindTexture(gl.TEXTURE_2D, this.textures[i]);
         }
     }
 
@@ -171,10 +183,10 @@ export class GLTileset
             if (tex)
             {
                 gl.deleteTexture(tex);
-                this.textures[i] = null;
             }
         }
 
+        this.textures.length = 0;
         this.gl = null;
     }
 
@@ -182,8 +194,8 @@ export class GLTileset
     {
         const imgIndex = this.images.length;
 
-        this.textures.push(null);
         this.images.push(null);
+        this.textures.push(null);
 
         loadImage(src, assets, (errEvent, img) =>
         {
@@ -200,6 +212,11 @@ export class GLTileset
         const gl = this.gl;
         const img = this.images[imgIndex];
         const tex = this.textures[imgIndex] = gl.createTexture();
+
+        if (!tex || !img)
+        {
+            throw new Error('Failed to create WebGL texture for tileset.');
+        }
 
         gl.bindTexture(gl.TEXTURE_2D, tex);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);

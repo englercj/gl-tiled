@@ -1,4 +1,4 @@
-import { IDictionary, IPoint } from '../typings/types';
+import { IPoint } from '../IPoint';
 import { IProperty } from './IProperty';
 import { ITileset } from './Tileset';
 

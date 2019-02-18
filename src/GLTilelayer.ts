@@ -62,15 +62,15 @@ export class GLTilelayer
 {
     type: ELayerType.Tilelayer = ELayerType.Tilelayer;
 
-    public gl: WebGLRenderingContext;
+    gl: WebGLRenderingContext | null = null;
 
-    public scrollScaleX = 1;
-    public scrollScaleY = 1;
+    scrollScaleX = 1;
+    scrollScaleY = 1;
 
-    public texture: WebGLTexture = null;
-    public textureData: Uint8Array;
+    texture: WebGLTexture | null = null;
+    textureData: Uint8Array;
 
-    public alpha: number;
+    alpha: number;
 
     private _animations: IAnimationData[] = [];
 
@@ -78,14 +78,14 @@ export class GLTilelayer
 
     private _repeatTiles = true;
 
-    constructor(public desc: ITilelayer, tilesets: ReadonlyArray<GLTileset>)
+    constructor(public readonly desc: ITilelayer, tilesets: ReadonlyArray<GLTileset>)
     {
         this._inverseTileCount[0] = 1 / desc.width;
         this._inverseTileCount[1] = 1 / desc.height;
 
         this.textureData = new Uint8Array(desc.width * desc.height * 4);
 
-        this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
+        this.alpha = desc.opacity;
 
         // If this isn't true then we probably did something wrong or got bad data...
         // This has caught me putting in base64 data instead of array data more than once!
@@ -181,10 +181,17 @@ export class GLTilelayer
                                 elapsedTime: 0,
                                 frames: tileprops.tile.animation.map((v) =>
                                 {
+                                    const animTileGid = v.tileid + tileset.desc.firstgid;
+                                    const animTileProps = tileset.getTileProperties(animTileGid);
+
+                                    // @if DEBUG
+                                    ASSERT(!!animTileProps, 'Animated tiles must reference a valid GID from within the same tileset.');
+                                    // @endif
+
                                     return {
                                         duration: v.duration,
                                         tileid: v.tileid,
-                                        props: tileset.getTileProperties(v.tileid + tileset.desc.firstgid),
+                                        props: animTileProps!,
                                         startTime: maxTime,
                                         endTime: (maxTime += v.duration),
                                     };
@@ -272,15 +279,36 @@ export class GLTilelayer
 
     uploadUniforms(shader: GLProgram)
     {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `uploadUniforms` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
 
-        gl.uniform1f(shader.uniforms.uAlpha, this.alpha);
-        gl.uniform1i(shader.uniforms.uRepeatTiles, this._repeatTiles ? 1 : 0);
-        gl.uniform2fv(shader.uniforms.uInverseLayerTileCount, this._inverseTileCount);
+        // @if DEBUG
+        ASSERT(!!(shader.uniforms.uAlpha
+            && shader.uniforms.uRepeatTiles
+            && shader.uniforms.uInverseLayerTileCount),
+            'Invalid uniforms for tile layer.');
+        // @endif
+
+        gl.uniform1f(shader.uniforms.uAlpha!, this.alpha);
+        gl.uniform1i(shader.uniforms.uRepeatTiles!, this._repeatTiles ? 1 : 0);
+        gl.uniform2fv(shader.uniforms.uInverseLayerTileCount!, this._inverseTileCount);
     }
 
     uploadData(doBind: boolean = true)
     {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `uploadData` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
 
         if (doBind)
@@ -300,6 +328,13 @@ export class GLTilelayer
 
     setupTexture(doBind: boolean = true)
     {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `setupTexture` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
         const gl = this.gl;
 
         if (doBind)

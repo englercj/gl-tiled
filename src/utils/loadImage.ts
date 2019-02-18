@@ -1,42 +1,44 @@
-import { IAssets, TCallback2 } from '../typings/types';
+import { IAssets } from '../IAssets';
 
-export function loadImage(url: string, cache: IAssets, cb: TCallback2<ErrorEvent, TexImageSource>): TexImageSource
+export type TErrorEventCallback<T> = (error: ErrorEvent | null, arg: T) => void;
+
+export function loadImage(url: string, cache?: IAssets, cb?: TErrorEventCallback<TexImageSource>): TexImageSource
 {
     const asset = cache && cache[url];
-    let img: TexImageSource = null;
 
     if (asset)
     {
-        img = (asset as any).data || asset;
+        const img = (asset as any).data || asset;
+
+        if (cb)
+            cb(null, img);
+
+        return img;
     }
 
-    if (img)
+    const onLoadHandler = () =>
     {
-        cb(null, img);
-    }
-    else
+        img.removeEventListener('load', onLoadHandler, false);
+        img.removeEventListener('error', onErrorHandler, false);
+
+        if (cb)
+            cb(null, img);
+    };
+
+    const onErrorHandler = (e: ErrorEvent) =>
     {
-        img = new Image();
-        img.src = url;
+        img.removeEventListener('load', onLoadHandler, false);
+        img.removeEventListener('error', onErrorHandler, false);
 
-        img.onload = () =>
-        {
-            (img as HTMLImageElement).onload = null;
-            (img as HTMLImageElement).onerror = null;
+        if (cb)
+            cb(e, img);
+    };
 
-            if (cb)
-                cb(null, img);
-        };
+    const img = new Image();
+    img.src = url;
 
-        img.onerror = (e: ErrorEvent) =>
-        {
-            (img as HTMLImageElement).onload = null;
-            (img as HTMLImageElement).onerror = null;
-
-            if (cb)
-                cb(e, img);
-        };
-    }
+    img.addEventListener('load', onLoadHandler, false);
+    img.addEventListener('error', onErrorHandler, false);
 
     return img;
 }
