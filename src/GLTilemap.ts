@@ -2,7 +2,6 @@
 import { ASSERT } from './debug';
 // @endif
 
-import * as vec2 from 'gl-matrix/vec2';
 import { ILayer } from './tiled/layers';
 import { ITilemap } from './tiled/Tilemap';
 import { assertNever } from './utils/assertNever';
@@ -65,9 +64,9 @@ export class GLTilemap
     private _layers: TGLLayer[] = [];
     private _tilesets: GLTileset[] = [];
 
-    private _viewportSize = vec2.create();
-    private _scaledViewportSize = vec2.create();
-    private _inverseLayerTileSize = vec2.create();
+    private _viewportSize = new Float32Array(2);
+    private _scaledViewportSize = new Float32Array(2);
+    private _inverseLayerTileSize = new Float32Array(2);
 
     private _quadVerts = new Float32Array([
         //x  y  u  v

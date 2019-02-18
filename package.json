@@ -42,9 +42,7 @@
     "README.md",
     "package.json"
   ],
-  "dependencies": {
-    "gl-matrix": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "cross-env": "^5.2.0",
     "fs-extra": "^7.0.1",

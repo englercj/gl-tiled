@@ -2,7 +2,6 @@
 import { ASSERT } from './debug';
 // @endif
 
-import * as vec2 from 'gl-matrix/vec2';
 import { ITilelayer } from './tiled/layers';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
@@ -75,7 +74,7 @@ export class GLTilelayer
 
     private _animations: IAnimationData[] = [];
 
-    private _inverseTileCount = vec2.create();
+    private _inverseTileCount = new Float32Array(2);
 
     private _repeatTiles = true;
 
