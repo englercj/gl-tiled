@@ -2,7 +2,7 @@
 import { ASSERT } from './debug';
 // @endif
 
-import { vec2 } from 'gl-matrix';
+import * as vec2 from 'gl-matrix/vec2';
 import { ILayer } from './tiled/layers';
 import { ITilemap } from './tiled/Tilemap';
 import { assertNever } from './utils/assertNever';

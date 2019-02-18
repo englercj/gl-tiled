@@ -43,10 +43,9 @@
     "package.json"
   ],
   "dependencies": {
-    "gl-matrix": "^2.8.1"
+    "gl-matrix": "^3.0.0"
   },
   "devDependencies": {
-    "@types/gl-matrix": "^2.4.5",
     "cross-env": "^5.2.0",
     "fs-extra": "^7.0.1",
     "gh-pages": "^2.0.1",

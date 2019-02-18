@@ -2,7 +2,7 @@
 import { ASSERT } from './debug';
 // @endif
 
-import { vec2 } from 'gl-matrix';
+import * as vec2 from 'gl-matrix/vec2';
 import { ITilelayer } from './tiled/layers';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
