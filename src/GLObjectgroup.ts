@@ -1,9 +1,9 @@
-
 // @if DEBUG
 import { ASSERT } from './debug';
+// @endif
+
 import { ELayerType } from './ELayerType';
 import { IObjectgroup } from './tiled/layers';
-// @endif
 
 export class GLObjectgroup
 {

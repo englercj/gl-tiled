@@ -1,12 +1,12 @@
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
+
 import { ITileset, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
 import { IDictionary } from './IDictionary';
 import { IAssetCache } from './IAssetCache';
 import { IPoint } from './IPoint';
-
-// @if DEBUG
-import { ASSERT } from './debug';
-// @endif
 
 export interface ITileProps
 {

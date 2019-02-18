@@ -1,3 +1,7 @@
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
+
 import { vec2 } from 'gl-matrix';
 import { ILayer } from './tiled/layers';
 import { ITilemap } from './tiled/Tilemap';
@@ -18,10 +22,6 @@ import tilelayerVS from './shaders/tilelayer.vert';
 import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
 import imagelayerFS from './shaders/imagelayer.frag';
-
-// @if DEBUG
-import { ASSERT } from './debug';
-// @endif
 
 export type TGLLayer = (GLTilelayer | GLImagelayer | GLObjectgroup);
 

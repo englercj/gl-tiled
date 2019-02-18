@@ -1,13 +1,13 @@
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
+
 import { vec2 } from 'gl-matrix';
 import { ITilelayer } from './tiled/layers';
 import { ELayerType } from './ELayerType';
 import { GLTileset, TilesetFlags, ITileProps } from './GLTileset';
 import { GLProgram } from './utils/GLProgram';
-
-// @if DEBUG
-import { ASSERT } from './debug';
 import { ITileAnimationFrame } from './tiled/Tileset';
-// @endif
 
 interface IAnimationDataFrame
 {

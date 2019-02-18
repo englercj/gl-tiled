@@ -1,13 +1,13 @@
+// @if DEBUG
+import { ASSERT } from './debug';
+// @endif
+
 import { IImagelayer } from './tiled/layers';
 import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLProgram } from './utils/GLProgram';
 import { IAssetCache } from './IAssetCache';
-
-// @if DEBUG
-import { ASSERT } from './debug';
-// @endif
 
 export class GLImagelayer
 {
