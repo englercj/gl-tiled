@@ -260,7 +260,10 @@ function onMapChange()
 
     if (!maps[mapUrl])
     {
-        tileMap = maps[mapUrl] = new glTiled.GLTilemap(loader.resources[mapUrl].data, { gl, assetCache: loader.resources });
+        tileMap = maps[mapUrl] = new glTiled.GLTilemap(loader.resources[mapUrl].data, {
+            gl: gl,
+            assetCache: loader.resources
+        });
         tileMap.repeatTiles = false;
     }
     else
