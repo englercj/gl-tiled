@@ -88,12 +88,16 @@ export class GLTilelayer
 
         this.alpha = desc.opacity;
 
+        // @if DEBUG
+        ASSERT(typeof this.desc.data !== 'string', 'Base64 encoded layer data is not supported.');
+        // @endif
+
         // If this isn't true then we probably did something wrong or got bad data...
         // This has caught me putting in base64 data instead of array data more than once!
         if ((desc.width * desc.height) !== this.desc.data.length)
             throw new Error('Sizes are off!');
 
-        this.buildMapTexture(tilesets);
+        this._buildMapTexture(tilesets);
     }
 
     get repeatTiles(): boolean
@@ -106,7 +110,7 @@ export class GLTilelayer
         if (v !== this._repeatTiles)
         {
             this._repeatTiles = v;
-            this.setupTexture(); // delay until next draw?
+            this._setupTexture(); // delay until next draw?
         }
     }
 
@@ -116,7 +120,7 @@ export class GLTilelayer
 
         this.gl = gl;
         this.texture = gl.createTexture();
-        this.upload();
+        this._upload();
     }
 
     glTerminate(): void
@@ -134,12 +138,135 @@ export class GLTilelayer
     }
 
     /**
+     * Updates the layer's animations by the given delta time.
+     *
+     * @param dt Delta time in milliseconds to perform an update for.
+     */
+    update(dt: number): void
+    {
+        let needsUpload = false;
+
+        for (let i = 0; i < this._animations.length; ++i)
+        {
+            const anim = this._animations[i];
+
+            anim.elapsedTime = (anim.elapsedTime + dt) % anim.maxTime;
+
+            for (let f = 0; f < anim.frames.length; ++f)
+            {
+                const frame = anim.frames[f];
+
+                if (anim.elapsedTime >= frame.startTime && anim.elapsedTime < frame.endTime)
+                {
+                    if (anim.activeFrame !== f)
+                    {
+                        needsUpload = true;
+                        anim.activeFrame = f;
+                        this.textureData[anim.index] = frame.props.coords.x;
+                        this.textureData[anim.index + 1] = frame.props.coords.y;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (needsUpload)
+            this._uploadData(true);
+    }
+
+    uploadUniforms(shader: GLProgram): void
+    {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `uploadUniforms` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
+        const gl = this.gl;
+
+        // @if DEBUG
+        ASSERT(!!(shader.uniforms.uAlpha
+            && shader.uniforms.uRepeatTiles
+            && shader.uniforms.uInverseLayerTileCount),
+            'Invalid uniforms for tile layer.');
+        // @endif
+
+        gl.uniform1f(shader.uniforms.uAlpha!, this.alpha);
+        gl.uniform1i(shader.uniforms.uRepeatTiles!, this._repeatTiles ? 1 : 0);
+        gl.uniform2fv(shader.uniforms.uInverseLayerTileCount!, this._inverseTileCount);
+    }
+
+    private _upload(): void
+    {
+        this._setupTexture();
+        this._uploadData(false);
+    }
+
+    private _uploadData(doBind: boolean): void
+    {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `uploadData` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
+        const gl = this.gl;
+
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+        gl.texImage2D(gl.TEXTURE_2D,
+            0,          // level
+            gl.RGBA,    // internal format
+            this.desc.width,
+            this.desc.height,
+            0,          // border
+            gl.RGBA,    // format
+            gl.UNSIGNED_BYTE, // type
+            this.textureData
+        );
+    }
+
+    private _setupTexture(doBind: boolean = true): void
+    {
+        // @if DEBUG
+        ASSERT(!!this.gl, 'Cannot call `setupTexture` before `glInitialize`.');
+        // @endif
+
+        if (!this.gl)
+            return;
+
+        const gl = this.gl;
+
+        if (doBind)
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+        // MUST be filtered with NEAREST or tile lookup fails
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+
+        if (this._repeatTiles)
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        }
+        else
+        {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+    }
+
+    /**
      * Builds the texture used as the map for this layer. Each texture has the data
      * necessary for the shader to lookup the correct texel to display.
      *
      * @param tilesets The list of tilesets, who's images will be uploaded to the GPU elsewhere.
      */
-    buildMapTexture(tilesets: ReadonlyArray<GLTileset>): void
+    private _buildMapTexture(tilesets: ReadonlyArray<GLTileset>): void
     {
         // TODO:
         // - Might be faster to build this texture on the GPU in a framebuffer?
@@ -150,10 +277,6 @@ export class GLTilelayer
         // - Can I upload animation data and just lookup the right frame in the shader? That would
         //   mean I don't have to upload a new layer texture each frame like I do now.
         let index = 0;
-
-        // @if DEBUG
-        ASSERT(typeof this.desc.data !== 'string', 'Base64 encoded layer data is not supported.');
-        // @endif
 
         const data = this.desc.data as number[];
 
@@ -237,128 +360,5 @@ export class GLTilelayer
         });
 
         this._animations[this._animations.length - 1].maxTime = maxTime;
-    }
-
-    /**
-     * Updates the layer's animations by the given delta time.
-     *
-     * @param dt Delta time in milliseconds to perform an update for.
-     */
-    update(dt: number): void
-    {
-        let needsUpload = false;
-
-        for (let i = 0; i < this._animations.length; ++i)
-        {
-            const anim = this._animations[i];
-
-            anim.elapsedTime = (anim.elapsedTime + dt) % anim.maxTime;
-
-            for (let f = 0; f < anim.frames.length; ++f)
-            {
-                const frame = anim.frames[f];
-
-                if (anim.elapsedTime >= frame.startTime && anim.elapsedTime < frame.endTime)
-                {
-                    if (anim.activeFrame !== f)
-                    {
-                        needsUpload = true;
-                        anim.activeFrame = f;
-                        this.textureData[anim.index] = frame.props.coords.x;
-                        this.textureData[anim.index + 1] = frame.props.coords.y;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        if (needsUpload)
-            this.uploadData();
-    }
-
-    upload(): void
-    {
-        this.setupTexture();
-        this.uploadData(false);
-    }
-
-    uploadUniforms(shader: GLProgram): void
-    {
-        // @if DEBUG
-        ASSERT(!!this.gl, 'Cannot call `uploadUniforms` before `glInitialize`.');
-        // @endif
-
-        if (!this.gl)
-            return;
-
-        const gl = this.gl;
-
-        // @if DEBUG
-        ASSERT(!!(shader.uniforms.uAlpha
-            && shader.uniforms.uRepeatTiles
-            && shader.uniforms.uInverseLayerTileCount),
-            'Invalid uniforms for tile layer.');
-        // @endif
-
-        gl.uniform1f(shader.uniforms.uAlpha!, this.alpha);
-        gl.uniform1i(shader.uniforms.uRepeatTiles!, this._repeatTiles ? 1 : 0);
-        gl.uniform2fv(shader.uniforms.uInverseLayerTileCount!, this._inverseTileCount);
-    }
-
-    uploadData(doBind: boolean = true): void
-    {
-        // @if DEBUG
-        ASSERT(!!this.gl, 'Cannot call `uploadData` before `glInitialize`.');
-        // @endif
-
-        if (!this.gl)
-            return;
-
-        const gl = this.gl;
-
-        if (doBind)
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-        gl.texImage2D(gl.TEXTURE_2D,
-            0,          // level
-            gl.RGBA,    // internal format
-            this.desc.width,
-            this.desc.height,
-            0,          // border
-            gl.RGBA,    // format
-            gl.UNSIGNED_BYTE, // type
-            this.textureData
-        );
-    }
-
-    setupTexture(doBind: boolean = true): void
-    {
-        // @if DEBUG
-        ASSERT(!!this.gl, 'Cannot call `setupTexture` before `glInitialize`.');
-        // @endif
-
-        if (!this.gl)
-            return;
-
-        const gl = this.gl;
-
-        if (doBind)
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-        // MUST be filtered with NEAREST or tile lookup fails
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-
-        if (this._repeatTiles)
-        {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-        }
-        else
-        {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        }
     }
 }
