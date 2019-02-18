@@ -23,6 +23,21 @@ import { ASSERT } from './debug';
 
 export type TGLLayer = (GLTilelayer | GLImagelayer);
 
+export interface ITilemapOptions
+{
+    /** The WebGL context to use to render. */
+    gl?: WebGLRenderingContext;
+
+    /** A cache of preloaded assets. Keyed by URL as it appears in the tilemap data. */
+    assets?: IAssets;
+
+    /** Should we automatically create each imagelayer? Default: true */
+    createAllImagelayers?: boolean;
+
+    /** Should we automatically create each tilelayer? Default: true */
+    createAllTilelayers?: boolean;
+}
+
 interface IShaderCache
 {
     background: GLProgram;
@@ -70,7 +85,7 @@ export class GLTilemap
     private _tilesetTileOffsetBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
-    constructor(public readonly desc: ITilemap, gl?: WebGLRenderingContext, assets?: IAssets)
+    constructor(public readonly desc: ITilemap, options?: ITilemapOptions)
     {
         // @if DEBUG
         ASSERT(desc.version >= 1.2, `Unsupported JSON format version ${desc.version}, please update your JSON to v1.2`);
@@ -81,12 +96,12 @@ export class GLTilemap
 
         for (let i = 0; i < desc.tilesets.length; ++i)
         {
-            const tileset = new GLTileset(desc.tilesets[i], assets);
+            const tileset = new GLTileset(desc.tilesets[i], options && options.assets);
             this._totalTilesetImages += tileset.images.length;
             this._tilesets.push(tileset);
         }
 
-        this._createLayers(desc.layers, assets);
+        this._createLayers(desc.layers, options);
 
         // parse the background color
         this._backgroundColor = new Float32Array(4);
@@ -101,9 +116,9 @@ export class GLTilemap
         this._inverseTilesetTextureSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._buildBufferData();
 
-        if (gl)
+        if (options && options.gl)
         {
-            this.glInitialize(gl);
+            this.glInitialize(options.gl);
         }
     }
 
@@ -490,18 +505,37 @@ export class GLTilemap
         }
     }
 
-    private _createLayers(layers: ILayer[], assets?: IAssets)
+    private _createLayers(layers: ILayer[], options?: ITilemapOptions): void
     {
+        const opts = options || {};
+        const assets = opts.assets;
+        const createTilelayers = typeof opts.createAllTilelayers === 'boolean' ? opts.createAllTilelayers : true;
+        const createImagelayers = typeof opts.createAllImagelayers === 'boolean' ? opts.createAllImagelayers : true;
+
+        if (!createTilelayers && !createImagelayers)
+            return;
+
         for (let i = 0; i < layers.length; ++i)
         {
             const layer = layers[i];
 
             switch (layer.type)
             {
-                case 'tilelayer': this._layers.push(new GLTilelayer(layer, this.tilesets)); break;
+                case 'tilelayer':
+                    if (createTilelayers)
+                        this._layers.push(new GLTilelayer(layer, this.tilesets));
+                    break;
+
                 // case 'objectgroup': this._layers.push(new GLObjectlayer(l)); break;
-                case 'imagelayer': this._layers.push(new GLImagelayer(layer, assets)); break;
-                case 'group': this._createLayers(layer.layers); break;
+
+                case 'imagelayer':
+                    if (createImagelayers)
+                        this._layers.push(new GLImagelayer(layer, assets));
+                    break;
+
+                case 'group':
+                    this._createLayers(layer.layers);
+                    break;
             }
         }
     }

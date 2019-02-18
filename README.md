@@ -18,7 +18,7 @@ map.
 ```js
 // Create the map instance. `mapData` is the parsed Tiled JSON map,
 // and `gl` is the WebGLRenderingContext.
-var tilemap = new glTiled.Tilemap(mapData, gl);
+var tilemap = new glTiled.Tilemap(mapData, { gl });
 
 // size the viewport of the map
 tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
