@@ -6,6 +6,7 @@ import { GLProgram } from './utils/GLProgram';
 
 // @if DEBUG
 import { ASSERT } from './debug';
+import { ITileAnimationFrame } from './tiled/Tileset';
 // @endif
 
 interface IAnimationDataFrame
@@ -173,33 +174,7 @@ export class GLTilelayer
                     {
                         if (tileprops.tile && tileprops.tile.animation)
                         {
-                            let maxTime = 0;
-
-                            this._animations.push({
-                                index,
-                                activeFrame: -1,
-                                elapsedTime: 0,
-                                frames: tileprops.tile.animation.map((v) =>
-                                {
-                                    const animTileGid = v.tileid + tileset.desc.firstgid;
-                                    const animTileProps = tileset.getTileProperties(animTileGid);
-
-                                    // @if DEBUG
-                                    ASSERT(!!animTileProps, 'Animated tiles must reference a valid GID from within the same tileset.');
-                                    // @endif
-
-                                    return {
-                                        duration: v.duration,
-                                        tileid: v.tileid,
-                                        props: animTileProps!,
-                                        startTime: maxTime,
-                                        endTime: (maxTime += v.duration),
-                                    };
-                                }),
-                                maxTime: 0,
-                            });
-
-                            this._animations[this._animations.length - 1].maxTime = maxTime;
+                            this._addAnimation(index, tileset, tileprops.tile.animation);
                         }
 
                         this.textureData[index++] = tileprops.coords.x;
@@ -231,6 +206,37 @@ export class GLTilelayer
             this.textureData[index++] = 255;
             this.textureData[index++] = 255;
         }
+    }
+
+    private _addAnimation(index: number, tileset: GLTileset, animationFrames: ITileAnimationFrame[]): void
+    {
+        let maxTime = 0;
+
+        this._animations.push({
+            index,
+            activeFrame: -1,
+            elapsedTime: 0,
+            frames: animationFrames.map((v) =>
+            {
+                const animTileGid = v.tileid + tileset.desc.firstgid;
+                const animTileProps = tileset.getTileProperties(animTileGid);
+
+                // @if DEBUG
+                ASSERT(!!animTileProps, 'Animated tiles must reference a valid GID from within the same tileset.');
+                // @endif
+
+                return {
+                    duration: v.duration,
+                    tileid: v.tileid,
+                    props: animTileProps!,
+                    startTime: maxTime,
+                    endTime: (maxTime += v.duration),
+                };
+            }),
+            maxTime: 0,
+        });
+
+        this._animations[this._animations.length - 1].maxTime = maxTime;
     }
 
     /**
