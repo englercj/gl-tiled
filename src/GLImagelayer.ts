@@ -3,7 +3,7 @@ import { loadImage } from './utils/loadImage';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLProgram } from './utils/GLProgram';
-import { IAssets } from './IAssets';
+import { IAssetCache } from './IAssetCache';
 
 // @if DEBUG
 import { ASSERT } from './debug';
@@ -24,7 +24,7 @@ export class GLImagelayer
 
     private _transparentColor: Float32Array;
 
-    constructor(public readonly desc: IImagelayer, assets?: IAssets)
+    constructor(public readonly desc: IImagelayer, assetCache?: IAssetCache)
     {
         this.alpha = typeof desc.opacity === 'number' ? desc.opacity : 1.0;
 
@@ -34,7 +34,7 @@ export class GLImagelayer
         if (desc.transparentcolor)
             parseColorStr(desc.transparentcolor, this._transparentColor);
 
-        loadImage(desc.image, assets, (errEvent, img) =>
+        loadImage(desc.image, assetCache, (errEvent, img) =>
         {
             this.image = img;
             this.upload();

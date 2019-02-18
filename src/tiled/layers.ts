@@ -83,7 +83,11 @@ export interface IObjectgroup extends ILayerBase
 {
     type: 'objectgroup';
 
-    /** 'topdown' (default) or 'index'. */
+    /**
+     * Whether the objects are drawn according to the order of
+     * appearance (index) or sorted by their y-coordinate (topdown).
+     * Defaults to topdown.
+     */
     draworder: 'topdown' | 'index';
 
     /** Array of Objects. objectgroup only. */

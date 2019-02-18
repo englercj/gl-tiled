@@ -3,7 +3,7 @@ export * from '../../src/GLImagelayer';
 export * from '../../src/GLTilelayer';
 export * from '../../src/GLTilemap';
 export * from '../../src/GLTileset';
-export * from '../../src/IAssets';
+export * from '../../src/IAssetCache';
 export * from '../../src/IDictionary';
 export * from '../../src/IPoint';
 

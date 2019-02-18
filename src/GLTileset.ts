@@ -1,7 +1,7 @@
 import { ITileset, ITile } from './tiled/Tileset';
 import { loadImage } from './utils/loadImage';
 import { IDictionary } from './IDictionary';
-import { IAssets } from './IAssets';
+import { IAssetCache } from './IAssetCache';
 import { IPoint } from './IPoint';
 
 // @if DEBUG
@@ -47,12 +47,12 @@ export class GLTileset
 
     private _lidToTileMap: IDictionary<ITile> = {};
 
-    constructor(public readonly desc: ITileset, assets?: IAssets)
+    constructor(public readonly desc: ITileset, assetCache?: IAssetCache)
     {
         // load the images
         if (this.desc.image)
         {
-            this._addImage(this.desc.image, assets);
+            this._addImage(this.desc.image, assetCache);
         }
 
         if (this.desc.tiles)
@@ -65,7 +65,7 @@ export class GLTileset
 
                 if (tile.image)
                 {
-                    this._addImage(tile.image, assets);
+                    this._addImage(tile.image, assetCache);
                 }
             }
         }
@@ -190,7 +190,7 @@ export class GLTileset
         this.gl = null;
     }
 
-    private _addImage(src: string, assets?: IAssets): void
+    private _addImage(src: string, assets?: IAssetCache): void
     {
         const imgIndex = this.images.length;
 

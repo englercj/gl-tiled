@@ -1,14 +1,16 @@
 import { vec2 } from 'gl-matrix';
 import { ILayer } from './tiled/layers';
 import { ITilemap } from './tiled/Tilemap';
+import { assertNever } from './utils/assertNever';
 import { GLProgram } from './utils/GLProgram';
 import { hasOwnKey } from './utils/hasOwnKey';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLTileset } from './GLTileset';
+import { GLObjectgroup } from './GLObjectgroup';
 import { GLTilelayer } from './GLTilelayer';
 import { GLImagelayer } from './GLImagelayer';
-import { IAssets } from './IAssets';
+import { IAssetCache } from './IAssetCache';
 
 import backgroundVS from './shaders/background.vert';
 import backgroundFS from './shaders/background.frag';
@@ -21,7 +23,7 @@ import imagelayerFS from './shaders/imagelayer.frag';
 import { ASSERT } from './debug';
 // @endif
 
-export type TGLLayer = (GLTilelayer | GLImagelayer);
+export type TGLLayer = (GLTilelayer | GLImagelayer | GLObjectgroup);
 
 export interface ITilemapOptions
 {
@@ -29,13 +31,16 @@ export interface ITilemapOptions
     gl?: WebGLRenderingContext;
 
     /** A cache of preloaded assets. Keyed by URL as it appears in the tilemap data. */
-    assets?: IAssets;
+    assetCache?: IAssetCache;
 
     /** Should we automatically create each imagelayer? Default: true */
     createAllImagelayers?: boolean;
 
     /** Should we automatically create each tilelayer? Default: true */
     createAllTilelayers?: boolean;
+
+    /** Should we automatically create each tilelayer? Default: false */
+    createAllObjectgroups?: boolean;
 }
 
 interface IShaderCache
@@ -54,6 +59,8 @@ export class GLTilemap
 
     gl: WebGLRenderingContext | null = null;
     shaders: IShaderCache | null = null;
+
+    readonly assetCache: IAssetCache | undefined = undefined;
 
     private _layers: TGLLayer[] = [];
     private _tilesets: GLTileset[] = [];
@@ -85,23 +92,26 @@ export class GLTilemap
     private _tilesetTileOffsetBuffer: Float32Array;
     private _inverseTilesetTextureSizeBuffer: Float32Array;
 
-    constructor(public readonly desc: ITilemap, options?: ITilemapOptions)
+    constructor(public readonly desc: ITilemap, options: ITilemapOptions = {})
     {
         // @if DEBUG
         ASSERT(desc.version >= 1.2, `Unsupported JSON format version ${desc.version}, please update your JSON to v1.2`);
         // @endif
+
+        if (options.assetCache)
+            this.assetCache = options.assetCache;
 
         this._inverseLayerTileSize[0] = 1 / desc.tilewidth;
         this._inverseLayerTileSize[1] = 1 / desc.tileheight;
 
         for (let i = 0; i < desc.tilesets.length; ++i)
         {
-            const tileset = new GLTileset(desc.tilesets[i], options && options.assets);
+            const tileset = new GLTileset(desc.tilesets[i], this.assetCache);
             this._totalTilesetImages += tileset.images.length;
             this._tilesets.push(tileset);
         }
 
-        this._createLayers(desc.layers, options);
+        this._createInitialLayers(desc.layers, options);
 
         // parse the background color
         this._backgroundColor = new Float32Array(4);
@@ -116,7 +126,7 @@ export class GLTilemap
         this._inverseTilesetTextureSizeBuffer = new Float32Array(this._totalTilesetImages * 2);
         this._buildBufferData();
 
-        if (options && options.gl)
+        if (options.gl)
         {
             this.glInitialize(options.gl);
         }
@@ -379,11 +389,35 @@ export class GLTilemap
                         -offsety + (y * layer.scrollScaleY)
                     );
                     break;
+
+                case ELayerType.Objectgroup:
+                    break;
+
+                default:
+                    assertNever(layer);
             }
 
-            gl.bindTexture(gl.TEXTURE_2D, layer.texture);
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            if (layer.type !== ELayerType.Objectgroup)
+            {
+                gl.bindTexture(gl.TEXTURE_2D, layer.texture);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
         }
+    }
+
+    createLayer(...name: string[]): boolean
+    {
+        if (name.length === 0)
+            return false;
+
+        const layer = this._findLayer(this.desc.layers, name, 0);
+
+        if (!layer)
+            return false;
+
+        this._createLayer(layer);
+
+        return true;
     }
 
     private _bindShader(layer: TGLLayer): GLProgram
@@ -428,12 +462,16 @@ export class GLTilemap
             }
 
             case ELayerType.Imagelayer:
+            case ELayerType.Objectgroup:
             {
                 const imageShader = this.shaders!.imagelayer;
                 gl.useProgram(imageShader.program);
 
                 return imageShader;
             }
+
+            default:
+                return assertNever(layer);
         }
     }
 
@@ -505,37 +543,88 @@ export class GLTilemap
         }
     }
 
-    private _createLayers(layers: ILayer[], options?: ITilemapOptions): void
+    private _findLayer(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
     {
-        const opts = options || {};
-        const assets = opts.assets;
-        const createTilelayers = typeof opts.createAllTilelayers === 'boolean' ? opts.createAllTilelayers : true;
-        const createImagelayers = typeof opts.createAllImagelayers === 'boolean' ? opts.createAllImagelayers : true;
+        for (let i = 0; i < layers.length; ++i)
+        {
+            const layer = layers[i];
 
-        if (!createTilelayers && !createImagelayers)
+            if (layer.name === names[nameIndex])
+            {
+                if (layer.type === 'group')
+                {
+                    // more names, so try something in this group
+                    if (names.length < nameIndex + 1)
+                    {
+                        return this._findLayer(layer.layers, names, ++nameIndex);
+                    }
+                    // No more names, return the group.
+                    else
+                    {
+                        return layer;
+                    }
+                }
+                else
+                {
+                    return layer;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private _createLayer(layer: ILayer): void
+    {
+        switch (layer.type)
+        {
+            case 'tilelayer':
+                this._layers.push(new GLTilelayer(layer, this.tilesets));
+                break;
+
+            case 'objectgroup':
+                this._layers.push(new GLObjectgroup(layer));
+                break;
+
+            case 'imagelayer':
+                this._layers.push(new GLImagelayer(layer, this.assetCache));
+                break;
+
+            case 'group':
+                for (let i = 0; i < layer.layers.length; ++i)
+                {
+                    this._createLayer(layer.layers[i]);
+                }
+                break;
+
+            default:
+                return assertNever(layer);
+        }
+    }
+
+    private _createInitialLayers(layers: ILayer[], options: ITilemapOptions): void
+    {
+        const createTilelayers = typeof options.createAllTilelayers === 'boolean' ? options.createAllTilelayers : true;
+        const createImagelayers = typeof options.createAllImagelayers === 'boolean' ? options.createAllImagelayers : true;
+        const createObjectgroups = typeof options.createAllObjectgroups === 'boolean' ? options.createAllObjectgroups : false;
+
+        // We don't create anything, early out.
+        if (!createTilelayers && !createImagelayers && !createObjectgroups)
             return;
 
         for (let i = 0; i < layers.length; ++i)
         {
             const layer = layers[i];
 
-            switch (layer.type)
+            if ((layer.type === 'tilelayer' && createTilelayers)
+                || (layer.type === 'objectgroup' && createObjectgroups)
+                || (layer.type === 'imagelayer' && createImagelayers))
             {
-                case 'tilelayer':
-                    if (createTilelayers)
-                        this._layers.push(new GLTilelayer(layer, this.tilesets));
-                    break;
-
-                // case 'objectgroup': this._layers.push(new GLObjectlayer(l)); break;
-
-                case 'imagelayer':
-                    if (createImagelayers)
-                        this._layers.push(new GLImagelayer(layer, assets));
-                    break;
-
-                case 'group':
-                    this._createLayers(layer.layers);
-                    break;
+                this._createLayer(layer);
+            }
+            else if (layer.type === 'group')
+            {
+                this._createInitialLayers(layer.layers, options);
             }
         }
     }
