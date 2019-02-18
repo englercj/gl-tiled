@@ -199,8 +199,11 @@ export class GLTileset
 
         loadImage(src, assets, (errEvent, img) =>
         {
-            this.images[imgIndex] = img;
-            this._createTexture(imgIndex);
+            if (!errEvent)
+            {
+                this.images[imgIndex] = img;
+                this._createTexture(imgIndex);
+            }
         });
     }
 
