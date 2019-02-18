@@ -16,7 +16,7 @@
  * @param message The message to display if the first param is not true.
  * @param data Extra data to log.
  */
-export function ASSERT(bool: boolean, message: string, data?: any)
+export function ASSERT(bool: boolean, message: string, data?: any): void
 {
     if (!bool)
     {
@@ -41,7 +41,7 @@ export function ASSERT(bool: boolean, message: string, data?: any)
  * @param message The message to display if the first param is not true.
  * @param data Extra data to log.
  */
-export function VALIDATE(bool: boolean, message: string, data?: any)
+export function VALIDATE(bool: boolean, message: string, data?: any): void
 {
     if (!bool)
     {

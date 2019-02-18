@@ -72,7 +72,7 @@ export class GLTileset
     }
 
     /** The last gid in this tileset */
-    get lastgid()
+    get lastgid(): number
     {
         return this.desc.firstgid + this.desc.tilecount;
     }
@@ -82,7 +82,7 @@ export class GLTileset
      *
      * @param gid The global ID of the tile in a map.
      */
-    containsGid(gid: number)
+    containsGid(gid: number): boolean
     {
         return this.containsLocalId(this.getTileLocalId(gid));
     }
@@ -92,7 +92,7 @@ export class GLTileset
      *
      * @param index The local index of a tile in this tileset.
      */
-    containsLocalId(index: number)
+    containsLocalId(index: number): boolean
     {
         return index >= 0 && index < this.desc.tilecount;
     }
@@ -102,7 +102,7 @@ export class GLTileset
      *
      * @param gid The global ID of the tile in a map.
      */
-    getTileLocalId(gid: number)
+    getTileLocalId(gid: number): number
     {
         return (gid & ~TilesetFlags.All) - this.desc.firstgid;
     }
@@ -135,7 +135,7 @@ export class GLTileset
         };
     }
 
-    bind(startSlot: number)
+    bind(startSlot: number): void
     {
         // @if DEBUG
         ASSERT(!!(this.gl), 'Cannot call `bind` before `glInitialize`.');
@@ -150,7 +150,7 @@ export class GLTileset
         }
     }
 
-    glInitialize(gl: WebGLRenderingContext)
+    glInitialize(gl: WebGLRenderingContext): void
     {
         this.glTerminate();
 
@@ -169,7 +169,7 @@ export class GLTileset
         }
     }
 
-    glTerminate()
+    glTerminate(): void
     {
         if (!this.gl)
             return;
@@ -190,7 +190,7 @@ export class GLTileset
         this.gl = null;
     }
 
-    private _addImage(src: string, assets?: IAssets)
+    private _addImage(src: string, assets?: IAssets): void
     {
         const imgIndex = this.images.length;
 
@@ -207,7 +207,7 @@ export class GLTileset
         });
     }
 
-    private _createTexture(imgIndex: number)
+    private _createTexture(imgIndex: number): void
     {
         if (!this.gl)
             return;

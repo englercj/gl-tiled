@@ -41,7 +41,7 @@ export class GLImagelayer
         });
     }
 
-    glInitialize(gl: WebGLRenderingContext)
+    glInitialize(gl: WebGLRenderingContext): void
     {
         this.glTerminate();
 
@@ -50,7 +50,7 @@ export class GLImagelayer
         this.upload();
     }
 
-    glTerminate()
+    glTerminate(): void
     {
         if (!this.gl)
             return;
@@ -64,7 +64,7 @@ export class GLImagelayer
         this.gl = null;
     }
 
-    upload()
+    upload(): void
     {
         if (!this.gl || !this.image)
             return;
@@ -73,7 +73,7 @@ export class GLImagelayer
         this.uploadData(false);
     }
 
-    uploadUniforms(shader: GLProgram)
+    uploadUniforms(shader: GLProgram): void
     {
         if (!this.gl || !this.image)
             return;
@@ -92,7 +92,7 @@ export class GLImagelayer
         gl.uniform2f(shader.uniforms.uSize!, this.image.width, this.image.height);
     }
 
-    uploadData(doBind: boolean = true)
+    uploadData(doBind: boolean = true): void
     {
         if (!this.gl || !this.image)
             return;
@@ -105,7 +105,7 @@ export class GLImagelayer
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
     }
 
-    setupTexture(doBind: boolean = true)
+    setupTexture(doBind: boolean = true): void
     {
         if (!this.gl)
             return;

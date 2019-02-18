@@ -117,22 +117,22 @@ export class GLTilemap
         return this._tilesets;
     }
 
-    get viewportWidth()
+    get viewportWidth(): number
     {
         return this._viewportSize[0];
     }
 
-    get viewportHeight()
+    get viewportHeight(): number
     {
         return this._viewportSize[1];
     }
 
-    get scaledViewportWidth()
+    get scaledViewportWidth(): number
     {
         return this._scaledViewportSize[0];
     }
 
-    get scaledViewportHeight()
+    get scaledViewportHeight(): number
     {
         return this._scaledViewportSize[1];
     }
@@ -150,7 +150,7 @@ export class GLTilemap
         }
     }
 
-    get tileScale()
+    get tileScale(): number
     {
         return this._tileScale;
     }
@@ -164,7 +164,7 @@ export class GLTilemap
         }
     }
 
-    resizeViewport(width: number, height: number)
+    resizeViewport(width: number, height: number): void
     {
         if (this._viewportSize[0] != width || this._viewportSize[1] != height)
         {
@@ -174,7 +174,7 @@ export class GLTilemap
         }
     }
 
-    glInitialize(gl: WebGLRenderingContext)
+    glInitialize(gl: WebGLRenderingContext): void
     {
         this.glTerminate();
 
@@ -205,7 +205,7 @@ export class GLTilemap
         this._updateViewportSize();
     }
 
-    glTerminate()
+    glTerminate(): void
     {
         if (!this.gl)
             return;
@@ -250,7 +250,7 @@ export class GLTilemap
      *
      * @param dt Delta time in milliseconds to perform an update for.
      */
-    update(dt: number)
+    update(dt: number): void
     {
         for (let i = 0; i < this.layers.length; ++i)
         {
@@ -267,7 +267,7 @@ export class GLTilemap
      * @param x The x offset at which to draw the map
      * @param y The y offset at which to draw the map
      */
-    draw(x: number = 0, y: number = 0)
+    draw(x: number = 0, y: number = 0): void
     {
         // @if DEBUG
         ASSERT(!!(this.gl && this.shaders), 'Cannot call `draw` before `glInitialize`.');
@@ -422,7 +422,7 @@ export class GLTilemap
         }
     }
 
-    private _updateViewportSize()
+    private _updateViewportSize(): void
     {
         // @if DEBUG
         ASSERT(!!(this.gl && this.shaders), 'Cannot call `_updateViewportSize` before `glInitialize`.');
@@ -458,7 +458,7 @@ export class GLTilemap
         gl.uniform1f(imageShader.uniforms.uInverseTileScale!, 1.0 / this._tileScale);
     }
 
-    private _buildBufferData()
+    private _buildBufferData(): void
     {
         // Index buffer
         for (let i = 0; i < this._tilesetIndices.length; ++i)
@@ -506,7 +506,7 @@ export class GLTilemap
         }
     }
 
-    private _createShaders()
+    private _createShaders(): void
     {
         // @if DEBUG
         ASSERT(!!(this.gl), 'Cannot call `_createShaders` before `glInitialize`.');

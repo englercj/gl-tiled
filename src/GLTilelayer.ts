@@ -95,7 +95,7 @@ export class GLTilelayer
         this.buildMapTexture(tilesets);
     }
 
-    get repeatTiles()
+    get repeatTiles(): boolean
     {
         return this._repeatTiles;
     }
@@ -109,7 +109,7 @@ export class GLTilelayer
         }
     }
 
-    glInitialize(gl: WebGLRenderingContext)
+    glInitialize(gl: WebGLRenderingContext): void
     {
         this.glTerminate();
 
@@ -118,7 +118,7 @@ export class GLTilelayer
         this.upload();
     }
 
-    glTerminate()
+    glTerminate(): void
     {
         if (!this.gl)
             return;
@@ -138,7 +138,7 @@ export class GLTilelayer
      *
      * @param tilesets The list of tilesets, who's images will be uploaded to the GPU elsewhere.
      */
-    buildMapTexture(tilesets: ReadonlyArray<GLTileset>)
+    buildMapTexture(tilesets: ReadonlyArray<GLTileset>): void
     {
         // TODO:
         // - Might be faster to build this texture on the GPU in a framebuffer?
@@ -238,7 +238,7 @@ export class GLTilelayer
      *
      * @param dt Delta time in milliseconds to perform an update for.
      */
-    update(dt: number)
+    update(dt: number): void
     {
         let needsUpload = false;
 
@@ -271,13 +271,13 @@ export class GLTilelayer
             this.uploadData();
     }
 
-    upload()
+    upload(): void
     {
         this.setupTexture();
         this.uploadData(false);
     }
 
-    uploadUniforms(shader: GLProgram)
+    uploadUniforms(shader: GLProgram): void
     {
         // @if DEBUG
         ASSERT(!!this.gl, 'Cannot call `uploadUniforms` before `glInitialize`.');
@@ -300,7 +300,7 @@ export class GLTilelayer
         gl.uniform2fv(shader.uniforms.uInverseLayerTileCount!, this._inverseTileCount);
     }
 
-    uploadData(doBind: boolean = true)
+    uploadData(doBind: boolean = true): void
     {
         // @if DEBUG
         ASSERT(!!this.gl, 'Cannot call `uploadData` before `glInitialize`.');
@@ -326,7 +326,7 @@ export class GLTilelayer
         );
     }
 
-    setupTexture(doBind: boolean = true)
+    setupTexture(doBind: boolean = true): void
     {
         // @if DEBUG
         ASSERT(!!this.gl, 'Cannot call `setupTexture` before `glInitialize`.');
