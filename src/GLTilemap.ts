@@ -11,7 +11,7 @@ import { hasOwnKey } from './utils/hasOwnKey';
 import { parseColorStr } from './utils/parseColorStr';
 import { ELayerType } from './ELayerType';
 import { GLTileset } from './GLTileset';
-import { GLObjectgroup } from './GLObjectgroup';
+// import { GLObjectgroup } from './GLObjectgroup';
 import { GLTilelayer } from './GLTilelayer';
 import { GLImagelayer } from './GLImagelayer';
 import { IAssetCache } from './IAssetCache';
@@ -23,7 +23,7 @@ import tilelayerFS from './shaders/tilelayer.frag';
 import imagelayerVS from './shaders/imagelayer.vert';
 import imagelayerFS from './shaders/imagelayer.frag';
 
-export type TGLLayer = (GLTilelayer | GLImagelayer | GLObjectgroup);
+export type TGLLayer = GLTilelayer | GLImagelayer /*| GLObjectgroup*/;
 
 export interface ITilemapOptions
 {
@@ -39,8 +39,8 @@ export interface ITilemapOptions
     /** Should we automatically create each tilelayer? Default: true */
     createAllTilelayers?: boolean;
 
-    /** Should we automatically create each tilelayer? Default: false */
-    createAllObjectgroups?: boolean;
+    /** Should we automatically create each objectgroup? Default: false */
+    // createAllObjectgroups?: boolean;
 }
 
 interface IShaderCache
@@ -390,14 +390,14 @@ export class GLTilemap
                     );
                     break;
 
-                case ELayerType.Objectgroup:
-                    break;
+                // case ELayerType.Objectgroup:
+                //     break;
 
                 default:
                     assertNever(layer);
             }
 
-            if (layer.type !== ELayerType.Objectgroup)
+            // if (layer.type !== ELayerType.Objectgroup)
             {
                 gl.bindTexture(gl.TEXTURE_2D, layer.texture);
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -462,13 +462,15 @@ export class GLTilemap
             }
 
             case ELayerType.Imagelayer:
-            case ELayerType.Objectgroup:
             {
                 const imageShader = this.shaders!.imagelayer;
                 gl.useProgram(imageShader.program);
 
                 return imageShader;
             }
+
+            // case ELayerType.Objectgroup:
+            //     return ;
 
             default:
                 return assertNever(layer);
@@ -583,7 +585,7 @@ export class GLTilemap
                 break;
 
             case 'objectgroup':
-                this._layers.push(new GLObjectgroup(layer));
+                // this._layers.push(new GLObjectgroup(layer));
                 break;
 
             case 'imagelayer':
@@ -606,10 +608,10 @@ export class GLTilemap
     {
         const createTilelayers = typeof options.createAllTilelayers === 'boolean' ? options.createAllTilelayers : true;
         const createImagelayers = typeof options.createAllImagelayers === 'boolean' ? options.createAllImagelayers : true;
-        const createObjectgroups = typeof options.createAllObjectgroups === 'boolean' ? options.createAllObjectgroups : false;
+        // const createObjectgroups = typeof options.createAllObjectgroups === 'boolean' ? options.createAllObjectgroups : false;
 
         // We don't create anything, early out.
-        if (!createTilelayers && !createImagelayers && !createObjectgroups)
+        if (!createTilelayers && !createImagelayers /*&& !createObjectgroups*/)
             return;
 
         for (let i = 0; i < layers.length; ++i)
@@ -617,7 +619,7 @@ export class GLTilemap
             const layer = layers[i];
 
             if ((layer.type === 'tilelayer' && createTilelayers)
-                || (layer.type === 'objectgroup' && createObjectgroups)
+                // || (layer.type === 'objectgroup' && createObjectgroups)
                 || (layer.type === 'imagelayer' && createImagelayers))
             {
                 this._createLayer(layer);
