@@ -400,12 +400,17 @@ export class GLTilemap
         }
     }
 
+    findLayerDesc(...name: string[]): ILayer | null
+    {
+        return this._doFindLayerDesc(this.desc.layers, name, 0);
+    }
+
     createLayer(...name: string[]): boolean
     {
         if (name.length === 0)
             return false;
 
-        const layer = this.findLayerDesc(this.desc.layers, name, 0);
+        const layer = this._doFindLayerDesc(this.desc.layers, name, 0);
 
         if (!layer)
             return false;
@@ -453,7 +458,7 @@ export class GLTilemap
         }
     }
 
-    findLayerDesc(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
+    private _doFindLayerDesc(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
     {
         for (let i = 0; i < layers.length; ++i)
         {
@@ -466,7 +471,7 @@ export class GLTilemap
                     // more names, so try something in this group
                     if (names.length < nameIndex + 1)
                     {
-                        return this.findLayerDesc(layer.layers, names, ++nameIndex);
+                        return this._doFindLayerDesc(layer.layers, names, ++nameIndex);
                     }
                     // No more names, return the group.
                     else
