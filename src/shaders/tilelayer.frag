@@ -86,7 +86,7 @@ void main()
 
     float flipFlags = floor(tile.w * 255.0);
 
-    // GLSL ES 1.0 doesn't have bitwise flags...
+    // GLSL ES 2.0 doesn't have bitwise flags...
     // int isFlippedAD = (flipFlags & Flag_FlippedAntiDiagonal) >> 1;
     // int isFlippedY = (flipFlags & Flag_FlippedVertical) >> 2;
     // int isFlippedX = (flipFlags & Flag_FlippedHorizontal) >> 3;
