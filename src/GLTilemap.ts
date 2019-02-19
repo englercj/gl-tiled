@@ -410,9 +410,47 @@ export class GLTilemap
         if (!layer)
             return false;
 
-        this._createLayer(layer);
+        this.createLayerFromDesc(layer);
 
         return true;
+    }
+
+    createLayerFromDesc(layer: ILayer): void
+    {
+        let newLayer: TGLLayer | null = null;
+
+        switch (layer.type)
+        {
+            case 'tilelayer':
+                newLayer = new GLTilelayer(layer, this.tilesets);
+                break;
+
+            case 'objectgroup':
+                // newLayer = new GLObjectgroup(layer);
+                break;
+
+            case 'imagelayer':
+                newLayer = new GLImagelayer(layer, this.assetCache);
+                break;
+
+            case 'group':
+                for (let i = 0; i < layer.layers.length; ++i)
+                {
+                    this.createLayerFromDesc(layer.layers[i]);
+                }
+                break;
+
+            default:
+                return assertNever(layer);
+        }
+
+        if (newLayer)
+        {
+            this._layers.push(newLayer);
+
+            if (this.gl)
+                newLayer.glInitialize(this.gl);
+        }
     }
 
     findLayerDesc(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
@@ -570,44 +608,6 @@ export class GLTilemap
         }
     }
 
-    private _createLayer(layer: ILayer): void
-    {
-        let newLayer: TGLLayer | null = null;
-
-        switch (layer.type)
-        {
-            case 'tilelayer':
-                newLayer = new GLTilelayer(layer, this.tilesets);
-                break;
-
-            case 'objectgroup':
-                // newLayer = new GLObjectgroup(layer);
-                break;
-
-            case 'imagelayer':
-                newLayer = new GLImagelayer(layer, this.assetCache);
-                break;
-
-            case 'group':
-                for (let i = 0; i < layer.layers.length; ++i)
-                {
-                    this._createLayer(layer.layers[i]);
-                }
-                break;
-
-            default:
-                return assertNever(layer);
-        }
-
-        if (newLayer)
-        {
-            this._layers.push(newLayer);
-
-            if (this.gl)
-                newLayer.glInitialize(this.gl);
-        }
-    }
-
     private _createInitialLayers(layers: ILayer[], options: ITilemapOptions): void
     {
         const createTilelayers = typeof options.createAllTilelayers === 'boolean' ? options.createAllTilelayers : true;
@@ -626,7 +626,7 @@ export class GLTilemap
                 // || (layer.type === 'objectgroup' && createObjectgroups)
                 || (layer.type === 'imagelayer' && createImagelayers))
             {
-                this._createLayer(layer);
+                this.createLayerFromDesc(layer);
             }
             else if (layer.type === 'group')
             {
