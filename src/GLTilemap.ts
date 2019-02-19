@@ -32,6 +32,9 @@ export interface ITilemapOptions
     /** A cache of preloaded assets. Keyed by URL as it appears in the tilemap data. */
     assetCache?: IAssetCache;
 
+    /** Should we render the background color of the map? Default: true */
+    renderBackgroundColor?: boolean;
+
     /** Should we automatically create each imagelayer? Default: true */
     createAllImagelayers?: boolean;
 
@@ -58,6 +61,8 @@ export class GLTilemap
 
     gl: WebGLRenderingContext | null = null;
     shaders: IShaderCache | null = null;
+
+    renderBackgroundColor: boolean;
 
     readonly assetCache: IAssetCache | undefined = undefined;
 
@@ -99,6 +104,8 @@ export class GLTilemap
 
         if (options.assetCache)
             this.assetCache = options.assetCache;
+
+        this.renderBackgroundColor = typeof options.renderBackgroundColor === 'boolean' ? options.renderBackgroundColor : true;
 
         this._inverseLayerTileSize[0] = 1 / desc.tilewidth;
         this._inverseLayerTileSize[1] = 1 / desc.tileheight;
@@ -310,7 +317,7 @@ export class GLTilemap
         gl.vertexAttribPointer(GLTilemap._attribIndices.aTexture, 2, gl.FLOAT, false, 16, 8);
 
         // Draw background
-        if (this._backgroundColor[3] > 0)
+        if (this.renderBackgroundColor && this._backgroundColor[3] > 0)
         {
             const bgShader = this.shaders.background;
 
