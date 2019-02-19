@@ -24,6 +24,19 @@ import imagelayerFS from './shaders/imagelayer.frag';
 
 export type TGLLayer = GLTilelayer | GLImagelayer /*| GLObjectgroup*/;
 
+export interface IBlendMode
+{
+    /**
+     * A 2 or 4 element array specifying which blend function to use.
+     *
+     * Default: [gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA]
+     */
+    func: number[];
+
+    /** What blend equation to use. Default: gl.FUNC_ADD */
+    equation: number;
+}
+
 export interface ITilemapOptions
 {
     /** The WebGL context to use to render. */
@@ -31,6 +44,9 @@ export interface ITilemapOptions
 
     /** A cache of preloaded assets. Keyed by URL as it appears in the tilemap data. */
     assetCache?: IAssetCache;
+
+    /** What blend function/equation should we draw with? */
+    blendMode?: IBlendMode;
 
     /** Should we render the background color of the map? Default: true */
     renderBackgroundColor?: boolean;
@@ -63,6 +79,7 @@ export class GLTilemap
     shaders: IShaderCache | null = null;
 
     renderBackgroundColor: boolean;
+    blendMode: IBlendMode;
 
     readonly assetCache: IAssetCache | undefined = undefined;
 
@@ -106,6 +123,10 @@ export class GLTilemap
             this.assetCache = options.assetCache;
 
         this.renderBackgroundColor = typeof options.renderBackgroundColor === 'boolean' ? options.renderBackgroundColor : true;
+        this.blendMode = {
+            func: options.blendMode && options.blendMode.func || [WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA],
+            equation: options.blendMode && options.blendMode.equation || WebGLRenderingContext.FUNC_ADD,
+        };
 
         this._inverseLayerTileSize[0] = 1 / desc.tilewidth;
         this._inverseLayerTileSize[1] = 1 / desc.tileheight;
@@ -305,9 +326,21 @@ export class GLTilemap
 
         var gl = this.gl;
 
-        // TODO: Custom blending modes?
         gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.blendEquation(this.blendMode.equation);
+
+        if (this.blendMode.func.length > 2)
+        {
+            gl.blendFuncSeparate(
+                this.blendMode.func[0],
+                this.blendMode.func[1],
+                this.blendMode.func[2],
+                this.blendMode.func[3]);
+        }
+        else
+        {
+            gl.blendFunc(this.blendMode.func[0], this.blendMode.func[1]);
+        }
 
         // Enable attributes, these are the same for all shaders.
         gl.bindBuffer(gl.ARRAY_BUFFER, this._quadVertBuffer);
