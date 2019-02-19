@@ -405,7 +405,7 @@ export class GLTilemap
         if (name.length === 0)
             return false;
 
-        const layer = this._findLayer(this.desc.layers, name, 0);
+        const layer = this.findLayerDesc(this.desc.layers, name, 0);
 
         if (!layer)
             return false;
@@ -413,6 +413,37 @@ export class GLTilemap
         this._createLayer(layer);
 
         return true;
+    }
+
+    findLayerDesc(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
+    {
+        for (let i = 0; i < layers.length; ++i)
+        {
+            const layer = layers[i];
+
+            if (layer.name === names[nameIndex])
+            {
+                if (layer.type === 'group')
+                {
+                    // more names, so try something in this group
+                    if (names.length < nameIndex + 1)
+                    {
+                        return this.findLayerDesc(layer.layers, names, ++nameIndex);
+                    }
+                    // No more names, return the group.
+                    else
+                    {
+                        return layer;
+                    }
+                }
+                else
+                {
+                    return layer;
+                }
+            }
+        }
+
+        return null;
     }
 
     private _bindShader(layer: TGLLayer): GLProgram
@@ -537,37 +568,6 @@ export class GLTilemap
                 imgIndex++;
             }
         }
-    }
-
-    private _findLayer(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
-    {
-        for (let i = 0; i < layers.length; ++i)
-        {
-            const layer = layers[i];
-
-            if (layer.name === names[nameIndex])
-            {
-                if (layer.type === 'group')
-                {
-                    // more names, so try something in this group
-                    if (names.length < nameIndex + 1)
-                    {
-                        return this._findLayer(layer.layers, names, ++nameIndex);
-                    }
-                    // No more names, return the group.
-                    else
-                    {
-                        return layer;
-                    }
-                }
-                else
-                {
-                    return layer;
-                }
-            }
-        }
-
-        return null;
     }
 
     private _createLayer(layer: ILayer): void
