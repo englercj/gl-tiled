@@ -262,7 +262,7 @@ function onMapChange()
     {
         tileMap = maps[mapUrl] = new glTiled.GLTilemap(loader.resources[mapUrl].data, {
             gl: gl,
-            assetCache: loader.resources
+            assetCache: loader.resources,
         });
         tileMap.repeatTiles = false;
     }
