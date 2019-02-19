@@ -450,14 +450,27 @@ export class GLTilemap
         if (name.length === 0)
             return false;
 
-        const layer = this._doFindLayerDesc(this.desc.layers, name, 0);
+        const layerDesc = this._doFindLayerDesc(this.desc.layers, name, 0);
 
-        if (!layer)
+        if (!layerDesc)
             return false;
 
-        this.createLayerFromDesc(layer);
+        this.createLayerFromDesc(layerDesc);
 
         return true;
+    }
+
+    destroyLayer(...name: string[]): boolean
+    {
+        if (name.length === 0)
+            return false;
+
+        const layerDesc = this._doFindLayerDesc(this.desc.layers, name, 0);
+
+        if (!layerDesc)
+            return false;
+
+        return this.destroyLayerFromDesc(layerDesc);
     }
 
     createLayerFromDesc(layer: ILayer): void
@@ -496,6 +509,23 @@ export class GLTilemap
             if (this.gl)
                 newLayer.glInitialize(this.gl);
         }
+    }
+
+    destroyLayerFromDesc(layerDesc: ILayer): boolean
+    {
+        for (let i = 0; i < this._layers.length; ++i)
+        {
+            const layer = this._layers[i];
+
+            if (layer.desc === layerDesc)
+            {
+                layer.glTerminate();
+                this._layers.splice(1, 1);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private _doFindLayerDesc(layers: ILayer[], names: string[], nameIndex: number): ILayer | null
