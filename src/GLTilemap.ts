@@ -293,10 +293,6 @@ export class GLTilemap
      */
     draw(x: number = 0, y: number = 0): void
     {
-        // @if DEBUG
-        ASSERT(!!(this.gl && this.shaders), 'Cannot call `draw` before `glInitialize`.');
-        // @endif
-
         if (!this.gl || !this.shaders)
             return;
 
@@ -478,9 +474,8 @@ export class GLTilemap
 
     private _updateViewportSize(): void
     {
-        // @if DEBUG
-        ASSERT(!!(this.gl && this.shaders), 'Cannot call `_updateViewportSize` before `glInitialize`.');
-        // @endif
+        if (!this.gl || !this.shaders)
+            return;
 
         this._scaledViewportSize[0] = this._viewportSize[0] / this._tileScale;
         this._scaledViewportSize[1] = this._viewportSize[1] / this._tileScale;

@@ -205,10 +205,6 @@ export class GLTilelayer
 
     private _uploadData(doBind: boolean): void
     {
-        // @if DEBUG
-        ASSERT(!!this.gl, 'Cannot call `uploadData` before `glInitialize`.');
-        // @endif
-
         if (!this.gl)
             return;
 
@@ -231,10 +227,6 @@ export class GLTilelayer
 
     private _setupTexture(doBind: boolean = true): void
     {
-        // @if DEBUG
-        ASSERT(!!this.gl, 'Cannot call `setupTexture` before `glInitialize`.');
-        // @endif
-
         if (!this.gl)
             return;
 
