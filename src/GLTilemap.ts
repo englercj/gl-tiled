@@ -572,18 +572,20 @@ export class GLTilemap
 
     private _createLayer(layer: ILayer): void
     {
+        let newLayer: TGLLayer | null = null;
+
         switch (layer.type)
         {
             case 'tilelayer':
-                this._layers.push(new GLTilelayer(layer, this.tilesets));
+                newLayer = new GLTilelayer(layer, this.tilesets);
                 break;
 
             case 'objectgroup':
-                // this._layers.push(new GLObjectgroup(layer));
+                // newLayer = new GLObjectgroup(layer);
                 break;
 
             case 'imagelayer':
-                this._layers.push(new GLImagelayer(layer, this.assetCache));
+                newLayer = new GLImagelayer(layer, this.assetCache);
                 break;
 
             case 'group':
@@ -595,6 +597,14 @@ export class GLTilemap
 
             default:
                 return assertNever(layer);
+        }
+
+        if (newLayer)
+        {
+            this._layers.push(newLayer);
+
+            if (this.gl)
+                newLayer.glInitialize(this.gl);
         }
     }
 
