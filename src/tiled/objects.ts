@@ -1,36 +1,36 @@
 import { IPoint } from '../IPoint';
 import { IProperty } from './IProperty';
-import { ITileset } from './Tileset';
+// import { ITileset } from './Tileset';
 
-export interface IObjectTemplate
-{
-    /** Type of the template, always 'template'. */
-    type: 'template';
+// export interface IObjectTemplate
+// {
+//     /** Type of the template, always 'template'. */
+//     type: 'template';
 
-    /** External tileset used by the template (optional) */
-    tileset?: ITileset;
+//     /** External tileset used by the template (optional) */
+//     tileset?: ITileset;
 
-    /** The object instantiated by this template */
-    object: IObject;
-}
+//     /** The object instantiated by this template */
+//     object: IObject;
+// }
 
-export interface IObjectTemplateInstance
-{
-    /** Incremental id - unique across all objects (int) */
-    id: number;
+// export interface IObjectTemplateInstance
+// {
+//     /** Incremental id - unique across all objects (int) */
+//     id: number;
 
-    /** Relative path to a template file, in case object is a template instance */
-    template: string;
+//     /** Relative path to a template file, in case object is a template instance */
+//     template: string;
 
-    /** Whether object is shown in editor. Default: true */
-    visible?: boolean;
+//     /** Whether object is shown in editor. Default: true */
+//     visible?: boolean;
 
-    /** x coordinate in pixels (int) */
-    x: number;
+//     /** x coordinate in pixels (int) */
+//     x: number;
 
-    /** y coordinate in pixels (int) */
-    y: number;
-}
+//     /** y coordinate in pixels (int) */
+//     y: number;
+// }
 
 /**
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#object
@@ -148,4 +148,4 @@ export interface ITextObject extends IObjectBase
     text: ITextOptions;
 }
 
-export type IObject = IObjectTemplateInstance | ITileObject | IEllipseObject | IRectangleObject | IPointObject | IPolygonObject | IPolylineObject | ITextObject;
+export type IObject = /*IObjectTemplateInstance |*/ ITileObject | IEllipseObject | IRectangleObject | IPointObject | IPolygonObject | IPolylineObject | ITextObject;
