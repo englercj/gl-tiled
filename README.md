@@ -33,7 +33,7 @@ var lastTime = 0;
     // you can skip this step.
     var dt = now - lastTime;
     lastTime = now;
-    tileMap.update(dt);
+    tileMap.update(dt); // dt is expected to be elapsed ms since last call.
 
     // draw!
     tileMap.draw();
