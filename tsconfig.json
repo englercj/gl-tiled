@@ -6,7 +6,8 @@
         "strict": true,
         "sourceMap": false,
         "declaration": true,
-        "removeComments": false
+        "removeComments": false,
+        "types": []
     },
     "include": [
         "src/**/*",
