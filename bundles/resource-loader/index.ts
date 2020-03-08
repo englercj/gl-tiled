@@ -1,10 +1,12 @@
-/// <reference path="./resource-loader.d.ts" />
+import { Loader, Resource, ResourceType, ImageLoadStrategy } from 'resource-loader';
+import { IAddOptions } from 'resource-loader/dist/Loader';
+import { XhrResponseType, XhrLoadStrategy } from 'resource-loader/dist/load_strategies/XhrLoadStrategy';
 
 /**
  * Creates the tiled loader middleware function and returns it.
  *
  * @example
- * var loader = new Loader();
+ * const loader = new Loader();
  *
  * // add this middleware so that any map files we load will also have all their sub resources
  * // loaded too.
@@ -20,28 +22,27 @@
  */
 export function tiledMiddlewareFactory()
 {
-    return function tiledMiddleware(this: Loader, resource: Loader.Resource, next: Function)
+    return function tiledMiddleware(this: Loader, resource: Resource, next: Function)
     {
         if (!resource.data
-            || resource.type !== Loader.Resource.TYPE.JSON
+            || resource.type !== ResourceType.Json
             || !resource.data.layers
-            || !resource.data.tilesets
-        )
+            || !resource.data.tilesets)
         {
             next();
             return;
         }
 
-        const loadOptions: Loader.IResourceOptions = {
-            crossOrigin: resource.crossOrigin,
-            loadType: Loader.Resource.LOAD_TYPE.IMAGE,
+        let urlDir = resource.url.replace(this.baseUrl, '');
+        urlDir = urlDir.substr(0, urlDir.lastIndexOf('/')) + '/';
+
+        const addOptions: IAddOptions = {
+            url: '',
+            crossOrigin: resource.strategy.config.crossOrigin,
+            strategy: ImageLoadStrategy,
             metadata: resource.metadata.imageMetadata,
             parentResource: resource,
         };
-
-        let urlDir = resource.url.replace(this.baseUrl, '');
-
-        urlDir = urlDir.substr(0, urlDir.lastIndexOf('/')) + '/';
 
         for (let i = 0; i < resource.data.tilesets.length; ++i)
         {
@@ -51,7 +52,10 @@ export function tiledMiddlewareFactory()
             {
                 if (!this.resources[tileset.image])
                 {
-                    this.add(tileset.image, urlDir + tileset.image, loadOptions);
+                    const options = Object.assign({}, addOptions);
+                    options.name = tileset.image;
+                    options.url = urlDir + tileset.image;
+                    this.add(options);
                 }
             }
 
@@ -63,7 +67,10 @@ export function tiledMiddlewareFactory()
 
                     if (tile.image && !this.resources[tile.image])
                     {
-                        this.add(tile.image, urlDir + tile.image, loadOptions);
+                        const options = Object.assign({}, addOptions);
+                        options.name = tile.image;
+                        options.url = urlDir + tile.image;
+                        this.add(options);
                     }
                 }
             }
@@ -77,7 +84,10 @@ export function tiledMiddlewareFactory()
             {
                 if (!this.resources[layer.image])
                 {
-                    this.add(layer.image, urlDir + layer.image, loadOptions);
+                    const options = Object.assign({}, addOptions);
+                    options.name = layer.image;
+                    options.url = urlDir + layer.image;
+                    this.add(options);
                 }
             }
         }

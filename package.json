@@ -42,20 +42,20 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@paztis/typedoc": "^0.1.5",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "cross-env": "^7.0.2",
     "fs-extra": "^8.1.0",
     "gh-pages": "^2.2.0",
     "glob": "^7.1.6",
-    "resource-loader": "^4.0.0-rc3",
+    "resource-loader": "^4.0.0-rc4",
     "rimraf": "^3.0.2",
     "rollup": "^1.32.1",
     "rollup-plugin-preprocess": "^0.0.4",
     "rollup-plugin-string": "^3.0.0",
     "rollup-plugin-typescript2": "^0.26.0",
     "stats.js": "^0.17.0",
+    "typedoc": "^0.16.11",
     "typedoc-md-theme": "^1.0.1",
     "typescript": "^3.8.3"
   }
