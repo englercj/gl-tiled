@@ -6,14 +6,10 @@ This is the core library bundle. It is meant to work with WebGL, and therefore c
 
 Exported classes:
 
-- [`GLTilemap`](https://englercj.github.io/gl-tiled/classes/_src_gltilemap_.gltilemap.html)
-- [`GLTileset`](https://englercj.github.io/gl-tiled/classes/_src_gltileset_.gltileset.html)
-- [`GLTilelayer`](https://englercj.github.io/gl-tiled/classes/_src_gltilelayer_.gltilelayer.html)
-- [`GLImagelayer`](https://englercj.github.io/gl-tiled/classes/_src_glimagelayer_.glimagelayer.html)
-
-## Implementation Details
-
-COMING SOON!
+- [`GLTilemap`](https://englercj.github.io/gl-tiled/classes/gltilemap.html)
+- [`GLTileset`](https://englercj.github.io/gl-tiled/classes/gltileset.html)
+- [`GLTilelayer`](https://englercj.github.io/gl-tiled/classes/gltilelayer.html)
+- [`GLImagelayer`](https://englercj.github.io/gl-tiled/classes/glimagelayer.html)
 
 ## Unsupported features
 

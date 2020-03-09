@@ -34,7 +34,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.ts",
     "watch": "rollup -w -c rollup.config.ts",
-    "docs": "typedoc --includeDeclarations --excludeExternals --excludePrivate --mode modules --module commonjs --target ES5 --out docs/ ./src ./bundles",
+    "docs": "typedoc",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run deploy",
     "predeploy": "rimraf ./docs && npm run docs && touch ./docs/.nojekyll && node ./scripts/copy-demo.js",
