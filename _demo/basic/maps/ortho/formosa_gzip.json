@@ -1,11 +1,13 @@
 { "backgroundcolor":"#55aaff",
  "height":15,
+ "infinite":false,
  "layers":[
         {
          "compression":"gzip",
-         "data":"H4sIAAAAAAAACxNiYGAQGsXDEmdToI8cvdlk6s0mUy+6PkJ6sakfDBgA3TcUToQDAAA=",
+         "data":"H4sIAAAAAAAAChNiYGAQGsXDEmdToI8cvdlk6s0mUy+6PkJ6sakfDBgA3TcUToQDAAA=",
          "encoding":"base64",
          "height":15,
+         "id":1,
          "name":"Grass and Water",
          "opacity":1,
          "type":"tilelayer",
@@ -16,9 +18,10 @@
         }, 
         {
          "compression":"gzip",
-         "data":"H4sIAAAAAAAAC92OSw5AMBRF3wuCMYIplsAG2Jg9o5i5kopPqtTQTU7S33m9RGbpQA8GuRdgBBOYH1yLiWzg8H7mYu0Bn\/VzAtyHIDq4MdYJSPk8Ryj8gqm963Wco4rO3SLI\/F9VGnSoJKWhW1761ybyxct\/6K3vM4nKyzR86fc2Cx4LRKqEAwAA",
+         "data":"H4sIAAAAAAAACt2OSw5AMBRF3wuCMYIplsAG2Jg9o5i5kopPqtTQTU7S33m9RGbpQA8GuRdgBBOYH1yLiWzg8H7mYu0Bn\/VzAtyHIDq4MdYJSPk8Ryj8gqm963Wco4rO3SLI\/F9VGnSoJKWhW1761ybyxct\/6K3vM4nKyzR86fc2Cx4LRKqEAwAA",
          "encoding":"base64",
          "height":15,
+         "id":2,
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
@@ -29,9 +32,10 @@
         }, 
         {
          "compression":"gzip",
-         "data":"H4sIAAAAAAAAC2NgGAXEAi9GBgcgPkCOXiugXiuoXi1GhgQgOwFoVgIxeoHqHbSgeoF6FgD1LgDyF5DjDlIA0A4QboCySXIzUC0Ig\/WS6magehBuIMvRQxAAAAvGQyuEAwAA",
+         "data":"H4sIAAAAAAAACmNgGAXEAi9GBgcgPkCOXiugXiuoXi1GhgQgOwFoVgIxeoHqHbSgeoF6FgD1LgDyF5DjDlIA0A4QboCySXIzUC0Ig\/WS6magehBuIMvRQxAAAAvGQyuEAwAA",
          "encoding":"base64",
          "height":15,
+         "id":3,
          "name":"Tile Layer 2",
          "opacity":1,
          "type":"tilelayer",
@@ -42,6 +46,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":4,
          "name":"Object Layer 1",
          "objects":[
                 {
@@ -65,14 +70,12 @@
                          "x":48,
                          "y":0
                         }],
-                 "properties":
-                    {
-                     "Population":"234"
-                    },
-                 "propertytypes":
-                    {
-                     "Population":"string"
-                    },
+                 "properties":[
+                        {
+                         "name":"Population",
+                         "type":"string",
+                         "value":"234"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -204,14 +207,12 @@
                          "x":-48,
                          "y":64
                         }],
-                 "properties":
-                    {
-                     "MoveCost":"2"
-                    },
-                 "propertytypes":
-                    {
-                     "MoveCost":"string"
-                    },
+                 "properties":[
+                        {
+                         "name":"MoveCost",
+                         "type":"string",
+                         "value":"2"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -306,6 +307,7 @@
          "y":0
         }, 
         {
+         "id":5,
          "image":"..\/gfx\/png\/formosa\/moon_overlay.png",
          "name":"Image Layer 1",
          "opacity":1,
@@ -314,22 +316,27 @@
          "x":0,
          "y":0
         }],
+ "nextlayerid":6,
  "nextobjectid":9,
  "orientation":"orthogonal",
- "properties":
-    {
-     "custom0":"value",
-     "custom1":"value",
-     "custom2":"value"
-    },
- "propertytypes":
-    {
-     "custom0":"string",
-     "custom1":"string",
-     "custom2":"string"
-    },
+ "properties":[
+        {
+         "name":"custom0",
+         "type":"string",
+         "value":"value"
+        }, 
+        {
+         "name":"custom1",
+         "type":"string",
+         "value":"value"
+        }, 
+        {
+         "name":"custom2",
+         "type":"string",
+         "value":"value"
+        }],
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
+ "tiledversion":"1.2.2",
  "tileheight":16,
  "tilesets":[
         {
@@ -340,55 +347,52 @@
          "imagewidth":256,
          "margin":0,
          "name":"16x16-overworld",
-         "properties":
-            {
-             "overworld":"test"
-            },
-         "propertytypes":
-            {
-             "overworld":"string"
-            },
+         "properties":[
+                {
+                 "name":"overworld",
+                 "type":"string",
+                 "value":"test"
+                }],
          "spacing":0,
          "tilecount":336,
          "tileheight":16,
-         "tileproperties":
-            {
-             "17":
+         "tiles":[
                 {
-                 "name":"grass"
-                },
-             "245":
+                 "id":17,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"grass"
+                        }]
+                }, 
                 {
-                 "type":"GrassCave"
-                },
-             "261":
+                 "id":245,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"GrassCave"
+                        }]
+                }, 
                 {
-                 "type":"SandCave"
-                },
-             "275":
+                 "id":261,
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"SandCave"
+                        }]
+                }, 
                 {
-                 "name":"castle-door"
-                }
-            },
-         "tilepropertytypes":
-            {
-             "17":
-                {
-                 "name":"string"
-                },
-             "245":
-                {
-                 "type":"string"
-                },
-             "261":
-                {
-                 "type":"string"
-                },
-             "275":
-                {
-                 "name":"string"
-                }
-            },
+                 "id":275,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"castle-door"
+                        }]
+                }],
          "tilewidth":16
         }, 
         {
@@ -406,6 +410,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":1,
+ "version":1.2,
  "width":15
 }

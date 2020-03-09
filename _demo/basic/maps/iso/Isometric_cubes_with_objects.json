@@ -1,8 +1,10 @@
 { "height":5,
+ "infinite":false,
  "layers":[
         {
          "data":[1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
          "height":5,
+         "id":1,
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
@@ -13,6 +15,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":2,
          "name":"object_indiv",
          "objects":[
                 {
@@ -89,6 +92,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":3,
          "name":"object_large",
          "objects":[
                 {
@@ -121,6 +125,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":4,
          "name":"polygon",
          "objects":[
                 {
@@ -227,6 +232,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":5,
          "name":"polylines",
          "objects":[
                 {
@@ -313,6 +319,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":6,
          "name":"PolylineCrazy",
          "objects":[
                 {
@@ -419,6 +426,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":7,
          "name":"Polygone Crazy",
          "objects":[
                 {
@@ -465,6 +473,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":8,
          "name":"noffsetImageObject",
          "objects":[
                 {
@@ -499,6 +508,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":9,
          "name":"minGreen",
          "objects":[
                 {
@@ -533,6 +543,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":10,
          "name":"tallBlue",
          "objects":[
                 {
@@ -567,6 +578,7 @@
         }, 
         {
          "draworder":"topdown",
+         "id":11,
          "name":"normalBlue_XOffset",
          "objects":[
                 {
@@ -587,18 +599,17 @@
          "x":0,
          "y":0
         }],
+ "nextlayerid":12,
  "nextobjectid":25,
  "orientation":"isometric",
- "properties":
-    {
-     "interactive":"true"
-    },
- "propertytypes":
-    {
-     "interactive":"string"
-    },
+ "properties":[
+        {
+         "name":"interactive",
+         "type":"string",
+         "value":"true"
+        }],
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
+ "tiledversion":"1.2.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -609,14 +620,12 @@
          "imagewidth":131,
          "margin":1,
          "name":"greyBlack",
-         "properties":
-            {
-             "hitArea":"[32,-32,0,-48,32,-64,64,-48]"
-            },
-         "propertytypes":
-            {
-             "hitArea":"string"
-            },
+         "properties":[
+                {
+                 "name":"hitArea",
+                 "type":"string",
+                 "value":"[32,-32,0,-48,32,-64,64,-48]"
+                }],
          "spacing":1,
          "tilecount":2,
          "tileheight":64,
@@ -706,6 +715,6 @@
         }],
  "tilewidth":64,
  "type":"map",
- "version":1,
+ "version":1.2,
  "width":5
 }

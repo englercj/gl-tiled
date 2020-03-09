@@ -38,8 +38,6 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -54,7 +52,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> gl-tiled</h1>
+			<h1>gl-tiled</h1>
 		</div>
 	</div>
 </header>
@@ -62,21 +60,27 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="gl-tiled">gl-tiled</h1>
+				<a href="#gl-tiled" id="gl-tiled" style="color: inherit; text-decoration: none;">
+					<h1>gl-tiled</h1>
+				</a>
 				<p>A WebGL renderer for maps created with the <a href="http://mapeditor.org">Tiled Editor</a>.</p>
-				<p>Tested with Tiled Map Editor v1.0.3.</p>
-				<h2 id="contents">Contents</h2>
+				<p>Tested with Tiled Map Editor v1.2.2.</p>
+				<a href="#contents" id="contents" style="color: inherit; text-decoration: none;">
+					<h2>Contents</h2>
+				</a>
 				<ul>
 					<li><a href="#usage">Usage</a></li>
 					<li><a href="bundles/gl-tiled/#api-reference">API Reference</a></li>
 					<li><a href="#framework-bundles">Framework Bundles</a></li>
 				</ul>
-				<h2 id="usage">Usage</h2>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
 				<p>For the most basic usage, you only need to provide a JS object that represents the parsed JSON Tiled
-				map.</p>
-				<pre><code class="lang-js"><span class="hljs-comment">// create the map instance, `gl` is the WebGLRenderingContext and `mapData` is</span>
-<span class="hljs-comment">// the parsed Tiled JSON map.</span>
-<span class="hljs-keyword">var</span> tilemap = <span class="hljs-keyword">new</span> glTiled.Tilemap(gl, mapData);
+				map and a WebGL Context to render with.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Create the map instance. `mapData` is the parsed Tiled JSON map,</span>
+<span class="hljs-comment">// and `gl` is the WebGLRenderingContext.</span>
+<span class="hljs-keyword">var</span> tilemap = <span class="hljs-keyword">new</span> glTiled.Tilemap(mapData, { gl });
 
 <span class="hljs-comment">// size the viewport of the map</span>
 tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
@@ -91,28 +95,25 @@ tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
     <span class="hljs-comment">// you can skip this step.</span>
     <span class="hljs-keyword">var</span> dt = now - lastTime;
     lastTime = now;
-    tileMap.update(dt);
+    tileMap.update(dt); <span class="hljs-comment">// dt is expected to be elapsed ms since last call.</span>
 
     <span class="hljs-comment">// draw!</span>
     tileMap.draw();
-})();
-</code></pre>
-				<h2 id="framework-bundles">Framework Bundles</h2>
+})();</code></pre>
+				<a href="#framework-bundles" id="framework-bundles" style="color: inherit; text-decoration: none;">
+					<h2>Framework Bundles</h2>
+				</a>
 				<p>This library also ships with a number of bundles (<code>gl-tiled.&lt;bundle-name&gt;.js</code>). These bundles contain
 					the code necessary for gl-tiled to integrate with other frameworks. Each bundle is listed below, with
-				a short desription of what they do. For more information click their <em>Documentation</em> link.</p>
-				<h3 id="core-gl-tiled-documentation-bundles-gl-tiled-">Core (<code>gl-tiled</code>) - <a href="bundles/gl-tiled/">Documentation</a></h3>
+				a short description of what they do. For more information click their <em>Documentation</em> link.</p>
+				<a href="#core-codegl-tiledjscode---a-hrefbundlesgl-tileddocumentationa" id="core-codegl-tiledjscode---a-hrefbundlesgl-tileddocumentationa" style="color: inherit; text-decoration: none;">
+					<h3>Core (<code>gl-tiled.js</code>) - <a href="bundles/gl-tiled/">Documentation</a></h3>
+				</a>
 				<p>This is the core library bundle. It is meant to work with WebGL, and therefore can work with any
 				framework. However, it does not provide any special code to ease integration with those frameworks.</p>
-				<h3 id="phaser2-gl-tiled-phaser2-documentation-bundles-phaser2-">Phaser2 (<code>gl-tiled.phaser2</code>) - <a href="bundles/phaser2/">Documentation</a></h3>
-				<p>The Phaser2 bundle is a wrapper around gl-tiled that makes it easy to integrate gl-tiled into your
-					existing <a href="https://github.com/photonstorm/phaser">Phaser</a> game. This bundle includes the core
-				gl-tiled code.</p>
-				<h3 id="pixi4-gl-tiled-pixi4-documentation-bundles-pixi4-">Pixi4 (<code>gl-tiled.pixi4</code>) - <a href="bundles/pixi4/">Documentation</a></h3>
-				<p>The Pixi4 bundle is a wrapper around gl-tiled that makes it easy to integrate gl-tiled into your
-					existing <a href="https://github.com/pixijs/pixi.js">Pixi</a> application. This bundle includes the core
-				gl-tiled code.</p>
-				<h3 id="resource-loader-gl-tiled-resource-loader-documentation-bundles-resource-loader-">Resource Loader (<code>gl-tiled.resource-loader</code>) - <a href="bundles/resource-loader/">Documentation</a></h3>
+				<a href="#resource-loader-codegl-tiledresource-loaderjscode---a-hrefbundlesresource-loaderdocumentationa" id="resource-loader-codegl-tiledresource-loaderjscode---a-hrefbundlesresource-loaderdocumentationa" style="color: inherit; text-decoration: none;">
+					<h3>Resource Loader (<code>gl-tiled.resource-loader.js</code>) - <a href="bundles/resource-loader/">Documentation</a></h3>
+				</a>
 				<p>The Resource Loader bundle a <a href="https://github.com/englercj/resource-loader">resource-loader</a>
 				middleware that makes it easy to load Tiled JSON maps.</p>
 			</div>
@@ -123,64 +124,187 @@ tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_bundles_gl_tiled_index_.html">"bundles/gl-<wbr>tiled/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_bundles_phaser2_index_.html">"bundles/phaser2/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_bundles_pixi4_index_.html">"bundles/pixi4/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_bundles_resource_loader_index_.html">"bundles/resource-<wbr>loader/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_bundles_resource_loader_resource_loader_d_.html">"bundles/resource-<wbr>loader/resource-<wbr>loader.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_glimagelayer_.html">"src/GLImagelayer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_gltilelayer_.html">"src/GLTilelayer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_gltilemap_.html">"src/GLTilemap"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_gltileset_.html">"src/GLTileset"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_debug_.html">"src/debug"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_tiled_tilelayer_.html">"src/tiled/<wbr>Tilelayer"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_tiled_tilemap_.html">"src/tiled/<wbr>Tilemap"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_tiled_tileset_.html">"src/tiled/<wbr>Tileset"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_tiled_objects_.html">"src/tiled/objects"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_typings_app_d_.html">"src/typings/app.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_utils_glprogram_.html">"src/utils/GLProgram"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_utils_loadimage_.html">"src/utils/load<wbr>Image"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_src_utils_parsecolorstr_.html">"src/utils/parse<wbr>Color<wbr>Str"</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/elayertype.html" class="tsd-kind-icon">ELayer<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/tilesetflags.html" class="tsd-kind-icon">Tileset<wbr>Flags</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/glimagelayer.html" class="tsd-kind-icon">GLImagelayer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/glprogram.html" class="tsd-kind-icon">GLProgram</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gltilelayer.html" class="tsd-kind-icon">GLTilelayer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gltilemap.html" class="tsd-kind-icon">GLTilemap</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gltileset.html" class="tsd-kind-icon">GLTileset</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ianimationdata.html" class="tsd-kind-icon">IAnimation<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ianimationdataframe.html" class="tsd-kind-icon">IAnimation<wbr>Data<wbr>Frame</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iassetcache.html" class="tsd-kind-icon">IAsset<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iblendmode.html" class="tsd-kind-icon">IBlend<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iboolproperty.html" class="tsd-kind-icon">IBool<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/icolorproperty.html" class="tsd-kind-icon">IColor<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iellipseobject.html" class="tsd-kind-icon">IEllipse<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ifileproperty.html" class="tsd-kind-icon">IFile<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ifloatproperty.html" class="tsd-kind-icon">IFloat<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iimagelayer.html" class="tsd-kind-icon">IImagelayer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iintproperty.html" class="tsd-kind-icon">IInt<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ilayerbase.html" class="tsd-kind-icon">ILayer<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ilayergroup.html" class="tsd-kind-icon">ILayergroup</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iobjectbase.html" class="tsd-kind-icon">IObject<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iobjectgroup.html" class="tsd-kind-icon">IObjectgroup</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipoint.html" class="tsd-kind-icon">IPoint</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipointobject.html" class="tsd-kind-icon">IPoint<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipolygonobject.html" class="tsd-kind-icon">IPolygon<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipolylineobject.html" class="tsd-kind-icon">IPolyline<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipropertybase.html" class="tsd-kind-icon">IProperty<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/irectangleobject.html" class="tsd-kind-icon">IRectangle<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ishadercache.html" class="tsd-kind-icon">IShader<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/istringproperty.html" class="tsd-kind-icon">IString<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iterrain.html" class="tsd-kind-icon">ITerrain</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itextobject.html" class="tsd-kind-icon">IText<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itextoptions.html" class="tsd-kind-icon">IText<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itile.html" class="tsd-kind-icon">ITile</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itileanimationframe.html" class="tsd-kind-icon">ITile<wbr>Animation<wbr>Frame</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itileobject.html" class="tsd-kind-icon">ITile<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itileprops.html" class="tsd-kind-icon">ITile<wbr>Props</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itilelayer.html" class="tsd-kind-icon">ITilelayer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itilelayerchunk.html" class="tsd-kind-icon">ITilelayer<wbr>Chunk</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itilemap.html" class="tsd-kind-icon">ITilemap</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itilemapoptions.html" class="tsd-kind-icon">ITilemap<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itileset.html" class="tsd-kind-icon">ITileset</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itilesetgrid.html" class="tsd-kind-icon">ITileset<wbr>Grid</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iwangcolor.html" class="tsd-kind-icon">IWang<wbr>Color</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iwangset.html" class="tsd-kind-icon">IWang<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iwangtile.html" class="tsd-kind-icon">IWang<wbr>Tile</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#idictionary" class="tsd-kind-icon">IDictionary</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#ilayer" class="tsd-kind-icon">ILayer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#iobject" class="tsd-kind-icon">IObject</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#iproperty" class="tsd-kind-icon">IProperty</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#terroreventcallback" class="tsd-kind-icon">TError<wbr>Event<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#tgllayer" class="tsd-kind-icon">TGLLayer</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#assert" class="tsd-kind-icon">ASSERT</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#validate" class="tsd-kind-icon">VALIDATE</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#assertnever" class="tsd-kind-icon">assert<wbr>Never</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#hasownkey" class="tsd-kind-icon">has<wbr>Own<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loadimage" class="tsd-kind-icon">load<wbr>Image</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parsecolorstr" class="tsd-kind-icon">parse<wbr>Color<wbr>Str</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tiledmiddlewarefactory" class="tsd-kind-icon">tiled<wbr>Middleware<wbr>Factory</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -198,6 +322,7 @@ tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -246,7 +371,7 @@ tileMap.resizeViewport(gl.canvas.width, gl.canvas.height);
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

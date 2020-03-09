@@ -91,7 +91,6 @@ function onLoad()
     var mapQueryParam = getParameterByName('map');
     var lastOptgroup = null;
 
-    // TODO: Create options in switchElm select.
     for (var i = 0; i < resourceUrls.length; ++i)
     {
         var url = resourceUrls[i];
@@ -232,6 +231,24 @@ function showDataView()
             dataViewElm.appendChild(document.createElement('br'));
         }
     }
+
+    var tilesets = tileMap.tilesets;
+
+    for (var i = 0; i < tilesets.length; ++i)
+    {
+        var tileset = tilesets[i];
+
+        for (var j = 0; j < tileset.images.length; ++j)
+        {
+            var txt = document.createElement('span');
+            txt.textContent = 'Tileset (index ' + i + ', image ' + j + '):';
+
+            dataViewElm.appendChild(txt);
+            dataViewElm.appendChild(document.createElement('br'));
+            dataViewElm.appendChild(tileset.images[j]);
+            dataViewElm.appendChild(document.createElement('br'));
+        }
+    }
 }
 
 function onMapChange()
@@ -243,7 +260,10 @@ function onMapChange()
 
     if (!maps[mapUrl])
     {
-        tileMap = maps[mapUrl] = new glTiled.GLTilemap(gl, loader.resources[mapUrl].data, loader.resources);
+        tileMap = maps[mapUrl] = new glTiled.GLTilemap(loader.resources[mapUrl].data, {
+            gl: gl,
+            assetCache: loader.resources,
+        });
         tileMap.repeatTiles = false;
     }
     else
