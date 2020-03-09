@@ -1,6 +1,6 @@
 # gl-tiled.resource-loader.js
 
-The Resource Loader bundle a [resource-loader](https://github.com/englercj/resource-loader) middleware that makes it easy to load Tiled JSON maps.
+The Resource Loader bundle provides a [resource-loader](https://github.com/englercj/resource-loader) middleware that makes it easy to load Tiled JSON maps.
 
 This bundle is unique in that it actually does not depend on the gl-tiled core, and therefore this bundle doesn't actually contain the core library. That means you can combine this bundle with any other bundle without conflicts.
 

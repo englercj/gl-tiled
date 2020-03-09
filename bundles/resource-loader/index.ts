@@ -1,6 +1,5 @@
 import { Loader, Resource, ResourceType, ImageLoadStrategy } from 'resource-loader';
 import { IAddOptions } from 'resource-loader/dist/Loader';
-import { XhrResponseType, XhrLoadStrategy } from 'resource-loader/dist/load_strategies/XhrLoadStrategy';
 
 /**
  * Creates the tiled loader middleware function and returns it.
