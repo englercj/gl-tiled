@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import { string } from 'rollup-plugin-string';
 import preprocess from 'rollup-plugin-preprocess';
@@ -46,6 +46,9 @@ const output = {
     format: 'umd',
     sourcemap: false,
     banner,
+    globals: {
+        'resource-loader': 'Loader',
+    },
 };
 
 // generate configs for all the bundles
@@ -65,7 +68,7 @@ for (let i = 0; i < dirs.length; ++i)
         const name = `glTiled${ext}`;
 
         bundles.push({
-            external: ['resource-loader', 'phaser3'],
+            external: ['resource-loader'],
             input: path.join('bundles', dirname, 'index.ts'),
             plugins,
             output: Object.assign({ file, name }, output),
