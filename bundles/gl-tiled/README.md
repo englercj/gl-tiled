@@ -1,7 +1,6 @@
 # gl-tiled.js
 
-This is the core library bundle. It is meant to work with WebGL, and therefore can work with any
-framework. However, it does not provide any special code to ease integration with those frameworks.
+This is the core library bundle. It is meant to work with WebGL, and therefore can work with any framework. However, it does not provide any special code to ease integration with those frameworks.
 
 ## API Reference
 
@@ -19,7 +18,7 @@ COMING SOON!
 ## Unsupported features
 
 - Objectgroups
-    * I feel like there isn't a good reasonable default for objectgroups this library can provide, so I don't do it at all.
+    * Haven't decided what support for this would mean.
 - Map tile render order
     * Currently only "Right Down" is supported, which is default. PRs welcome.
 - Isometric, Isometric (Staggered), Hexagonal (Staggered)
