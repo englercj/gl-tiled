@@ -39,7 +39,7 @@ export function tiledMiddlewareFactory()
             url: '',
             crossOrigin: resource.strategy.config.crossOrigin,
             strategy: ImageLoadStrategy,
-            metadata: resource.metadata.imageMetadata,
+            metadata: resource.metadata ? resource.metadata.imageMetadata : undefined,
             parentResource: resource,
         };
 
