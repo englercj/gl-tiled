@@ -1,6 +1,6 @@
 /*!
 * gl-tiled - v1.0.0
-* Compiled Mon, 09 Mar 2020 21:00:53 UTC
+* Compiled Wed, 11 Mar 2020 15:21:37 UTC
 *
 * gl-tiled is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license
@@ -45,7 +45,7 @@
                 url: '',
                 crossOrigin: resource.strategy.config.crossOrigin,
                 strategy: resourceLoader.ImageLoadStrategy,
-                metadata: resource.metadata.imageMetadata,
+                metadata: resource.metadata ? resource.metadata.imageMetadata : undefined,
                 parentResource: resource,
             };
             for (var i = 0; i < resource.data.tilesets.length; ++i) {
