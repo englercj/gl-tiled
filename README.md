@@ -2,7 +2,7 @@
 
 A WebGL renderer for maps created with the [Tiled Editor](http://mapeditor.org).
 
-Tested with Tiled Map Editor v1.2.2.
+Tested with Tiled Map Editor v1.3.3.
 
 ## Contents
 
