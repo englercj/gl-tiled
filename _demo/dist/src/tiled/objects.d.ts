@@ -1,5 +1,14 @@
 import { IPoint } from '../IPoint';
 import { IProperty } from './IProperty';
+import { ITileset } from './Tileset';
+export interface IObjectTemplate {
+    /** Type of the template, always 'template'. */
+    type: 'template';
+    /** External tileset used by the template (optional) */
+    tileset?: ITileset;
+    /** The object instantiated by this template */
+    object: IObject;
+}
 /**
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/#object
  */
@@ -16,14 +25,18 @@ export interface IObjectBase {
     rotation: number;
     /** String assigned to type field in editor */
     type: string;
-    /** Whether object is shown in editor. */
-    visible: boolean;
+    /** Whether object is shown in editor. Default: true */
+    visible?: boolean;
     /** Width in pixels. Ignored if using a gid. (int) */
     width: number;
     /** x coordinate in pixels (int) */
     x: number;
     /** y coordinate in pixels (int) */
     y: number;
+}
+export interface IObjectTemplateInstance extends Omit<IObjectBase, 'width' | 'height'> {
+    /** Relative path to a template file */
+    template: string;
 }
 export interface ITileObject extends IObjectBase {
     /** GID, only if object comes from a Tilemap (int) */
@@ -38,6 +51,12 @@ export interface IRectangleObject extends IObjectBase {
 export interface IPointObject extends IObjectBase {
     /** Used to mark an object as a point */
     point: true;
+    /** Width of points are always 0. */
+    width: 0;
+    /** Height of points are always 0. */
+    height: 0;
+    /** Rotation angle of points is always 0. */
+    rotation: 0;
 }
 export interface IPolygonObject extends IObjectBase {
     /** A list of x,y coordinates in pixels */
@@ -77,4 +96,4 @@ export interface ITextObject extends IObjectBase {
     /** String key-value pairs */
     text: ITextOptions;
 }
-export declare type IObject = /*IObjectTemplateInstance |*/ ITileObject | IEllipseObject | IRectangleObject | IPointObject | IPolygonObject | IPolylineObject | ITextObject;
+export declare type IObject = IObjectTemplateInstance | ITileObject | IEllipseObject | IRectangleObject | IPointObject | IPolygonObject | IPolylineObject | ITextObject;

@@ -20,6 +20,8 @@ export interface ITile {
     imagewidth?: number;
     /** Layer with the type 'objectgroup' */
     objectgroup?: IObjectgroup;
+    /** Percentage chance this tile is chosen when competing with others in the editor (double) */
+    probability?: number;
     /** A list of properties (name, value, type) */
     properties?: IProperty[];
     /**
@@ -33,16 +35,18 @@ export interface ITile {
 export interface ITerrain {
     /** Name of terrain */
     name: string;
+    /** A list of properties (name, value, type). */
+    properties?: IProperty[];
     /** Local ID of tile representing terrain (int) */
     tile: number;
 }
 export interface ITilesetGrid {
-    /** Orientation of the grid for the tiles in this tileset (orthogonal or isometric) */
-    orientation: 'orthogonal' | 'isometric';
-    /** Width of a grid cell */
-    width: number;
-    /** Height of a grid cell */
+    /** Cell height of tile grid (int) */
     height: number;
+    /** Orientation of the grid for the tiles in this tileset */
+    orientation: 'orthogonal' | 'isometric';
+    /** Cell width of tile grid (int) */
+    width: number;
 }
 export interface IWangColor {
     /** Hex-formatted color (#RRGGBB or #AARRGGBB). */
@@ -55,14 +59,14 @@ export interface IWangColor {
     tile: number;
 }
 export interface IWangTile {
-    /** Tile is flipped diagonally. */
-    dflip: boolean;
-    /** Tile is flipped horizontally. */
-    hflip: boolean;
+    /** Tile is flipped diagonally. Default: false */
+    dflip?: boolean;
+    /** Tile is flipped horizontally. Default: false */
+    hflip?: boolean;
     /** Local ID of tile. (int) */
     tileid: number;
-    /** Tile is flipped vertically. */
-    vflip: boolean;
+    /** Tile is flipped vertically. Default: false */
+    vflip?: boolean;
     /** Array of Wang color indexes (uchar[8]). */
     wangid: [number, number, number, number, number, number, number, number];
 }
@@ -73,6 +77,8 @@ export interface IWangSet {
     edgecolors: IWangColor[];
     /** Name of the Wang set. */
     name: string;
+    /** A list of properties (name, value, type). */
+    properties?: IProperty[];
     /** Local ID of tile representing the Wang set. */
     tile: number;
     /** Array of Wang tiles. */
@@ -83,6 +89,8 @@ export interface IWangSet {
  * See: http://doc.mapeditor.org/en/latest/reference/json-map-format/
  */
 export interface ITileset {
+    /** Hex-formatted color (#RRGGBB or #AARRGGBB) */
+    backgroundcolor?: string;
     /** The number of tile columns in the tileset (int) */
     columns: number;
     /** GID corresponding to the first tile in the set */
@@ -91,22 +99,26 @@ export interface ITileset {
     grid?: ITilesetGrid;
     /** Image used for tiles in this set */
     image?: string;
-    /** Width of source image in pixels (int) */
-    imagewidth: number;
     /** Height of source image in pixels (int) */
     imageheight: number;
+    /** Width of source image in pixels (int) */
+    imagewidth: number;
     /** Buffer between image edge and first tile (pixels) (int) */
     margin: number;
     /** Name given to this tileset */
     name: string;
     /** A list of properties (name, value, type). */
     properties?: IProperty[];
+    /** The external file that contains this tilesets data */
+    source?: string;
     /** Spacing between adjacent tiles in image (pixels) (int) */
     spacing: number;
     /** Array of Terrains (optional) */
     terrains?: ITerrain[];
     /** The number of tiles in this tileset (int) */
     tilecount: number;
+    /** The Tiled version used to save the file */
+    tiledversion?: string;
     /** Maximum height of tiles in this set (int) */
     tileheight: number;
     /** Specifies an offset in pixels, to be applied when drawing a tile from the related tileset. */
@@ -119,6 +131,8 @@ export interface ITileset {
     transparentcolor?: string;
     /** Type of the tileset, always 'tileset'. Only set for tileset files. */
     type?: 'tileset';
+    /** The JSON format version. */
+    version?: number;
     /** Array of wangsets (optional). */
     wangsets?: IWangSet[];
 }

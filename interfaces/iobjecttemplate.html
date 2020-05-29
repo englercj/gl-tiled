@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IWangSet | gl-tiled</title>
+	<title>IObjectTemplate | gl-tiled</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="iwangset.html">IWangSet</a>
+					<a href="iobjecttemplate.html">IObjectTemplate</a>
 				</li>
 			</ul>
-			<h1>Interface IWangSet</h1>
+			<h1>Interface IObjectTemplate</h1>
 		</div>
 	</div>
 </header>
@@ -66,7 +66,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IWangSet</span>
+						<span class="target">IObjectTemplate</span>
 					</li>
 				</ul>
 			</section>
@@ -77,12 +77,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#cornercolors" class="tsd-kind-icon">cornercolors</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#edgecolors" class="tsd-kind-icon">edgecolors</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#properties" class="tsd-kind-icon">properties</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#tile" class="tsd-kind-icon">tile</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iwangset.html#wangtiles" class="tsd-kind-icon">wangtiles</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iobjecttemplate.html#object" class="tsd-kind-icon">object</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iobjecttemplate.html#tileset" class="tsd-kind-icon">tileset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iobjecttemplate.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,92 +88,47 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cornercolors" class="tsd-anchor"></a>
-					<h3>cornercolors</h3>
-					<div class="tsd-signature tsd-kind-icon">cornercolors<span class="tsd-signature-symbol">:</span> <a href="iwangcolor.html" class="tsd-signature-type">IWangColor</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="object" class="tsd-anchor"></a>
+					<h3>object</h3>
+					<div class="tsd-signature tsd-kind-icon">object<span class="tsd-signature-symbol">:</span> <a href="../globals.html#iobject" class="tsd-signature-type">IObject</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L110">src/tiled/Tileset.ts:110</a></li>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/objects.ts#L14">src/tiled/objects.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Array of Wang colors.</p>
+							<p>The object instantiated by this template</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="edgecolors" class="tsd-anchor"></a>
-					<h3>edgecolors</h3>
-					<div class="tsd-signature tsd-kind-icon">edgecolors<span class="tsd-signature-symbol">:</span> <a href="iwangcolor.html" class="tsd-signature-type">IWangColor</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="tileset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> tileset</h3>
+					<div class="tsd-signature tsd-kind-icon">tileset<span class="tsd-signature-symbol">:</span> <a href="itileset.html" class="tsd-signature-type">ITileset</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L113">src/tiled/Tileset.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/objects.ts#L11">src/tiled/objects.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Array of Wang colors.</p>
+							<p>External tileset used by the template (optional)</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"template"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L116">src/tiled/Tileset.ts:116</a></li>
+							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/objects.ts#L8">src/tiled/objects.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Name of the Wang set.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="properties" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> properties</h3>
-					<div class="tsd-signature tsd-kind-icon">properties<span class="tsd-signature-symbol">:</span> <a href="../globals.html#iproperty" class="tsd-signature-type">IProperty</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L119">src/tiled/Tileset.ts:119</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A list of properties (name, value, type).</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="tile" class="tsd-anchor"></a>
-					<h3>tile</h3>
-					<div class="tsd-signature tsd-kind-icon">tile<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L122">src/tiled/Tileset.ts:122</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Local ID of tile representing the Wang set.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="wangtiles" class="tsd-anchor"></a>
-					<h3>wangtiles</h3>
-					<div class="tsd-signature tsd-kind-icon">wangtiles<span class="tsd-signature-symbol">:</span> <a href="iwangtile.html" class="tsd-signature-type">IWangTile</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/englercj/gl-tiled/blob/f4eb89f/src/tiled/Tileset.ts#L125">src/tiled/Tileset.ts:125</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Array of Wang tiles.</p>
+							<p>Type of the template, always &#39;template&#39;.</p>
 						</div>
 					</div>
 				</section>
@@ -195,25 +147,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="iwangset.html" class="tsd-kind-icon">IWang<wbr>Set</a>
+						<a href="iobjecttemplate.html" class="tsd-kind-icon">IObject<wbr>Template</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#cornercolors" class="tsd-kind-icon">cornercolors</a>
+								<a href="iobjecttemplate.html#object" class="tsd-kind-icon">object</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#edgecolors" class="tsd-kind-icon">edgecolors</a>
+								<a href="iobjecttemplate.html#tileset" class="tsd-kind-icon">tileset</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#properties" class="tsd-kind-icon">properties</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#tile" class="tsd-kind-icon">tile</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="iwangset.html#wangtiles" class="tsd-kind-icon">wangtiles</a>
+								<a href="iobjecttemplate.html#type" class="tsd-kind-icon">type</a>
 							</li>
 						</ul>
 					</li>

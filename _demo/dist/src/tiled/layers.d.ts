@@ -29,21 +29,25 @@ export interface ILayerBase {
     opacity: number;
     /** A list of properties (name, value, type). */
     properties: IProperty[];
+    /** X coordinate where layer content starts (for infinite maps) (int) */
+    startx?: number;
+    /** Y coordinate where layer content starts (for infinite maps) (int) */
+    starty: number;
     /** tilelayer, objectgroup, imagelayer or group */
     type: 'tilelayer' | 'objectgroup' | 'imagelayer' | 'group';
     /** Whether layer is shown or hidden in editor */
     visible: boolean;
     /** Horizontal layer offset in tiles. Always 0. (int) */
-    x: number;
+    x: 0;
     /** Vertical layer offset in tiles. Always 0. (int) */
-    y: number;
+    y: 0;
 }
 export interface ITilelayer extends ILayerBase {
     type: 'tilelayer';
     /** Array of chunks (optional). */
     chunks?: ITilelayerChunk[];
     /** zlib, gzip or empty (default). */
-    compression?: 'zlib' | 'gzip';
+    compression?: 'zlib' | 'gzip' | 'zstd';
     /** csv (default) or base64. */
     encoding?: 'csv' | 'base64';
     /** Row count. Same as map height for fixed-size maps. (int) */

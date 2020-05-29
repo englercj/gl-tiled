@@ -2,11 +2,26 @@ export interface IPropertyBase {
     /** The name of the property. */
     name: string;
     /** The type of the property. */
-    type: 'bool' | 'color' | 'file' | 'float' | 'int' | 'string';
+    type: 'string' | 'int' | 'float' | 'bool' | 'color' | 'file';
     /**
      * The value of the property. Type depends on what the `type` property is.
      */
     value: boolean | string | number;
+}
+export interface IStringProperty extends IPropertyBase {
+    type: 'string';
+    /** The string value */
+    value: string;
+}
+export interface IIntProperty extends IPropertyBase {
+    type: 'int';
+    /** The integer value */
+    value: number;
+}
+export interface IFloatProperty extends IPropertyBase {
+    type: 'float';
+    /** The floating-point value */
+    value: number;
 }
 export interface IBoolProperty extends IPropertyBase {
     type: 'bool';
@@ -23,19 +38,4 @@ export interface IFileProperty extends IPropertyBase {
     /** Relative path to the file. */
     value: string;
 }
-export interface IFloatProperty extends IPropertyBase {
-    type: 'float';
-    /** The floating-point value */
-    value: number;
-}
-export interface IIntProperty extends IPropertyBase {
-    type: 'int';
-    /** The integer value */
-    value: number;
-}
-export interface IStringProperty extends IPropertyBase {
-    type: 'string';
-    /** The string value */
-    value: string;
-}
-export declare type IProperty = IBoolProperty | IColorProperty | IFileProperty | IFloatProperty | IIntProperty | IStringProperty;
+export declare type IProperty = IStringProperty | IIntProperty | IFloatProperty | IBoolProperty | IColorProperty | IFileProperty;
