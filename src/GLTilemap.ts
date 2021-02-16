@@ -582,7 +582,6 @@ export class GLTilemap
                     // @if DEBUG
                     ASSERT(!!(tileShader.uniforms.uLayer
                         && tileShader.uniforms.uInverseLayerTileSize
-                        && tileShader.uniforms.uTilesets
                         && tileShader.uniforms.uTilesetTileSize
                         && tileShader.uniforms.uTilesetTileOffset
                         && tileShader.uniforms.uInverseTilesetTextureSize),
@@ -591,7 +590,15 @@ export class GLTilemap
 
                     gl.uniform1i(tileShader.uniforms.uLayer!, 0);
                     gl.uniform2fv(tileShader.uniforms.uInverseLayerTileSize!, this._inverseLayerTileSize);
-                    gl.uniform1iv(tileShader.uniforms.uTilesets!, this._tilesetIndices);
+                    for (let index = 0; index < this._tilesetIndices.length; index++) {
+                        gl.uniform1i(
+                            gl.getUniformLocation(
+                                tileShader.program,
+                                `uTilesets${index}`,
+                            ),
+                            this._tilesetIndices[index],
+                        );
+                    }
                     gl.uniform2fv(tileShader.uniforms.uTilesetTileSize!, this._tilesetTileSizeBuffer);
                     gl.uniform2fv(tileShader.uniforms.uTilesetTileOffset!, this._tilesetTileOffsetBuffer);
                     gl.uniform2fv(tileShader.uniforms.uInverseTilesetTextureSize!, this._inverseTilesetTextureSizeBuffer);
@@ -718,8 +725,26 @@ export class GLTilemap
 
         const tilelayerFragShader = tilelayerFS
             .replace('#pragma define(NUM_TILESETS)', `#define NUM_TILESETS ${this._tilesets.length}`)
-            .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${this._totalTilesetImages}`);
-
+            .replace('#pragma define(NUM_TILESET_IMAGES)', `#define NUM_TILESET_IMAGES ${this._totalTilesetImages}`)
+            .replace(
+                '#pragma declare_tileset_uniforms', 
+                new Array(this._totalTilesetImages)
+                    .fill(0).map((_,i) => i)
+                    .map((i) => `uniform sampler2D uTilesets${i};`)
+                    .join('\n'),
+            )
+                    
+            .replace(
+                '#pragma get_texture_cases', 
+                new Array(this._totalTilesetImages)
+                    .fill(0).map((_,i) => i)
+                    .map((i) => 
+`if(index == ${i}){
+    return texture2D(uTilesets${i}, coord * uInverseTilesetTextureSize[${i}]); 
+}`)
+                    .join('\n'),
+            );
+            
         const gl = this.gl!;
 
         this.shaders = {

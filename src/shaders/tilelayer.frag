@@ -9,7 +9,7 @@ varying vec2 vPixelCoord;
 varying vec2 vTextureCoord;
 
 uniform sampler2D uLayer;
-uniform sampler2D uTilesets[NUM_TILESET_IMAGES];
+#pragma declare_tileset_uniforms
 
 uniform vec2 uTilesetTileSize[NUM_TILESET_IMAGES];
 uniform vec2 uTilesetTileOffset[NUM_TILESET_IMAGES];
@@ -67,9 +67,7 @@ vec2 getTilesetTileOffset(int index)
 
 vec4 getColor(int index, vec2 coord)
 {
-    for (int i = 0; i < NUM_TILESET_IMAGES; ++i)
-        if (i == index)
-            return texture2D(uTilesets[i], coord * uInverseTilesetTextureSize[i]);
+    #pragma get_texture_cases
 
     return vec4(0.0, 0.0, 0.0, 0.0);
 }
