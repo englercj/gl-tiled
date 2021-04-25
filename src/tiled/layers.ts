@@ -47,7 +47,7 @@ export interface ILayerBase
     startx?: number;
 
     /** Y coordinate where layer content starts (for infinite maps) (int) */
-    starty: number;
+    starty?: number;
 
     /** tilelayer, objectgroup, imagelayer or group */
     type: 'tilelayer' | 'objectgroup' | 'imagelayer' | 'group';
